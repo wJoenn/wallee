@@ -10,6 +10,10 @@ gem "bootsnap", "~> 1.18.3", require: false # Installed by default with rails 7.
 # [https://github.com/heartcombo/devise]
 gem "devise", "~> 4.9.3"
 
+# A Devise extension which uses JWT tokens for user authentication
+# [https://github.com/waiting-for-dev/devise-jwt]
+gem "devise-jwt", "~> 0.10.0"
+
 # The ruby interface for PostgreSQL
 # [https://github.com/ged/ruby-pg]
 gem "pg", "~> 1.5.6"
