@@ -1,7 +1,5 @@
 RSpec.describe BudgetsController, type: :request do
   let(:user) { create(:user) }
-  let!(:budget) { create(:budget, user:) }
-  let!(:budgets_count) { Budget.count }
 
   describe "GET /budgets" do
     context "when a User is authenticated" do
@@ -59,7 +57,7 @@ RSpec.describe BudgetsController, type: :request do
         end
 
         it "creates an instance of Budget" do
-          expect(Budget.count).to eq budgets_count + 1
+          expect(Budget.count).to eq 1
         end
 
         it "returns the new instance of Budget" do
@@ -86,7 +84,7 @@ RSpec.describe BudgetsController, type: :request do
         end
 
         it "does not create an instance of Budget" do
-          expect(Budget.count).to eq budgets_count + 0
+          expect(Budget.count).to eq 0
         end
 
         it "returns a list of error messages" do
@@ -109,6 +107,8 @@ RSpec.describe BudgetsController, type: :request do
   end
 
   describe "PATCH /budgets/:id" do
+    let(:budget) { create(:budget, user:) }
+
     context "when a User is authenticated" do
       before do
         sign_in user
@@ -169,6 +169,8 @@ RSpec.describe BudgetsController, type: :request do
   end
 
   describe "DELETE /budgets/:id" do
+    let(:budget) { create(:budget, user:) }
+
     context "when a User is authenticated" do
       before do
         sign_in user

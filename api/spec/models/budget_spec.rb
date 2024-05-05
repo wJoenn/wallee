@@ -23,6 +23,14 @@ RSpec.describe Budget do
       expect(budget.error_codes).to eq({ name: %i[blank] })
     end
 
+    it "validates the uniqueness of the name" do
+      described_class.create(name:, user:)
+      budget = described_class.create(name:, user:)
+
+      expect(budget).not_to be_persisted
+      expect(budget.error_codes).to eq({ name: %i[taken] })
+    end
+
     it "validates the presence of the User" do
       budget = described_class.create(name:)
 
