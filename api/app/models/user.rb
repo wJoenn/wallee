@@ -8,4 +8,5 @@ class User < ApplicationRecord
   UNSAFE_ATTRIBUTES_FOR_SERIALIZATION << :jti
 
   has_many :budgets, dependent: :destroy
+  has_many :sub_categories, dependent: :destroy
 end

@@ -3,9 +3,9 @@ RSpec.describe User do
   let(:password) { "password" }
 
   describe "associations" do
-    context "with budgets" do
-      let(:user) { create(:user) }
+    let(:user) { create(:user) }
 
+    context "with budgets" do
       before do
         create(:budget, user:)
       end
@@ -17,6 +17,21 @@ RSpec.describe User do
       it "destroys budgets on destroy" do
         user.destroy
         expect(Budget.count).to be 0
+      end
+    end
+
+    context "with sub_categories" do
+      before do
+        create(:sub_category, user:)
+      end
+
+      it "has many SubCategory" do
+        expect(user.sub_categories).to all be_a SubCategory
+      end
+
+      it "destroys sub_categories on destroy" do
+        user.destroy
+        expect(SubCategory.count).to be 0
       end
     end
   end
