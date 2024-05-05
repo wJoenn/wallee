@@ -8,11 +8,11 @@ gem "bootsnap", "~> 1.18.3", require: false # Installed by default with rails 7.
 
 # A flexible authentication solution for Rails based on Warden
 # [https://github.com/heartcombo/devise]
-gem "devise", "~> 4.9.3"
+gem "devise", "~> 4.9.4"
 
 # A Devise extension which uses JWT tokens for user authentication
 # [https://github.com/waiting-for-dev/devise-jwt]
-gem "devise-jwt", "~> 0.10.0"
+gem "devise-jwt", "~> 0.11.0"
 
 # The ruby interface for PostgreSQL
 # [https://github.com/ged/ruby-pg]
