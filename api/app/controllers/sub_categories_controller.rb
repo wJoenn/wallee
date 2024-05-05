@@ -1,5 +1,5 @@
 class SubCategoriesController < ApplicationController
-  before_action :set_sub_category, only: %i[show]
+  before_action :set_sub_category, only: %i[show update]
 
   def index
     render json: current_user.sub_categories, status: :ok
@@ -14,6 +14,14 @@ class SubCategoriesController < ApplicationController
 
     if @sub_category.save
       render json: @sub_category, status: :created
+    else
+      render json: { errors: @sub_category.error_codes }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @sub_category.update(sub_category_params)
+      render json: @sub_category, status: :ok
     else
       render json: { errors: @sub_category.error_codes }, status: :unprocessable_entity
     end

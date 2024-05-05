@@ -140,4 +140,66 @@ RSpec.describe SubCategoriesController, type: :request do
       end
     end
   end
+
+  describe "PATCH /sub_categories/:id" do
+    let(:sub_category) { create(:sub_category, user:) }
+
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+      end
+
+      context "with proper params" do
+        before do
+          patch "/sub_categories/#{sub_category.id}", params: { sub_category: { name: "New sub category name" } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "id"
+        end
+
+        it "returns the instance of SubCategory" do
+          data = response.parsed_body
+          expect(data["id"]).to be sub_category.id
+        end
+
+        it "updates the SubCategory" do
+          expect(sub_category.reload.name).to eq "New sub category name"
+        end
+
+        it "returns a ok HTTP status" do
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      context "without proper params" do
+        before do
+          patch "/sub_categories/#{sub_category.id}", params: { sub_category: { name: nil } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "errors"
+        end
+
+        it "returns a list of error messages" do
+          data = response.parsed_body
+          expect(data["errors"]).to eq({ "name" => ["blank"] })
+        end
+
+        it "returns a unprocessable_entity HTTP status" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        patch "/sub_categories/#{sub_category.id}"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end
