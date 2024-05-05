@@ -1,17 +1,13 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[show]
+  before_action :set_resource, only: %i[show]
 
   def index
     render json: Category.all, status: :ok
   end
 
   def show
-    render json: @category, status: :ok
+    render json: @resource, status: :ok
   end
 
   private
-
-  def set_category
-    @category = Category.find(params[:id])
-  end
 end
