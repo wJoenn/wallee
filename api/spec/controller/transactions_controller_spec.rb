@@ -37,4 +37,36 @@ RSpec.describe TransactionsController, type: :request do
       end
     end
   end
+
+  describe "GET /transactions/:id" do
+    let(:transaction) { create(:transaction, user:) }
+
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        get "/transactions/#{transaction.id}"
+      end
+
+      it "returns a JSON object" do
+        expect(response.body).to be_a String
+        expect(response.parsed_body).to have_key "id"
+      end
+
+      it "returns the instance of Transaction" do
+        data = response.parsed_body
+        expect(data["id"]).to eq transaction.id
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        get "/transactions/#{transaction.id}"
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end
