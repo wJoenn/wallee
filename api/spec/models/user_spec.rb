@@ -2,6 +2,25 @@ RSpec.describe User do
   let(:email) { "user@example.com" }
   let(:password) { "password" }
 
+  describe "associations" do
+    context "with budgets" do
+      let(:user) { create(:user) }
+
+      before do
+        create(:budget, user:)
+      end
+
+      it "has many Budget" do
+        expect(user.budgets).to all be_a Budget
+      end
+
+      it "destroys budgets on destroy" do
+        user.destroy
+        expect(Budget.count).to be 0
+      end
+    end
+  end
+
   describe "validations" do
     it "creates a User with proper params" do
       user = described_class.create(email:, password:)
