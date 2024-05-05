@@ -110,7 +110,7 @@ RSpec.describe TransactionsController, type: :request do
             "budget_id" => budget_id,
             "description" => description,
             "sub_category_id" => sub_category_id,
-            "transacted_at" => transacted_at.round,
+            "transacted_at" => transacted_at.floor,
             "user_id" => user.id,
             "value" => value
           })
@@ -220,6 +220,33 @@ RSpec.describe TransactionsController, type: :request do
     context "when a User is not authenticated" do
       it "returns a unauthorized HTTP status" do
         patch "/transactions/#{transaction.id}"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
+
+  describe "DELETE /transactions/:id" do
+    let(:transaction) { create(:transaction, user:) }
+
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        delete "/transactions/#{transaction.id}"
+      end
+
+      it "destroys the instance of Transaction" do
+        expect(Transaction.count).to be 0
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        delete "/transactions/#{transaction.id}"
 
         expect(response).to have_http_status :unauthorized
       end
