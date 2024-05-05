@@ -46,4 +46,30 @@ RSpec.describe Users::SessionsController, type: :request do
       end
     end
   end
+
+  describe "DELETE /users/sign_out" do
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        delete "/users/sign_out"
+      end
+
+      it "signs the User out" do
+        get "/users/current"
+        expect(response).to have_http_status :unauthorized
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        delete "/users/sign_out"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end
