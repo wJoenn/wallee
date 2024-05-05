@@ -4,6 +4,7 @@ RSpec.describe BudgetsController, type: :request do
   describe "GET /budgets" do
     context "when a User is authenticated" do
       before do
+        create(:budget, user:)
         sign_in user
         get "/budgets"
       end
