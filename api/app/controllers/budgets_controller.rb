@@ -1,5 +1,5 @@
 class BudgetsController < ApplicationController
-  before_action :set_budget, only: %i[update]
+  before_action :set_budget, only: %i[destroy update]
 
   def index
     render json: current_user.budgets, status: :ok
@@ -21,6 +21,11 @@ class BudgetsController < ApplicationController
     else
       render json: { errors: @budget.error_codes }, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @budget.destroy!
+    render status: :ok
   end
 
   private

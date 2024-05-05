@@ -1,11 +1,12 @@
 RSpec.describe BudgetsController, type: :request do
   let(:user) { create(:user) }
+  let!(:budget) { create(:budget, user:) }
+  let!(:budgets_count) { Budget.count }
 
   describe "GET /budgets" do
     context "when a User is authenticated" do
       before do
         sign_in user
-        create(:budget, user:)
         get "/budgets"
       end
 
@@ -58,7 +59,7 @@ RSpec.describe BudgetsController, type: :request do
         end
 
         it "creates an instance of Budget" do
-          expect(Budget.count).to eq 1
+          expect(Budget.count).to eq budgets_count + 1
         end
 
         it "returns the new instance of Budget" do
@@ -85,7 +86,7 @@ RSpec.describe BudgetsController, type: :request do
         end
 
         it "does not create an instance of Budget" do
-          expect(Budget.count).to eq 0
+          expect(Budget.count).to eq budgets_count + 0
         end
 
         it "returns a list of error messages" do
@@ -108,8 +109,6 @@ RSpec.describe BudgetsController, type: :request do
   end
 
   describe "PATCH /budgets/:id" do
-    let(:budget) { create(:budget, user:) }
-
     context "when a User is authenticated" do
       before do
         sign_in user
@@ -163,6 +162,31 @@ RSpec.describe BudgetsController, type: :request do
     context "when a User is not authenticated" do
       it "returns a unauthorized HTTP status" do
         patch "/budgets/#{budget.id}"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
+
+  describe "DELETE /budgets/:id" do
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        delete "/budgets/#{budget.id}"
+      end
+
+      it "destroys the instance of Budget" do
+        expect(Budget.count).to be 0
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        delete "/budgets/#{budget.id}"
 
         expect(response).to have_http_status :unauthorized
       end

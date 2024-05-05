@@ -15,5 +15,5 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  resources :budgets, only: %i[create index update]
+  resources :budgets, only: %i[create destroy index update]
 end
