@@ -1,9 +1,47 @@
 RSpec.describe BudgetsController, type: :request do
-  let(:description) { "A budget to budgetise" }
-  let(:name) { "My budget" }
   let(:user) { create(:user) }
 
+  describe "GET /budgets" do
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        create(:budget, user:)
+        get "/budgets"
+      end
+
+      it "returns a JSON array" do
+        expect(response.body).to be_a String
+        expect(response.parsed_body).to all have_key "id"
+      end
+
+      it "returns a list of Budget" do
+        data = response.parsed_body
+
+        data.each do |budget|
+          %w[id name].each do |key|
+            expect(budget).to have_key key
+          end
+        end
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        get "/budgets"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
+
   describe "POST /budgets" do
+    let(:description) { "A budget to budgetise" }
+    let(:name) { "My budget" }
+
     context "when a User is authenticated" do
       before do
         sign_in user

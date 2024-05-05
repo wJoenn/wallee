@@ -1,4 +1,8 @@
 class BudgetsController < ApplicationController
+  def index
+    render json: current_user.budgets, status: :ok
+  end
+
   def create
     @budget = current_user.budgets.new(budget_params)
 
