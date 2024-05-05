@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  as :user do
+    get "users/current", to: "users/registrations#show"
+  end
+
   devise_for :users, controllers: {
     registrations: "users/registrations"
   }
