@@ -163,4 +163,66 @@ RSpec.describe TransactionsController, type: :request do
       end
     end
   end
+
+  describe "PATCH /transactions/:id" do
+    let(:transaction) { create(:transaction, user:) }
+
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+      end
+
+      context "with proper params" do
+        before do
+          patch "/transactions/#{transaction.id}", params: { transaction: { value: 2 } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "id"
+        end
+
+        it "returns the instance of Transaction" do
+          data = response.parsed_body
+          expect(data["id"]).to be transaction.id
+        end
+
+        it "updates the Transaction" do
+          expect(transaction.reload.value).to be 2
+        end
+
+        it "returns a ok HTTP status" do
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      context "without proper params" do
+        before do
+          patch "/transactions/#{transaction.id}", params: { transaction: { value: nil } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "errors"
+        end
+
+        it "returns a list of error messages" do
+          data = response.parsed_body
+          expect(data["errors"]).to eq({ "value" => %w[blank] })
+        end
+
+        it "returns a unprocessable_entity HTTP status" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        patch "/transactions/#{transaction.id}"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end

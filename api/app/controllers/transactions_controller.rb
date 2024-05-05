@@ -1,5 +1,5 @@
 class TransactionsController < ApplicationController
-  before_action :set_resource, only: %i[show]
+  before_action :set_resource, only: %i[show update]
 
   def index
     render json: current_user.transactions, status: :ok
@@ -14,6 +14,14 @@ class TransactionsController < ApplicationController
 
     if @resource.save
       render json: @resource, status: :created
+    else
+      render json: { errors: @resource.error_codes }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @resource.update(transaction_params)
+      render json: @resource, status: :ok
     else
       render json: { errors: @resource.error_codes }, status: :unprocessable_entity
     end
