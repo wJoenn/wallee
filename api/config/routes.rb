@@ -16,5 +16,5 @@ Rails.application.routes.draw do
   }
 
   resources :budgets, only: %i[create destroy index update]
-  resources :categories, only: %i[index]
+  resources :categories, only: %i[index show]
 end
