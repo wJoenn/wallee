@@ -106,4 +106,66 @@ RSpec.describe BudgetsController, type: :request do
       end
     end
   end
+
+  describe "PATCH /budgets/:id" do
+    let(:budget) { create(:budget, user:) }
+
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+      end
+
+      context "with proper params" do
+        before do
+          patch "/budgets/#{budget.id}", params: { budget: { name: "New budget name" } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "id"
+        end
+
+        it "returns the instance of Budget" do
+          data = response.parsed_body
+          expect(data["id"]).to be budget.id
+        end
+
+        it "updates the Budget" do
+          expect(budget.reload.name).to eq "New budget name"
+        end
+
+        it "returns a ok HTTP status" do
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      context "without proper params" do
+        before do
+          patch "/budgets/#{budget.id}", params: { budget: { name: nil } }
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "errors"
+        end
+
+        it "returns a list of error messages" do
+          data = response.parsed_body
+          expect(data["errors"]).to eq({ "name" => ["blank"] })
+        end
+
+        it "returns a unprocessable_entity HTTP status" do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        patch "/budgets/#{budget.id}"
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end

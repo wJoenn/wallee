@@ -1,4 +1,6 @@
 class BudgetsController < ApplicationController
+  before_action :set_budget, only: %i[update]
+
   def index
     render json: current_user.budgets, status: :ok
   end
@@ -13,9 +15,21 @@ class BudgetsController < ApplicationController
     end
   end
 
+  def update
+    if @budget.update(budget_params)
+      render json: @budget, status: :ok
+    else
+      render json: { errors: @budget.error_codes }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def budget_params
     params.require(:budget).permit(:description, :name)
+  end
+
+  def set_budget
+    @budget = current_user.budgets.find_by(id: params[:id])
   end
 end
