@@ -13,6 +13,20 @@ RSpec.describe SubCategory do
       sub_category = described_class.create(category:, name:, user:)
       expect(sub_category.user).to be_a User
     end
+
+    context "with transactions" do
+      let(:sub_category) { create(:sub_category, user:) }
+      let!(:transaction) { create(:transaction, sub_category:, user:) }
+
+      it "has many Transaction" do
+        expect(sub_category.transactions).to all be_a Transaction
+      end
+
+      it "nullifies transactions on destroy" do
+        sub_category.destroy
+        expect(transaction.reload.sub_category).to be_nil
+      end
+    end
   end
 
   describe "validations" do

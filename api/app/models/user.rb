@@ -9,4 +9,5 @@ class User < ApplicationRecord
 
   has_many :budgets, dependent: :destroy
   has_many :sub_categories, dependent: :destroy
+  has_many :transactions, dependent: :destroy
 end

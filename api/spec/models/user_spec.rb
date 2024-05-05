@@ -34,6 +34,21 @@ RSpec.describe User do
         expect(SubCategory.count).to be 0
       end
     end
+
+    context "with transactions" do
+      before do
+        create(:transaction, user:)
+      end
+
+      it "has many Transaction" do
+        expect(user.transactions).to all be_a Transaction
+      end
+
+      it "destroys transactions on destroy" do
+        user.destroy
+        expect(Transaction.count).to be 0
+      end
+    end
   end
 
   describe "validations" do

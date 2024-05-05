@@ -8,6 +8,20 @@ RSpec.describe Budget do
       budget = described_class.create(description:, name:, user:)
       expect(budget.user).to be_a User
     end
+
+    context "with transactions" do
+      let(:budget) { create(:budget, user:) }
+      let!(:transaction) { create(:transaction, budget:, user:) }
+
+      it "has many Transaction" do
+        expect(budget.transactions).to all be_a Transaction
+      end
+
+      it "nullifies transactions on destroy" do
+        budget.destroy
+        expect(transaction.reload.budget).to be_nil
+      end
+    end
   end
 
   describe "validations" do
