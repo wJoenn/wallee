@@ -1,6 +1,18 @@
 {
   "folders": [
     { "name": "ROOT", "path": "." },
-    { "name": "API", "path": "api" }
-  ]
+    { "name": "API", "path": "api" },
+    { "name": "CLIENT", "path": "client" }
+  ],
+  "settings": {
+    "i18n-ally.localesPaths": "assets/langs",
+    "i18n-ally.annotations": false,
+    "i18n-ally.enabledFrameworks": [
+      "vue",
+      "vue-sfc"
+    ],
+    "i18n-ally.readonly": true,
+    "i18n-ally.sourceLanguage": "en"
+  }
+
 }

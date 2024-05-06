@@ -1,0 +1,17 @@
+:root {
+  --background-primary: #121212;
+  --text-primary: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--text-primary)
+}
