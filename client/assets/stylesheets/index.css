@@ -1,6 +1,12 @@
 :root {
   --background-primary: #121212;
+  --background-negative: #351216;
+
+  --color-primary: #00db80;
+  --color-secondary: #303030;
+
   --text-primary: #ffffff;
+  --text-negative: #BF051C;
 }
 
 * {
