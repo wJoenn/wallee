@@ -1,2 +1,5 @@
-export type InputType = "number" | "text"
-export type InputValue<T extends InputType> = T extends "number" ? number : T extends "text" ? string : never
+export type InputValue = {
+  number: number
+  password: string
+  text: string
+}

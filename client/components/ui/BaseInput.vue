@@ -1,18 +1,21 @@
 <template>
-  <input
-    :id
-    v-model="value"
-    class="base-input"
-    :class="{ invalid: isInvalid }"
-    :disabled
-    :name
-    :placeholder
-    :type
-  >
+  <div class="base-input">
+    <input
+      :id
+      v-model="value"
+      :class="{ invalid: isInvalid }"
+      :disabled
+      :name
+      :placeholder
+      :type
+    >
+
+    <slot name="caption" />
+  </div>
 </template>
 
-<script setup lang="ts" generic="T extends InputType">
-  import type { InputType, InputValue } from "./types"
+<script setup lang="ts" generic="T extends keyof InputValue">
+  import type { InputValue } from "./types"
 
   defineProps<{
     id: string
@@ -23,28 +26,41 @@
     type: T
   }>()
 
-  const value = defineModel<InputValue<T> | undefined>("value")
+  defineSlots<{
+    caption: never
+  }>()
+
+  const value = defineModel<InputValue[T] | undefined>("value")
 </script>
 
 <style scoped>
   .base-input {
+    align-items: center;
     background-color: var(--background-primary);
     border: 1px solid var(--color-secondary);
     border-radius: 0.25rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
 
-    &:focus {
+    &:has(input:focus) {
       border: 1px solid var(--color-primary);
-      outline: none;
     }
 
-    &.invalid {
+    &:has(input.invalid) {
       background-color: var(--background-negative);
       border: 1px solid var(--text-negative);
+    }
+
+    input {
+      background-color: transparent;
+      border: none;
+      flex-grow: 1;
 
       &:focus {
-        border: 1px solid var(--text-negative);
+        outline: none;
       }
     }
   }
