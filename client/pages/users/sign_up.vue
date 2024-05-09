@@ -46,7 +46,7 @@
 
   const handleSubmit = async (values: RecursiveRecord) => {
     const { data, status } = await signUp(values)
-    if (status === "error") {
+    if (status === "unprocessable_entity") {
       Object.entries(data.errors).forEach(([path, errors]) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         errors.forEach(error => { form.value?.setFieldError(path, t(`validations.${path}.${error}`)) })

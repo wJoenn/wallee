@@ -3,14 +3,6 @@ import type { User, UserErrors } from "~/types/api"
 
 import { FetchError } from "ofetch"
 
-type UserResponse = {
-  data: User
-  status: "success"
-} | {
-  data: UserErrors
-  status: "error"
-}
-
 export const useUserStore = defineStore("UserStore", () => {
   const api = useApi()
 
@@ -18,25 +10,46 @@ export const useUserStore = defineStore("UserStore", () => {
 
   const isSignedIn = computed(() => !!user.value)
 
-  const signUp = async (body: RecursiveRecord): Promise<UserResponse> => {
-    try {
-      const { _data, headers } = await api.users.sign_up(body)
-      localStorage.bearerToken = headers.get("Authorization")
-      user.value = _data
-
-      return { data: _data!, status: "success" }
-    } catch (error) {
-      if (error instanceof FetchError) {
-        if (error.statusCode === 422) {
-          return { data: error.data as UserErrors, status: "error" }
-        }
-
-        throw error
-      } else {
-        throw error
+  const signInWithToken = async () => {
+    if (!isSignedIn.value && localStorage.getItem("bearerToken")?.startsWith("Bearer")) {
+      try {
+        const { _data } = await api.users.signInWithToken()
+        user.value = _data
+        return { data: _data!, status: "success" as const }
+      } catch (error) {
+        return _handleError(error)
       }
     }
   }
 
-  return { isSignedIn, signUp, user }
+  const signUp = async (body: RecursiveRecord) => {
+    try {
+      const { _data, headers } = await api.users.signUp(body)
+      localStorage.bearerToken = headers.get("Authorization")!
+      user.value = _data
+
+      return { data: _data!, status: "success" as const }
+    } catch (error) {
+      return _handleError(error)
+    }
+  }
+
+  const _handleError = (error: unknown) => {
+    if (error instanceof FetchError) {
+      switch (error.statusCode) {
+      case 401:
+        user.value = undefined
+        localStorage.removeItem("bearerToken")
+        return { status: "unauthorized" as const }
+      case 422:
+        return { data: error.data as UserErrors, status: "unprocessable_entity" as const }
+      default:
+        throw error
+      }
+    }
+
+    throw error
+  }
+
+  return { isSignedIn, signInWithToken, signUp, user }
 })
