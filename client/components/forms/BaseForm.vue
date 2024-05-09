@@ -18,12 +18,14 @@
   }>()
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
-  const { handleSubmit } = useForm({
+  const { handleSubmit, setFieldError } = useForm({
     validationSchema: computed(() => toTypedSchema(props.validationSchema))
   })
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const submit = handleSubmit(props.action)
+
+  defineExpose({ setFieldError })
 </script>
 
 <style scoped>
