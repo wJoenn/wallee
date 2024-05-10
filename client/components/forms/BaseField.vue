@@ -3,12 +3,7 @@
     <label v-if="label" :for="name">{{ label }}</label>
     <slot />
 
-    <TransitionGroupSlideY :from="1">
-      <p v-for="error in errors" :key="error" class="error">
-        <IonIcon :icon="ioniconsAlertCircleOutline" />
-        {{ error }}
-      </p>
-    </TransitionGroupSlideY>
+    <BaseError :errors />
   </div>
 </template>
 
@@ -36,14 +31,6 @@
 
     label {
       font-weight: 600;
-    }
-
-    .error {
-      align-items: center;
-      color: var(--text-negative);
-      display: flex;
-      font-size: 0.8rem;
-      gap: 0.5rem;
     }
   }
 </style>
