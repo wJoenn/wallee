@@ -13,7 +13,8 @@ export const useApi = () => {
 
   return {
     users: {
-      sign_up: (body: RecursiveRecord) => _fetchApi<User>("/users", { body: { user: body }, method: "POST" })
+      signIn: (body: RecursiveRecord) => _fetchApi<User>("/users/sign_in", { body: { user: body }, method: "POST" }),
+      signUp: (body: RecursiveRecord) => _fetchApi<User>("/users", { body: { user: body }, method: "POST" })
     }
   }
 }
