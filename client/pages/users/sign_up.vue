@@ -14,12 +14,11 @@
 <script setup lang="ts">
   import type { RecursiveRecord } from "~/types"
   import { object as zodObject, string as zodString } from "zod"
-  import { useIonRouter } from "@ionic/vue"
 
   import BaseForm from "~/components/forms/BaseForm.vue"
 
   const { t } = useI18n()
-  const router = useIonRouter()
+  const router = useLocaleRouter()
   const { signUp } = useUserStore()
 
   const validationSchema = zodObject({
