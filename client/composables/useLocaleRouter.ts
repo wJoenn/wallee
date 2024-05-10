@@ -5,6 +5,7 @@ export const useLocaleRouter = () => {
   const router = useIonRouter()
 
   const localeRouter = {
+    push: (path: string) => router.push(localePath(path)),
     replace: (path: string) => router.replace(localePath(path))
   }
 
