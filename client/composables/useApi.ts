@@ -1,5 +1,5 @@
 import type { RecursiveRecord } from "~/types"
-import type { User } from "~/types/api"
+import type { Transaction, User } from "~/types/api"
 
 type Options = {
   body?: RecursiveRecord
@@ -24,6 +24,9 @@ export const useApi = () => {
   })
 
   return {
+    transactions: {
+      index: () => _fetchApi<Transaction[]>("/transactions")
+    },
     users: {
       signIn: (body: RecursiveRecord) => _fetchApi<User>("/users/sign_in", { body: { user: body }, method: "POST" }),
       signInWithToken: () => _fetchApi<User>("/users/current"),
