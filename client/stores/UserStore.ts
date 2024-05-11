@@ -14,17 +14,30 @@ export const useUserStore = defineStore("UserStore", () => {
   const signIn = async (body: RecursiveRecord) => _post(api.users.signIn, body)
   const signUp = async (body: RecursiveRecord) => _post(api.users.signUp, body)
 
+  const signInWithToken = async () => {
+    if (!isSignedIn.value && localStorage.getItem("bearerToken")?.startsWith("Bearer")) {
+      try {
+        const { _data } = await api.users.signInWithToken()
+        user.value = _data
+        return { data: _data!, status: "success" as const }
+      } catch (error) {
+        return _handleError(error)
+      }
+    }
+  }
+
   const _handleError = (error: unknown) => {
     if (error instanceof FetchError) {
-      if (error.statusCode === 401) {
-        return { data: error.data as UserErrors | undefined, status: "unauthorized" as const }
-      }
-
-      if (error.statusCode === 422) {
+      switch (error.statusCode) {
+      case 401:
+        user.value = undefined
+        localStorage.removeItem("bearerToken")
+        return { status: "unauthorized" as const }
+      case 422:
         return { data: error.data as UserErrors, status: "unprocessable_entity" as const }
+      default:
+        throw error
       }
-
-      throw error
     }
 
     throw error
@@ -42,5 +55,5 @@ export const useUserStore = defineStore("UserStore", () => {
     }
   }
 
-  return { isSignedIn, signIn, signUp, user }
+  return { isSignedIn, signIn, signInWithToken, signUp, user }
 })
