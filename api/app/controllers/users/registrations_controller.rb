@@ -1,6 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :authenticate_user!, only: %i[show]
-
   def show
     if current_user
       render json: current_user, status: :ok
