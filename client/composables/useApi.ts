@@ -25,6 +25,7 @@ export const useApi = () => {
 
   return {
     transactions: {
+      create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
       index: () => _fetchApi<Transaction[]>("/transactions")
     },
     users: {

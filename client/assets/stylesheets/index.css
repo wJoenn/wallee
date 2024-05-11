@@ -21,3 +21,7 @@
 html {
   color: var(--text-primary)
 }
+
+nav, ul {
+  list-style: none;
+}
