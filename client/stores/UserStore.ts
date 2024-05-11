@@ -6,6 +6,7 @@ import { FetchError } from "ofetch"
 
 export const useUserStore = defineStore("UserStore", () => {
   const api = useApi()
+  const router = useLocaleRouter()
 
   const user = ref<User>()
 
@@ -26,12 +27,17 @@ export const useUserStore = defineStore("UserStore", () => {
     }
   }
 
+  const signOut = async () => {
+    await api.users.signOut()
+    _reset()
+    router.replace("/users/sign_in")
+  }
+
   const _handleError = (error: unknown) => {
     if (error instanceof FetchError) {
       switch (error.statusCode) {
       case 401:
-        user.value = undefined
-        localStorage.removeItem("bearerToken")
+        _reset()
         return { status: "unauthorized" as const }
       case 422:
         return { data: error.data as UserErrors, status: "unprocessable_entity" as const }
@@ -55,5 +61,10 @@ export const useUserStore = defineStore("UserStore", () => {
     }
   }
 
-  return { isSignedIn, signIn, signInWithToken, signUp, user }
+  const _reset = () => {
+    user.value = undefined
+    localStorage.removeItem("bearerToken")
+  }
+
+  return { isSignedIn, signIn, signInWithToken, signOut, signUp, user }
 })
