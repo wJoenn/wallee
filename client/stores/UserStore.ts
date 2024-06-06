@@ -1,8 +1,7 @@
-import type { FetchResponse } from "ofetch"
 import type { RecursiveRecord } from "~/types"
 import type { User, UserErrors } from "~/types/api"
 
-import { FetchError } from "ofetch"
+import { FetchError, type FetchResponse } from "ofetch"
 
 export const useUserStore = defineStore("UserStore", () => {
   const api = useApi()

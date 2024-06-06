@@ -4,7 +4,7 @@ type Route = {
 
 const WHITELIST = [
   "/users/sign_in",
-  "/users/sign_up",
+  "/users/sign_up"
 ]
 
 // eslint-disable-next-line complexity

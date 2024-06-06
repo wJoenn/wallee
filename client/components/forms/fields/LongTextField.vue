@@ -1,11 +1,13 @@
 <template>
   <BaseField :errors :label :name>
     <textarea
-      v-model="value"
       :id="name"
+      v-model="value"
       class="long-text-field"
       :class="{ invalid: errors.length > 0 }"
-      :name :placeholder
+      :disabled
+      :name
+      :placeholder
     />
   </BaseField>
 </template>

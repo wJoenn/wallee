@@ -24,11 +24,6 @@
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { errors, value } = useField<Timestamp>(props.name)
-
-  watch(value, () => {
-    console.log(value.value)
-    console.log(new Date(value.value))
-  })
 </script>
 
 <style scoped>
