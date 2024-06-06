@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    "nuxt-icon",
     "@nuxt/image",
     "@nuxtjs/i18n",
     "@nuxtjs/ionic",
