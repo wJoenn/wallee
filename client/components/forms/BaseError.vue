@@ -1,10 +1,10 @@
 <template>
-    <TransitionGroupSlideY :from="1">
-      <p v-for="error in errors" :key="error" class="base-error">
-        <IonIcon :icon="ioniconsAlertCircleOutline" />
-        {{ error }}
-      </p>
-    </TransitionGroupSlideY>
+  <TransitionGroupSlideY :from="1">
+    <p v-for="error in errors" :key="error" class="base-error">
+      <IonIcon :icon="ioniconsAlertCircleOutline" />
+      {{ error }}
+    </p>
+  </TransitionGroupSlideY>
 </template>
 
 <script setup lang="ts">
