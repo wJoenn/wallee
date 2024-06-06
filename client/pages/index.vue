@@ -1,58 +1,56 @@
 <template>
-  <IonPage>
-    <div id="index" ref="presentingElement">
-      <div class="header">
-        <div>
-          <h1>Transactions</h1>
-          <BaseButton @click="signOut">Sign out</BaseButton>
-        </div>
-
-        <p>Total: {{ toEuro(transactions?.reduce((sum, transaction) => sum + transaction.value, 0)) }}</p>
+  <div id="index" ref="presentingElement">
+    <div class="header">
+      <div>
+        <h1>Transactions</h1>
+        <BaseButton @click="signOut">Sign out</BaseButton>
       </div>
 
-      <ul class="transactions">
-        <li v-for="transaction in sortedTransactions" :key="transaction.id">
-          <p>{{ toEuro(transaction.value) }}</p>
-          <span>{{ transaction.description }}</span>
-        </li>
-      </ul>
-
-      <BaseButton @click="isOpen = true">New Transaction</BaseButton>
+      <p>Total: {{ toEuro(transactions?.reduce((sum, transaction) => sum + transaction.value, 0)) }}</p>
     </div>
 
-    <BaseModal class="modal" :is-open :presenting-element>
-      <div class="transaction-modifier">
-        <label>{{ t("labels.transactionModifier") }}</label>
+    <ul class="transactions">
+      <li v-for="transaction in sortedTransactions" :key="transaction.id">
+        <p>{{ toEuro(transaction.value) }}</p>
+        <span>{{ transaction.description }}</span>
+      </li>
+    </ul>
 
-        <div>
-          <button :class="{ selected: transactionModifier === -1 }" @click="transactionModifier = -1">
-            <Icon name="ion:arrow-up" />
-            <span>{{ t("labels.paid") }}</span>
-          </button>
+    <BaseButton @click="show = true">New Transaction</BaseButton>
+  </div>
 
-          <button :class="{ selected: transactionModifier === 1 }" @click="transactionModifier = 1">
-            <Icon name="ion:arrow-down" />
-            <span>{{ t("labels.received") }}</span>
-          </button>
-        </div>
+  <BaseModal :show>
+    <div class="transaction-modifier">
+      <label>{{ t("labels.transactionModifier") }}</label>
+
+      <div>
+        <button :class="{ selected: transactionModifier === -1 }" @click="transactionModifier = -1">
+          <Icon name="ion:arrow-up" />
+          <span>{{ t("labels.paid") }}</span>
+        </button>
+
+        <button :class="{ selected: transactionModifier === 1 }" @click="transactionModifier = 1">
+          <Icon name="ion:arrow-down" />
+          <span>{{ t("labels.received") }}</span>
+        </button>
       </div>
+    </div>
 
-      <BaseForm :action="handleSubmit" :validation-schema>
-        <NumberField :label="t('labels.value')" name="value" :placeholder="t('placeholders.value')" />
-        <DateField :label="t('labels.transacted_at')" name="transacted_at" />
+    <BaseForm :action="handleSubmit" :validation-schema>
+      <NumberField :label="t('labels.value')" name="value" :placeholder="t('placeholders.value')" />
+      <DateField :label="t('labels.transacted_at')" name="transacted_at" />
 
-        <LongTextField
-          :label="t('labels.description')"
-          name="description"
-          :placeholder="t('placeholders.description')"
-        />
+      <LongTextField
+        :label="t('labels.description')"
+        name="description"
+        :placeholder="t('placeholders.description')"
+      />
 
-        <BaseButton type="submit">Submit</BaseButton>
-      </BaseForm>
+      <BaseButton type="submit">Submit</BaseButton>
+    </BaseForm>
 
-      <BaseButton @click="isOpen = false">Close</BaseButton>
-    </BaseModal>
-  </IonPage>
+    <BaseButton @click="show = false">Close</BaseButton>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
@@ -84,8 +82,8 @@
   })
 
   const transactionModifier = ref(-1)
-  const isOpen = ref(false)
   const presentingElement = ref<HTMLDivElement>()
+  const show = ref(false)
 
   const sortedTransactions = computed(() => {
     if (!transactions.value) { return [] }
@@ -101,14 +99,14 @@
     values.value *= transactionModifier.value
     const { _data } = await api.transactions.create(values)
     transactions.value?.push(_data!)
-    isOpen.value = false
+    show.value = false
   }
 
   const toEuro = (value?: number) => `${((value ?? 0) / 100).toFixed(2)} €`
 </script>
 
-<style scoped>
-  .modal {
+<style>
+  .base-modal {
     form {
       margin-bottom: 2rem;
     }

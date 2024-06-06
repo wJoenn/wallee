@@ -30,7 +30,6 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@nuxt/image",
     "@nuxtjs/i18n",
-    "@nuxtjs/ionic",
     "@pinia/nuxt",
     "@vee-validate/nuxt",
     "@vueuse/nuxt"

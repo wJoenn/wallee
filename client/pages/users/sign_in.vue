@@ -1,16 +1,14 @@
 <template>
-  <IonPage>
-    <div id="users-sign-in">
-      <BaseForm :action="handleSubmit" :validation-schema>
-        <BaseError v-if="unauthorizedError" :errors="[unauthorizedError]" />
-        <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
-        <PasswordField :label="t('labels.password')" name="password" />
-        <BaseButton type="submit">Submit</BaseButton>
-      </BaseForm>
+  <div id="users-sign-in">
+    <BaseForm :action="handleSubmit" :validation-schema>
+      <BaseError v-if="unauthorizedError" :errors="[unauthorizedError]" />
+      <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
+      <PasswordField :label="t('labels.password')" name="password" />
+      <BaseButton type="submit">Submit</BaseButton>
+    </BaseForm>
 
-      <p>{{ t("noAccount") }} <span class="link" @click="router.push('/users/sign_up')">{{ t("signUp") }}</span></p>
-    </div>
-  </IonPage>
+    <p>{{ t("noAccount") }} <span class="link" @click="router.push('/users/sign_up')">{{ t("signUp") }}</span></p>
+  </div>
 </template>
 
 <script setup lang="ts">

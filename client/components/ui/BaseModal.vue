@@ -1,15 +1,14 @@
 <template>
-  <IonModal :is-open :presenting-element>
-    <div class="base-modal">
+  <Teleport to="#teleports">
+    <div v-if="show" class="base-modal">
       <slot />
     </div>
-  </IonModal>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
   defineProps<{
-    isOpen: boolean
-    presentingElement?: HTMLElement
+    show: boolean
   }>()
 
   defineSlots<{
@@ -20,8 +19,8 @@
 <style scoped>
   .base-modal {
     background: var(--background-primary);
-    color: var(--text-primary);
-    height: 100%;
+    inset: 0;
     padding: 2rem;
+    position: fixed;
   }
 </style>

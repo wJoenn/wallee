@@ -1,16 +1,14 @@
 <template>
-  <IonPage>
-    <div id="users-sign-up">
-      <BaseForm ref="form" :action="handleSubmit" :validation-schema>
-        <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
-        <PasswordField :label="t('labels.password')" name="password" />
-        <PasswordField :label="t('labels.passwordConfirmation')" name="password_confirmation" />
-        <BaseButton type="submit">Submit</BaseButton>
-      </BaseForm>
+  <div id="users-sign-up">
+    <BaseForm ref="form" :action="handleSubmit" :validation-schema>
+      <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
+      <PasswordField :label="t('labels.password')" name="password" />
+      <PasswordField :label="t('labels.passwordConfirmation')" name="password_confirmation" />
+      <BaseButton type="submit">Submit</BaseButton>
+    </BaseForm>
 
-      <p>{{ t("haveAccount") }} <span class="link" @click="router.push('/users/sign_in')">{{ t("signIn") }}</span></p>
-    </div>
-  </IonPage>
+    <p>{{ t("haveAccount") }} <span class="link" @click="router.push('/users/sign_in')">{{ t("signIn") }}</span></p>
+  </div>
 </template>
 
 <script setup lang="ts">
