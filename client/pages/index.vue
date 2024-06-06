@@ -1,6 +1,6 @@
 <template>
   <IonPage>
-    <div id="index">
+    <div id="index" ref="presentingElement">
       <div class="header">
         <div>
           <h1>Transactions</h1>
@@ -17,6 +17,10 @@
         </li>
       </ul>
 
+      <BaseButton @click="isOpen = true">New Transaction</BaseButton>
+    </div>
+
+    <BaseModal :is-open :presenting-element>
       <BaseForm :action="handleSubmit" :validation-schema>
         <NumberField :label="t('labels.value')" name="value" :placeholder="t('placeholders.value')" />
         <DateField :label="t('labels.transacted_at')" name="transacted_at" />
@@ -29,7 +33,9 @@
 
         <BaseButton type="submit">Submit</BaseButton>
       </BaseForm>
-    </div>
+
+      <BaseButton @click="isOpen = false">Close</BaseButton>
+    </BaseModal>
   </IonPage>
 </template>
 
@@ -55,6 +61,9 @@
     }).refine(value => value !== 0, t("validations.value.other_than_0"))
   })
 
+  const isOpen = ref(false)
+  const presentingElement = ref<HTMLDivElement>()
+
   const sortedTransactions = computed(() => {
     if (!transactions.value) { return [] }
 
@@ -68,6 +77,7 @@
   const handleSubmit = async (values: RecursiveRecord) => {
     const { _data } = await api.transactions.create(values)
     transactions.value?.push(_data!)
+    isOpen.value = false
   }
 
   const toEuro = (value?: number) => `${((value ?? 0) / 100).toFixed(2)} €`
