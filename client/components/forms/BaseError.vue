@@ -1,7 +1,7 @@
 <template>
   <TransitionGroupSlideY :from="1">
     <p v-for="error in errors" :key="error" class="base-error">
-      <IonIcon :icon="ioniconsAlertCircleOutline" />
+      <Icon name="ion:alert-circle-outline" />
       {{ error }}
     </p>
   </TransitionGroupSlideY>

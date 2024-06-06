@@ -26,12 +26,12 @@
 
         <div>
           <button :class="{ selected: transactionModifier === -1 }" @click="transactionModifier = -1">
-            <IonIcon :icon="ioniconsArrowUp" />
+            <Icon name="ion:arrow-up" />
             <span>{{ t("labels.paid") }}</span>
           </button>
 
           <button :class="{ selected: transactionModifier === 1 }" @click="transactionModifier = 1">
-            <IonIcon :icon="ioniconsArrowDown" />
+            <Icon name="ion:arrow-down" />
             <span>{{ t("labels.received") }}</span>
           </button>
         </div>

@@ -10,7 +10,10 @@
       :type
     >
       <template #caption>
-        <IonIcon :icon @click="type = type === 'text' ? 'password' : 'text'" />
+        <Icon
+          :name="type === 'text' ? 'ion:eye-off' : 'ion:eye'"
+          @click="type = type === 'text' ? 'password' : 'text'"
+        />
       </template>
     </BaseInput>
   </BaseField>
@@ -29,7 +32,6 @@
 
   const type = ref<"password" | "text">("password")
 
-  const icon = computed(() => type.value === "text" ? ioniconsEyeOff : ioniconsEye)
   const placeholder = computed(() => type.value === "text" ? t("placeholder") : t("placeholder").replaceAll(/./g, "●"))
 </script>
 
