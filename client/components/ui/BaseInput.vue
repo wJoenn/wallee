@@ -8,6 +8,7 @@
       :name
       :placeholder
       :type
+      v-bind="$attrs"
     >
 
     <slot name="caption" />
@@ -25,6 +26,10 @@
     placeholder?: string
     type: T
   }>()
+
+  defineOptions({
+    inheritAttrs: false
+  })
 
   defineSlots<{
     caption: never

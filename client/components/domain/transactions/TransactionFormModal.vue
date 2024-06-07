@@ -64,12 +64,14 @@
       invalid_type_error: t("globals.forms.validations.required"),
       required_error: t("globals.forms.validations.required")
     }).positive(t("validations.value.other_than_0"))
+      .multipleOf(0.01, t("globals.forms.validations.maxDecimals"))
   })
 
   const transactionModifier = ref(-1)
 
   const handleSubmit = async (values: TransactionForm) => {
-    values.value *= transactionModifier.value
+    values.value *= transactionModifier.value * 100
+
     const { _data } = await api.transactions.create(values)
     emit("create", _data!)
   }

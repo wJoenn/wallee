@@ -21,6 +21,7 @@ export default {
         description: "description..."
       },
       validations: {
+        maxDecimals: "This field can't have more than two decimals",
         required: "This field is required"
       }
     }

@@ -7,6 +7,7 @@
       :is-invalid="errors.length > 0"
       :name
       :placeholder
+      step="any"
       type="number"
     />
   </BaseField>
