@@ -11,12 +11,16 @@
       </p>
     </div>
 
-    <ul class="transactions">
-      <li v-for="transaction in sortedTransactions" :key="transaction.id">
+    <nav class="transactions">
+      <NuxtLink
+        v-for="transaction in sortedTransactions"
+        :key="transaction.id"
+        :to="localePath(`/transactions/${transaction.id}`)"
+      >
         <p>{{ toEuro(transaction.value) }}</p>
         <span>{{ transaction.description }}</span>
-      </li>
-    </ul>
+      </NuxtLink>
+    </nav>
 
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
   </div>
@@ -29,6 +33,7 @@
 
   const api = useApi()
   const { t } = useI18n()
+  const localePath = useLocalePath()
   const { signOut } = useUserStore()
 
   const { data: transactions } = useAsyncData(async () => {
@@ -80,7 +85,7 @@
       flex-direction: column;
       overflow-y: scroll;
 
-      li {
+      a {
         border-bottom: 1px solid var(--color-secondary);
         padding: 0.5rem 0;
 

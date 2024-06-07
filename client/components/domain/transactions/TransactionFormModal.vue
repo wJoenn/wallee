@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <BaseForm :action="handleSubmit" :validation-schema>
+    <BaseForm :action="handleSubmit" :initial-values :validation-schema>
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
       <DateField :label="t('globals.forms.labels.date')" name="transacted_at" />
 
@@ -37,7 +37,8 @@
   import type { Timestamp } from "~/types"
   import type { Transaction } from "~/types/api"
 
-  import { number as zodNumber, object as zodObject, string as zodString } from "zod"
+  import dayjs from "dayjs"
+  import { literal as zodLiteral, number as zodNumber, object as zodObject, string as zodString } from "zod"
 
   type TransactionForm = {
     description?: string
@@ -47,18 +48,19 @@
 
   const emit = defineEmits<{
     (event: "close"): void
-    (event: "create", payload: Transaction): void
+    (event: "create" | "update", payload: Transaction): void
   }>()
 
-  defineProps<{
+  const props = defineProps<{
     show: boolean
+    transaction?: Transaction
   }>()
 
   const api = useApi()
   const { t } = useI18n()
 
   const validationSchema = zodObject({
-    description: zodString().optional(),
+    description: zodString().optional().or(zodLiteral(null)),
     transacted_at: zodString().optional(),
     value: zodNumber({
       invalid_type_error: t("globals.forms.validations.required"),
@@ -69,12 +71,36 @@
 
   const transactionModifier = ref(-1)
 
+  const initialValues = computed(() => {
+    if (!props.transaction) { return {} }
+
+    const { description, transacted_at, value } = props.transaction
+    return {
+      description,
+      transacted_at: dayjs(transacted_at).format("DD/MM/YYYY"),
+      value: Math.abs(value / 100)
+    }
+  })
+
   const handleSubmit = async (values: TransactionForm) => {
     values.value *= transactionModifier.value * 100
 
-    const { _data } = await api.transactions.create(values)
-    emit("create", _data!)
+    if (props.transaction) {
+      const { _data } = await api.transactions.update(props.transaction.id, values)
+      emit("update", _data!)
+    } else {
+      const { _data } = await api.transactions.create(values)
+      emit("create", _data!)
+    }
   }
+
+  watch(() => props.transaction, () => {
+    if (props.transaction && props.transaction.value > 0) {
+      transactionModifier.value = 1
+    } else {
+      transactionModifier.value = -1
+    }
+  }, { immediate: true })
 </script>
 
 <style>

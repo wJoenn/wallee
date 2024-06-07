@@ -9,6 +9,7 @@
   import type { RecursiveRecord } from "~/types"
 
   const props = defineProps<{
+    initialValues?: RecursiveRecord
     validationSchema: ZodSchema
     action(values: RecursiveRecord): void
   }>()
@@ -19,6 +20,7 @@
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { handleSubmit, setFieldError } = useForm({
+    initialValues: props.initialValues,
     validationSchema: computed(() => toTypedSchema(props.validationSchema))
   })
 

@@ -4,7 +4,7 @@ import type { Transaction, User } from "~/types/api"
 type Options = {
   body?: RecursiveRecord
   headers?: Record<string, string>
-  method?: "DELETE" | "GET" | "POST"
+  method?: "DELETE" | "GET" | "PATCH" | "POST"
 }
 
 const API_URL = "http://localhost:8080"
@@ -26,7 +26,12 @@ export const useApi = () => {
   return {
     transactions: {
       create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
-      index: () => _fetchApi<Transaction[]>("/transactions")
+      index: () => _fetchApi<Transaction[]>("/transactions"),
+      show: (id: number | string) => _fetchApi<Transaction>(`/transactions/${id}`),
+      update: (id: number | string, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
+        body,
+        method: "PATCH"
+      })
     },
     users: {
       signIn: (body: RecursiveRecord) => _fetchApi<User>("/users/sign_in", { body: { user: body }, method: "POST" }),
