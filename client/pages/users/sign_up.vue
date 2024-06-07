@@ -1,13 +1,16 @@
 <template>
   <div id="users-sign-up">
     <BaseForm ref="form" :action="handleSubmit" :validation-schema>
-      <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
-      <PasswordField :label="t('labels.password')" name="password" />
-      <PasswordField :label="t('labels.passwordConfirmation')" name="password_confirmation" />
-      <BaseButton type="submit">Submit</BaseButton>
+      <TextField :label="t('globals.forms.labels.email')" name="email" placeholder="user@example.com" />
+      <PasswordField :label="t('globals.forms.labels.password')" name="password" />
+      <PasswordField :label="t('globals.forms.labels.passwordConfirmation')" name="password_confirmation" />
+      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
-    <p>{{ t("haveAccount") }} <span class="link" @click="router.push('/users/sign_in')">{{ t("signIn") }}</span></p>
+    <p>
+      {{ t("haveAccount") }}
+      <NuxtLink class="link" :to="localePath('/users/sign_in')">{{ t("globals.actions.signIn") }}</NuxtLink>
+    </p>
   </div>
 </template>
 
@@ -18,6 +21,7 @@
   import BaseForm from "~/components/forms/BaseForm.vue"
 
   const { t } = useI18n()
+  const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { signUp } = useUserStore()
 
@@ -72,11 +76,6 @@
 <i18n lang="yaml">
   en:
     haveAccount: Already have an account ?
-    labels:
-      email: Email
-      password: Password
-      passwordConfirmation: Password confirmation
-    signIn: Sign In
     validations:
       email:
         required: An email is required

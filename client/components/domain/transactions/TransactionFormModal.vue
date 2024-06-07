@@ -1,7 +1,7 @@
 <template>
   <BaseModal :show>
     <div class="transaction-modifier">
-      <label>{{ t("labels.transactionModifier") }}</label>
+      <label>{{ t("globals.forms.labels.direction") }}</label>
 
       <div>
         <button :class="{ selected: transactionModifier === -1 }" @click="transactionModifier = -1">
@@ -17,19 +17,19 @@
     </div>
 
     <BaseForm :action="handleSubmit" :validation-schema>
-      <NumberField :label="t('labels.value')" name="value" :placeholder="t('placeholders.value')" />
-      <DateField :label="t('labels.transacted_at')" name="transacted_at" />
+      <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
+      <DateField :label="t('globals.forms.labels.date')" name="transacted_at" />
 
       <LongTextField
-        :label="t('labels.description')"
+        :label="t('globals.forms.labels.description')"
         name="description"
-        :placeholder="t('placeholders.description')"
+        :placeholder="t('globals.forms.placeholders.description')"
       />
 
-      <BaseButton type="submit">Submit</BaseButton>
+      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
-    <BaseButton @click="emit('close')">Close</BaseButton>
+    <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
   </BaseModal>
 </template>
 
@@ -61,8 +61,8 @@
     description: zodString().optional(),
     transacted_at: zodString().optional(),
     value: zodNumber({
-      invalid_type_error: t("validations.value.required"),
-      required_error: t("validations.value.required")
+      invalid_type_error: t("globals.forms.validations.required"),
+      required_error: t("globals.forms.validations.required")
     }).positive(t("validations.value.other_than_0"))
   })
 
@@ -119,17 +119,9 @@
 <i18n lang="yaml">
   en:
     labels:
-      description: Description
       paid: Paid
       received: Received
-      transacted_at: Date
-      transactionModifier: Direction
-      value: Value
-    placeholders:
-      description: description...
-      value: "100"
     validations:
       value:
         other_than_0: The value must be positive
-        required: This field is required
 </i18n>

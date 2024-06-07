@@ -2,11 +2,13 @@
   <div id="index" ref="presentingElement">
     <div class="header">
       <div>
-        <h1>Transactions</h1>
-        <BaseButton @click="signOut">Sign out</BaseButton>
+        <h1>{{ t("title") }}</h1>
+        <BaseButton @click="signOut">{{ t("globals.actions.signOut") }}</BaseButton>
       </div>
 
-      <p>Total: {{ toEuro(transactions?.reduce((sum, transaction) => sum + transaction.value, 0)) }}</p>
+      <p>
+        {{ t("total", { amount: toEuro(transactions?.reduce((sum, transaction) => sum + transaction.value, 0)) }) }}
+      </p>
     </div>
 
     <ul class="transactions">
@@ -16,7 +18,7 @@
       </li>
     </ul>
 
-    <BaseButton @click="show = true">New Transaction</BaseButton>
+    <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
   </div>
 
   <TransactionFormModal :show @close="show = false" @create="handleCreate" />
@@ -26,6 +28,7 @@
   import type { Transaction } from "~/types/api"
 
   const api = useApi()
+  const { t } = useI18n()
   const { signOut } = useUserStore()
 
   const { data: transactions } = useAsyncData(async () => {
@@ -88,3 +91,10 @@
     }
   }
 </style>
+
+<i18n lang="yaml">
+  en:
+    newTransaction: New transaction
+    title: Transactions
+    total: "Total: {amount}"
+</i18n>

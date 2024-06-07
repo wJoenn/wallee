@@ -1,13 +1,15 @@
 <template>
   <div id="users-sign-in">
-    <BaseForm :action="handleSubmit" :validation-schema>
-      <BaseError v-if="unauthorizedError" :errors="[unauthorizedError]" />
-      <TextField :label="t('labels.email')" name="email" placeholder="user@example.com" />
-      <PasswordField :label="t('labels.password')" name="password" />
-      <BaseButton type="submit">Submit</BaseButton>
+    <BaseForm ref="form" :action="handleSubmit" :validation-schema>
+      <TextField :label="t('globals.forms.labels.email')" name="email" placeholder="user@example.com" />
+      <PasswordField :label="t('globals.forms.labels.password')" name="password" />
+      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
-    <p>{{ t("noAccount") }} <span class="link" @click="router.push('/users/sign_up')">{{ t("signUp") }}</span></p>
+    <p>
+      {{ t("noAccount") }}
+      <NuxtLink class="link" :to="localePath('/users/sign_up')">{{ t("globals.actions.signUp") }}</NuxtLink>
+    </p>
   </div>
 </template>
 
@@ -15,7 +17,10 @@
   import type { RecursiveRecord } from "~/types"
   import { object as zodObject, string as zodString } from "zod"
 
+  import BaseForm from "~/components/forms/BaseForm.vue"
+
   const { t } = useI18n()
+  const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { signIn } = useUserStore()
 
@@ -32,14 +37,16 @@
       .refine(password => password.length === 0 || password.length >= 6, t("validations.password.tooSmall"))
   })
 
-  const unauthorizedError = ref<string>()
+  const form = ref<InstanceType<typeof BaseForm>>()
 
   const handleSubmit = async (values: RecursiveRecord) => {
-    unauthorizedError.value = undefined
     const { status } = await signIn(values)
 
     if (status === "unauthorized") {
-      unauthorizedError.value = t("validations.user.invalid_email_or_password")
+      ["email", "password"].forEach(path => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        form.value?.setFieldError(path, t("validations.user.invalid_email_or_password"))
+      })
     } else {
       await router.replace("/")
     }
@@ -61,12 +68,7 @@
 
 <i18n lang="yaml">
   en:
-    labels:
-      email: Email
-      password: Password
-      passwordConfirmation: Password confirmation
     noAccount: Don't have an account yet ?
-    signUp: Sign up
     validations:
       email:
         required: An email is required
