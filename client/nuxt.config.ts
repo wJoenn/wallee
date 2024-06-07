@@ -13,10 +13,6 @@ export default defineNuxtConfig({
     "~/assets/stylesheets/index.css"
   ],
 
-  experimental: {
-    typedPages: true
-  },
-
   typescript: {
     tsConfig: {
       compilerOptions: {

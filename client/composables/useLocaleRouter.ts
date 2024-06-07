@@ -3,8 +3,8 @@ export const useLocaleRouter = () => {
   const router = useRouter()
 
   const localeRouter = {
-    push: (path: string) => { router.push(localePath(path)) },
-    replace: (path: string) => { router.replace(localePath(path)) }
+    push: async (path: string) => { await router.push(localePath(path)) },
+    replace: async (path: string) => { await router.replace(localePath(path)) }
   }
 
   return localeRouter
