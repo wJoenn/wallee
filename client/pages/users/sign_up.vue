@@ -51,7 +51,7 @@
         errors.forEach(error => { form.value?.setFieldError(path, t(`validations.${path}.${error}`)) })
       })
     } else {
-      router.replace("/")
+      await router.replace("/")
     }
   }
 </script>

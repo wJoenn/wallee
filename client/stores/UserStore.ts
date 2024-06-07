@@ -29,7 +29,7 @@ export const useUserStore = defineStore("UserStore", () => {
   const signOut = async () => {
     await api.users.signOut()
     _reset()
-    router.replace("/users/sign_in")
+    await router.replace("/users/sign_in")
   }
 
   const _handleError = (error: unknown) => {

@@ -41,7 +41,7 @@
     if (status === "unauthorized") {
       unauthorizedError.value = t("validations.user.invalid_email_or_password")
     } else {
-      router.replace("/")
+      await router.replace("/")
     }
   }
 </script>
