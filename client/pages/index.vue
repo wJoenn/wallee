@@ -12,14 +12,16 @@
     </div>
 
     <nav class="transactions">
-      <NuxtLink
-        v-for="transaction in sortedTransactions"
-        :key="transaction.id"
-        :to="localePath(`/transactions/${transaction.id}`)"
-      >
-        <p>{{ toEuro(transaction.value) }}</p>
-        <span>{{ transaction.description }}</span>
-      </NuxtLink>
+      <div v-for="transaction in sortedTransactions" :key="transaction.id">
+        <NuxtLink :to="localePath(`/transactions/${transaction.id}`)">
+          <div>
+            <p>{{ toEuro(transaction.value) }}</p>
+            <span>{{ transaction.description }}</span>
+          </div>
+        </NuxtLink>
+
+        <Icon name="ion:trash-bin" @click.stop="handleDelete(transaction.id)" />
+      </div>
     </nav>
 
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
@@ -58,6 +60,15 @@
     show.value = false
   }
 
+  const handleDelete = async (id: number) => {
+    await walleeApi.transactions.destroy(id)
+
+    const transactionIndex = transactions.value!.findIndex(transaction => transaction.id === id)
+    if (transactionIndex !== -1) {
+      transactions.value!.splice(transactionIndex, 1)
+    }
+  }
+
   const toEuro = (value?: number) => `${((value ?? 0) / 100).toFixed(2)} €`
 </script>
 
@@ -84,12 +95,19 @@
       flex-direction: column;
       overflow-y: scroll;
 
-      a {
-        border-bottom: 1px solid var(--color-secondary);
-        padding: 0.5rem 0;
+      > div {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
 
-        &:last-child {
-          border: none;
+        a {
+          border-bottom: 1px solid var(--color-secondary);
+          flex-grow: 1;
+          padding: 0.5rem 0;
+
+          &:last-child {
+            border: none;
+          }
         }
       }
     }
