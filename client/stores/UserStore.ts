@@ -4,20 +4,19 @@ import type { User, UserErrors } from "~/types/api"
 import { FetchError, type FetchResponse } from "ofetch"
 
 export const useUserStore = defineStore("UserStore", () => {
-  const api = useApi()
   const router = useLocaleRouter()
 
   const user = ref<User>()
 
   const isSignedIn = computed(() => !!user.value)
 
-  const signIn = async (body: RecursiveRecord) => _post(api.users.signIn, body)
-  const signUp = async (body: RecursiveRecord) => _post(api.users.signUp, body)
+  const signIn = async (body: RecursiveRecord) => _post(walleeApi.users.signIn, body)
+  const signUp = async (body: RecursiveRecord) => _post(walleeApi.users.signUp, body)
 
   const signInWithToken = async () => {
     if (!isSignedIn.value && localStorage.getItem("bearerToken")?.startsWith("Bearer")) {
       try {
-        const { _data } = await api.users.signInWithToken()
+        const { _data } = await walleeApi.users.signInWithToken()
         user.value = _data
         return { data: _data!, status: "success" as const }
       } catch (error) {
@@ -27,7 +26,7 @@ export const useUserStore = defineStore("UserStore", () => {
   }
 
   const signOut = async () => {
-    await api.users.signOut()
+    await walleeApi.users.signOut()
     _reset()
     await router.replace("/users/sign_in")
   }

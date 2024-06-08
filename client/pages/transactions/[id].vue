@@ -18,12 +18,11 @@
     }
   }
 
-  const api = useApi()
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { params: { id } } = useRoute() as Route
 
-  const { data: transaction } = useAsyncData(async () => {
+  const { data: transaction } = await useWalleeApi(async api => {
     const { _data } = await api.transactions.show(id)
     return _data!
   })

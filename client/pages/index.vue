@@ -1,5 +1,5 @@
 <template>
-  <div id="index" ref="presentingElement">
+  <div v-if="transactions" id="index" ref="presentingElement">
     <div class="header">
       <div>
         <h1>{{ t("title") }}</h1>
@@ -31,12 +31,11 @@
 <script setup lang="ts">
   import type { Transaction } from "~/types/api"
 
-  const api = useApi()
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
 
-  const { data: transactions } = useAsyncData(async () => {
+  const { data: transactions } = await useWalleeApi(async api => {
     const { _data } = await api.transactions.index()
     return _data!
   })

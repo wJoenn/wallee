@@ -56,7 +56,6 @@
     transaction?: Transaction
   }>()
 
-  const api = useApi()
   const { t } = useI18n()
 
   const validationSchema = zodObject({
@@ -86,10 +85,10 @@
     values.value *= transactionModifier.value * 100
 
     if (props.transaction) {
-      const { _data } = await api.transactions.update(props.transaction.id, values)
+      const { _data } = await walleeApi.transactions.update(props.transaction.id, values)
       emit("update", _data!)
     } else {
-      const { _data } = await api.transactions.create(values)
+      const { _data } = await walleeApi.transactions.create(values)
       emit("create", _data!)
     }
   }
