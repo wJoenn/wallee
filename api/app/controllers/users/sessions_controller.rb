@@ -13,9 +13,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    return render status: :unauthorized if all_signed_out?
-
-    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    # Nothing happens here because `Warden::JWTAuth::Middleware` takes care of revoking the user's token after visiting
+    # a route that matches `DELETE /users/sign_out`
     render status: :ok
   end
 end

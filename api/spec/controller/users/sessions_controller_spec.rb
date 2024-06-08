@@ -65,10 +65,10 @@ RSpec.describe Users::SessionsController, type: :request do
     end
 
     context "when a User is not authenticated" do
-      it "returns a unauthorized HTTP status" do
+      it "returns a ok HTTP status" do
         delete "/users/sign_out"
 
-        expect(response).to have_http_status :unauthorized
+        expect(response).to have_http_status :ok
       end
     end
   end
