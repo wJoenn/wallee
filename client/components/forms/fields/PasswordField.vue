@@ -35,13 +35,6 @@
   const placeholder = computed(() => type.value === "text" ? t("placeholder") : t("placeholder").replaceAll(/./g, "●"))
 </script>
 
-<style>
-  .password-field .base-input ion-icon {
-    height: 1.25rem;
-    width: 1.25rem;
-  }
-</style>
-
 <i18n lang="yaml">
   en:
     placeholder: password
