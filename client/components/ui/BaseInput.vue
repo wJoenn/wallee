@@ -35,7 +35,7 @@
     caption: never
   }>()
 
-  const value = defineModel<InputValue[T] | undefined>("value")
+  const value = defineModel<InputValue[T]>("value")
 </script>
 
 <style scoped>
