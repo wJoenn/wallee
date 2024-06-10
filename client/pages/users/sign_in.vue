@@ -15,7 +15,6 @@
 
 <script setup lang="ts">
   import type { RecursiveRecord } from "~/types"
-  import { object as zodObject, string as zodString } from "zod"
 
   import BaseForm from "~/components/forms/BaseForm.vue"
 
@@ -24,18 +23,10 @@
   const router = useLocaleRouter()
   const { signIn } = useUserStore()
 
-  const validationSchema = zodObject({
-    email: zodString({
-      invalid_type_error: t("validations.email.required"),
-      required_error: t("validations.email.required")
-    }).min(1, t("validations.email.required"))
-      .email(t("validations.email.valid")),
-    password: zodString({
-      invalid_type_error: t("validations.password.required"),
-      required_error: t("validations.password.required")
-    }).min(1, t("validations.password.required"))
-      .refine(password => password.length === 0 || password.length >= 6, t("validations.password.tooSmall"))
-  })
+  const validationSchema = useZodSchema(({ object, password, requiredString }) => object({
+    email: requiredString(t("validations.email.valid")).email(t("validations.email.valid")),
+    password: password()
+  }))
 
   const form = ref<InstanceType<typeof BaseForm>>()
 

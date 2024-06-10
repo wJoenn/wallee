@@ -37,7 +37,6 @@
   import type { Timestamp } from "~/types"
   import type { Transaction } from "~/types/api"
 
-  import { literal as zodLiteral, number as zodNumber, object as zodObject, string as zodString } from "zod"
   import dayjs from "~/libs/dayjs.ts"
 
   type TransactionForm = {
@@ -58,19 +57,11 @@
 
   const { t } = useI18n()
 
-  const validationSchema = zodObject({
-    description: zodString().optional().or(zodLiteral(null)),
-    transacted_at: zodString().optional().refine(transacted_at => (
-      !transacted_at || dayjs(transacted_at, "YYYY-MM-DD", true).isValid()
-    ), {
-      message: t("globals.forms.validations.dateFormat")
-    }),
-    value: zodNumber({
-      invalid_type_error: t("globals.forms.validations.required"),
-      required_error: t("globals.forms.validations.required")
-    }).positive(t("validations.value.other_than_0"))
-      .multipleOf(0.01, t("globals.forms.validations.maxDecimals"))
-  })
+  const validationSchema = useZodSchema(({ object, optional, price, string, timestamp }) => object({
+    description: optional(string()),
+    transacted_at: timestamp(),
+    value: price()
+  }))
 
   const transactionModifier = ref(-1)
 
