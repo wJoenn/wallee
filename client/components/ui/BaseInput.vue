@@ -2,6 +2,7 @@
   <div class="base-input">
     <input
       :id
+      ref="input"
       v-model="value"
       :class="{ invalid: isInvalid }"
       :disabled
@@ -18,10 +19,11 @@
 <script setup lang="ts" generic="T extends keyof InputValue">
   import type { InputValue } from "./types"
 
-  defineProps<{
+  const props = defineProps<{
     id: string
     isInvalid: boolean
     disabled?: boolean
+    focused?: boolean
     name: string
     placeholder?: string
     type: T
@@ -36,6 +38,12 @@
   }>()
 
   const value = defineModel<InputValue[T]>("value")
+
+  const input = ref<HTMLInputElement>()
+
+  watch(() => props.focused, () => {
+    if (props.focused) { input.value?.focus() }
+  })
 </script>
 
 <style scoped>
