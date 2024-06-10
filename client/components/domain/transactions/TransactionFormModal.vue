@@ -18,11 +18,12 @@
 
     <BaseForm :action="handleSubmit" :initial-values :validation-schema>
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
-      <DateField :label="t('globals.forms.labels.date')" name="transacted_at" />
+      <DateField :label="t('globals.forms.labels.date')" name="transacted_at" optional />
 
       <LongTextField
         :label="t('globals.forms.labels.description')"
         name="description"
+        optional
         :placeholder="t('globals.forms.placeholders.description')"
       />
 

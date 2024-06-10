@@ -1,7 +1,7 @@
 <template>
   <BaseDropdown ref="dropdown" v-on-click-outside="() => { focused = false }">
     <template #trigger>
-      <BaseField :errors :label :name>
+      <BaseField :errors :label :name :optional>
         <BaseInput
           :id="name"
           ref="input"
@@ -38,6 +38,7 @@
     disabled?: boolean
     label: string
     name: string
+    optional?: boolean
   }>()
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss

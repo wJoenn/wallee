@@ -1,5 +1,5 @@
 <template>
-  <BaseField :errors :label :name>
+  <BaseField :errors :label :name :optional>
     <textarea
       :id="name"
       v-model="value"
@@ -17,6 +17,7 @@
     disabled?: boolean
     label: string
     name: string
+    optional?: boolean
     placeholder?: string
   }>()
 

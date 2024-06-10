@@ -1,6 +1,9 @@
 <template>
   <div class="base-field">
-    <label v-if="label" :for="name">{{ label }}</label>
+    <label v-if="label" :for="name">
+      <span>{{ label }}</span>
+      <span v-if="optional" class="optional">({{ t("optional") }})</span>
+    </label>
     <slot />
 
     <BaseError :errors />
@@ -12,11 +15,14 @@
     errors?: string[]
     label?: string
     name?: string
+    optional?: boolean
   }>()
 
   defineSlots<{
     default: never
   }>()
+
+  const { t } = useI18n()
 </script>
 
 <style>
@@ -31,6 +37,17 @@
 
     label {
       font-weight: 600;
+
+      .optional {
+        font-weight: 400;
+        margin-left: 0.5rem;
+        opacity: 0.5;
+      }
     }
   }
 </style>
+
+<i18n lang="yaml">
+  en:
+    optional: Optional
+</i18n>
