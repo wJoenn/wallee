@@ -1,51 +1,68 @@
 <template>
-  <BaseField :errors :label :name>
-    <BaseInput
-      :id="name"
-      v-model:value="value"
-      :disabled
-      :is-invalid="errors.length > 0"
-      :name
-      :placeholder
-      type="date"
-    />
-  </BaseField>
+  <BaseDropdown ref="dropdown" v-on-click-outside="() => { focused = false }">
+    <template #trigger>
+      <BaseField :errors :label :name>
+        <BaseInput
+          :id="name"
+          ref="input"
+          v-model:value="value"
+          :disabled
+          :focused
+          :is-invalid="errors.length > 0"
+          :name
+          :placeholder="dayjs().format('YYYY-MM-DD')"
+          type="text"
+          @focus="handleFocus"
+        >
+          <template #caption>
+            <Icon name="ion:calendar" @click="handleToggle" />
+          </template>
+        </BaseInput>
+      </BaseField>
+    </template>
+
+    <template #content>
+      <DatePicker v-model:date="value" @selected="handleSelected" />
+    </template>
+  </BaseDropdown>
 </template>
 
 <script setup lang="ts">
   import type { Timestamp } from "~/types"
 
+  import dayjs from "dayjs"
+
+  import BaseDropdown from "~/components/ui/BaseDropdown.vue"
+
   const props = defineProps<{
     disabled?: boolean
     label: string
     name: string
-    placeholder?: string
   }>()
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { errors, value } = useField<Timestamp>(props.name)
-</script>
 
-<style scoped>
-  .long-text-field {
-    background-color: var(--background-primary);
-    border: 1px solid var(--color-secondary);
-    border-radius: 0.25rem;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
+  const dropdown = ref<InstanceType<typeof BaseDropdown>>()
+  const input = ref()
 
-    &:focus {
-      border: 1px solid var(--color-primary);
-      outline: none;
-    }
+  const focused = ref(false)
 
-    &.invalid {
-      background-color: var(--background-negative);
-      border: 1px solid var(--text-negative);
-
-      &:focus {
-        border: 1px solid var(--text-negative);
-      }
-    }
+  const handleFocus = () => {
+    focused.value = true
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    dropdown.value!.enable()
   }
-</style>
+
+  const handleSelected = () => {
+    focused.value = false
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    dropdown.value!.disable()
+  }
+
+  const handleToggle = () => {
+    focused.value = !focused.value
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    dropdown.value!.toggle()
+  }
+</script>

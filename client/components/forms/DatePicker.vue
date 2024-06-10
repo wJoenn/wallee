@@ -24,7 +24,7 @@
 <script setup lang="ts">
   import type { Timestamp } from "~/types"
 
-  import dayjs from "dayjs"
+  import dayjs from "~/libs/dayjs.ts"
 
   type DayOption = {
     disabled?: boolean
@@ -83,7 +83,7 @@
   const timestampAt = (day: number) => month.value.date(day).format("YYYY-MM-DD")
 
   watch(date, () => {
-    if (date.value && /\d{4}-\d{2}-\d{2}/.test(date.value)) {
+    if (date.value && dayjs(date.value, "YYYY-MM-DD", true).isValid()) {
       const currentYear = dayjs().year()
       const newYear = dayjs(date.value).year()
       const yearDiff = newYear - currentYear

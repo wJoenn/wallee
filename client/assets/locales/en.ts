@@ -22,6 +22,7 @@ export default {
         description: "description..."
       },
       validations: {
+        dateFormat: "This date is not valid",
         maxDecimals: "This field can't have more than two decimals",
         required: "This field is required"
       }

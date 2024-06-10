@@ -37,8 +37,8 @@
   import type { Timestamp } from "~/types"
   import type { Transaction } from "~/types/api"
 
-  import dayjs from "dayjs"
   import { literal as zodLiteral, number as zodNumber, object as zodObject, string as zodString } from "zod"
+  import dayjs from "~/libs/dayjs.ts"
 
   type TransactionForm = {
     description?: string
@@ -60,7 +60,11 @@
 
   const validationSchema = zodObject({
     description: zodString().optional().or(zodLiteral(null)),
-    transacted_at: zodString().optional(),
+    transacted_at: zodString().optional().refine(transacted_at => (
+      !transacted_at || dayjs(transacted_at, "YYYY-MM-DD", true).isValid()
+    ), {
+      message: t("globals.forms.validations.dateFormat")
+    }),
     value: zodNumber({
       invalid_type_error: t("globals.forms.validations.required"),
       required_error: t("globals.forms.validations.required")
@@ -76,7 +80,7 @@
     const { description, transacted_at, value } = props.transaction
     return {
       description,
-      transacted_at: dayjs(transacted_at).format("DD/MM/YYYY"),
+      transacted_at: dayjs(transacted_at).format("YYYY-MM-DD"),
       value: Math.abs(value / 100)
     }
   })
