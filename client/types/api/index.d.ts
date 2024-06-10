@@ -2,6 +2,12 @@ import type { Timestamp } from "../index"
 
 export type * from "./errors.d.ts"
 
+export type Budget = {
+  description?: string
+  id: number
+  name: string
+}
+
 export type Transaction = {
   description?: string
   id: number

@@ -1,5 +1,5 @@
 import type { RecursiveRecord } from "~/types"
-import type { Transaction, User } from "~/types/api"
+import type { Budget, Transaction, User } from "~/types/api"
 
 type Options = {
   body?: RecursiveRecord
@@ -23,6 +23,9 @@ const _fetchApi = <T>(path: string, options?: Options) => $fetch.raw<T>(`${API_U
 })
 
 export const walleeApi = {
+  budgets: {
+    create: (body: RecursiveRecord) => _fetchApi<Budget>("/budgets", { body, method: "POST" })
+  },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
     destroy: (id: number | string) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),

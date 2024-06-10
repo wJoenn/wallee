@@ -27,11 +27,17 @@
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
   </div>
 
-  <TransactionFormModal :show @close="show = false" @create="handleCreate" />
+  <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
+
+  <TransactionFormModal
+    :show="showTransactionForm"
+    @close="showTransactionForm = false"
+    @create="handleCreateTransaction"
+  />
 </template>
 
 <script setup lang="ts">
-  import type { Transaction } from "~/types/api"
+  import type { Budget, Transaction } from "~/types/api"
 
   const { t } = useI18n()
   const localePath = useLocalePath()
@@ -43,7 +49,8 @@
   })
 
   const presentingElement = ref<HTMLDivElement>()
-  const show = ref(false)
+  const showBudgetForm = ref(false)
+  const showTransactionForm = ref(false)
 
   const sortedTransactions = computed(() => {
     if (!transactions.value) { return [] }
@@ -55,9 +62,13 @@
     })
   })
 
-  const handleCreate = (transaction: Transaction) => {
+  const handleCreateTransaction = (transaction: Transaction) => {
     transactions.value?.push(transaction)
-    show.value = false
+    showTransactionForm.value = false
+  }
+
+  const handleCreateBudget = (budget: Budget) => {
+    budgets.value?.push(budget)
   }
 
   const handleDelete = async (id: number) => {
@@ -116,6 +127,7 @@
 
 <i18n lang="yaml">
   en:
+    newBudget: New budget
     newTransaction: New transaction
     title: Transactions
     total: "Total: {amount}"

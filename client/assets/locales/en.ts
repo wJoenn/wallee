@@ -14,6 +14,7 @@ export default {
         description: "Description",
         direction: "Direction",
         email: "Email",
+        name: "Name",
         password: "Password",
         passwordConfirmation: "Password confirmation",
         value: "Value"
