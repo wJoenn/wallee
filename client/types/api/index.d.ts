@@ -6,6 +6,8 @@ export type Budget = {
   description?: string
   id: number
   name: string
+
+  transactions: Transaction[]
 }
 
 export type Transaction = {

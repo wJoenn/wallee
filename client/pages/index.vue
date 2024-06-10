@@ -11,6 +11,17 @@
       </p>
     </div>
 
+    <h2>{{ t("sections.budgets") }}</h2>
+
+    <ul class="budgets">
+      <li v-for="budget in budgets" :key="budget.id">
+        <span>{{ budget.name }}</span>
+        <p>{{ toEuro(budget.transactions.reduce((sum, transaction) => sum + transaction.value, 0)) }}</p>
+      </li>
+    </ul>
+
+    <h2>{{ t("sections.transactions") }}</h2>
+
     <nav class="transactions">
       <div v-for="transaction in sortedTransactions" :key="transaction.id">
         <NuxtLink :to="localePath(`/transactions/${transaction.id}`)">
@@ -24,7 +35,8 @@
       </div>
     </nav>
 
-    <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
+    <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
+    <BaseButton @click="showBudgetForm = true">{{ t("newBudget") }}</BaseButton>
   </div>
 
   <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
@@ -42,6 +54,11 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
+
+  const { data: budgets } = await useWalleeApi(async api => {
+    const { _data } = await api.budgets.index()
+    return _data!
+  })
 
   const { data: transactions } = await useWalleeApi(async api => {
     const { _data } = await api.transactions.index()
@@ -101,6 +118,20 @@
       }
     }
 
+    .budgets {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      li {
+        background-color: var(--background-primary);
+        border: 1px solid var(--color-secondary);
+        border-radius: 0.25rem;
+        box-shadow: 0 0 10px black;
+        padding: 1rem;
+      }
+    }
+
     .transactions {
       display: flex;
       flex-direction: column;
@@ -129,6 +160,9 @@
   en:
     newBudget: New budget
     newTransaction: New transaction
-    title: Transactions
+    sections:
+      budgets: Budgets
+      transactions: Transactions
+    title: Home page
     total: "Total: {amount}"
 </i18n>

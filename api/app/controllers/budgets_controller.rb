@@ -2,7 +2,8 @@ class BudgetsController < ApplicationController
   before_action :set_resource, only: %i[destroy update]
 
   def index
-    render json: current_user.budgets, status: :ok
+    budgets = current_user.budgets.includes(:transactions)
+    render json: budgets.map { |budget| { **budget.as_json, transactions: budget.transactions } }, status: :ok
   end
 
   def create

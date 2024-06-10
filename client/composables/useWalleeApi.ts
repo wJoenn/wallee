@@ -24,7 +24,8 @@ const _fetchApi = <T>(path: string, options?: Options) => $fetch.raw<T>(`${API_U
 
 export const walleeApi = {
   budgets: {
-    create: (body: RecursiveRecord) => _fetchApi<Budget>("/budgets", { body, method: "POST" })
+    create: (body: RecursiveRecord) => _fetchApi<Budget>("/budgets", { body, method: "POST" }),
+    index: () => _fetchApi<Budget[]>("/budgets")
   },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
