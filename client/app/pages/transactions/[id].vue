@@ -29,7 +29,7 @@
 
   const show = ref(false)
 
-  const handleUpdate = (updatedTransaction: Transaction) => {
+  const handleUpdate = ({ transaction: updatedTransaction }: { transaction: Transaction }) => {
     transaction.value = updatedTransaction
     show.value = false
   }

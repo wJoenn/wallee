@@ -41,6 +41,7 @@ const timestamp = () => {
 }
 
 const zodSchema = {
+  number,
   object,
   optional,
   password,

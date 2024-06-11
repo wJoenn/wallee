@@ -18,6 +18,16 @@
 
     <BaseForm :action="handleSubmit" :initial-values :validation-schema>
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
+
+      <SelectField
+        :label="t('labels.budget')"
+        name="budget_id"
+        optional
+        :options="budgetOptions"
+        :placeholder="t('placeholders.budget')"
+        select-by="id"
+      />
+
       <DateField :label="t('globals.forms.labels.date')" name="transacted_at" optional />
 
       <LongTextField
@@ -41,6 +51,7 @@
   import dayjs from "~~/libs/dayjs.ts"
 
   type TransactionForm = {
+    budget_id?: number
     description?: string
     transacted_at?: Timestamp
     value: number
@@ -48,7 +59,7 @@
 
   const emit = defineEmits<{
     (event: "close"): void
-    (event: "create" | "update", payload: Transaction): void
+    (event: "create" | "update", payload: { budgetId?: number, transaction: Transaction }): void
   }>()
 
   const props = defineProps<{
@@ -58,13 +69,23 @@
 
   const { t } = useI18n()
 
-  const validationSchema = useZodSchema(({ object, optional, price, string, timestamp }) => object({
+  const { data: budgets } = await useWalleeApi(async api => {
+    const { _data } = await api.budgets.index()
+    return _data!
+  }, { deep: true })
+
+  const validationSchema = useZodSchema(({ number, object, optional, price, string, timestamp }) => object({
+    budget_id: optional(number()),
     description: optional(string()),
     transacted_at: timestamp(),
     value: price()
   }))
 
   const transactionModifier = ref(-1)
+
+  const budgetOptions = computed(() => (
+    budgets.value?.map(budget => ({ ...budget, key: budget.id, label: budget.name })) ?? []
+  ))
 
   const initialValues = computed(() => {
     if (!props.transaction) { return {} }
@@ -79,13 +100,14 @@
 
   const handleSubmit = async (values: TransactionForm) => {
     values.value *= transactionModifier.value * 100
+    const budgetId = budgets.value?.find(budgetOption => budgetOption.id === values.budget_id)?.id
 
     if (props.transaction) {
       const { _data } = await walleeApi.transactions.update(props.transaction.id, values)
-      emit("update", _data!)
+      emit("update", { budgetId, transaction: _data! })
     } else {
       const { _data } = await walleeApi.transactions.create(values)
-      emit("create", _data!)
+      emit("create", { budgetId, transaction: _data! })
     }
   }
 
@@ -142,8 +164,11 @@
 <i18n lang="yaml">
   en:
     labels:
+      budget: Budget
       paid: Paid
       received: Received
+    placeholders:
+      budget: My budget
     validations:
       value:
         other_than_0: The value must be positive

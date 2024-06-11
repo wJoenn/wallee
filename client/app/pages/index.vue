@@ -79,8 +79,12 @@
     })
   })
 
-  const handleCreateTransaction = (transaction: Transaction) => {
+  const handleCreateTransaction = ({ budgetId, transaction }: { budgetId?: number, transaction: Transaction }) => {
     transactions.value?.push(transaction)
+
+    const budget = budgets.value?.find(budgetOption => budgetOption.id === budgetId)
+    budget?.transactions.push(transaction)
+
     showTransactionForm.value = false
   }
 
