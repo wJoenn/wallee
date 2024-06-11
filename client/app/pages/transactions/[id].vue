@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
   import type { RouteLocationNormalizedLoaded } from "vue-router"
-  import type { Transaction } from "~/types/api"
+  import type { Transaction } from "~~/types/api"
 
   type Route = RouteLocationNormalizedLoaded & {
     params: {

@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Budget, Transaction } from "~/types/api"
+  import type { Budget, Transaction } from "~~/types/api"
 
   const { t } = useI18n()
   const localePath = useLocalePath()

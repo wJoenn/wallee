@@ -1,5 +1,5 @@
 import { literal, number, object, string, type ZodSchema } from "zod"
-import dayjs from "~/libs/dayjs.ts"
+import dayjs from "~~/libs/dayjs.ts"
 
 const optional = (schema: ZodSchema) => schema.optional().or(literal(null))
 

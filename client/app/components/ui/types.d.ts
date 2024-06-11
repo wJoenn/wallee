@@ -1,4 +1,4 @@
-import type { Timestamp } from "~/types"
+import type { Timestamp } from "~~/types"
 
 export type InputValue = {
   date: Timestamp

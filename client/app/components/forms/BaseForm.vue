@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
   import type { ZodSchema } from "zod"
-  import type { RecursiveRecord } from "~/types"
+  import type { RecursiveRecord } from "~~/types"
 
   const props = defineProps<{
     initialValues?: RecursiveRecord

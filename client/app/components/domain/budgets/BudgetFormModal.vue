@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Budget } from "~/types/api"
+  import type { Budget } from "~~/types/api"
 
   type BudgetForm = {
     description?: string

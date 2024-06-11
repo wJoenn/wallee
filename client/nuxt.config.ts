@@ -2,6 +2,28 @@
 export default defineNuxtConfig({
   ssr: false,
 
+  future: {
+    compatibilityVersion: 4
+  },
+
+  experimental: {
+    compileTemplate: true,
+    defaults: {
+      useAsyncData: {
+        deep: true
+      }
+    },
+    relativeWatchPaths: true,
+    resetAsyncDataToUndefined: true,
+    sharedPrerenderData: false,
+    templateUtils: true
+  },
+  unhead: {
+    renderSSRHeadOptions: {
+      omitLineBreaks: false
+    }
+  },
+
   components: [
     {
       path: "~/components",

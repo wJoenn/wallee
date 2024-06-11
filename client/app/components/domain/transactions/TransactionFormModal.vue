@@ -35,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { Timestamp } from "~/types"
-  import type { Transaction } from "~/types/api"
+  import type { Timestamp } from "~~/types"
+  import type { Transaction } from "~~/types/api"
 
-  import dayjs from "~/libs/dayjs.ts"
+  import dayjs from "~~/libs/dayjs.ts"
 
   type TransactionForm = {
     description?: string

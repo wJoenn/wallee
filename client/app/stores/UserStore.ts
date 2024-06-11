@@ -1,5 +1,5 @@
-import type { RecursiveRecord } from "~/types"
-import type { User, UserErrors } from "~/types/api"
+import type { RecursiveRecord } from "~~/types"
+import type { User, UserErrors } from "~~/types/api"
 
 import { FetchError, type FetchResponse } from "ofetch"
 

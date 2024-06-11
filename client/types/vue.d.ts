@@ -1,4 +1,4 @@
-import type en from "~/assets/locales/en.ts"
+import type en from "~/assets/locales/en"
 
 type MessageSchema = typeof en
 

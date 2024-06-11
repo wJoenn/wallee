@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Timestamp } from "~/types"
+  import type { Timestamp } from "~~/types"
 
   import dayjs from "dayjs"
 

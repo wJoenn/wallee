@@ -1,5 +1,5 @@
-import type { RecursiveRecord } from "~/types"
-import type { Budget, Transaction, User } from "~/types/api"
+import type { RecursiveRecord } from "~~/types"
+import type { Budget, Transaction, User } from "~~/types/api"
 
 type Options = {
   body?: RecursiveRecord
