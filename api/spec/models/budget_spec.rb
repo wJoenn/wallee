@@ -52,4 +52,20 @@ RSpec.describe Budget do
       expect(budget.error_codes).to eq({ user: %i[blank] })
     end
   end
+
+  describe "#serialize" do
+    let(:budget) { create(:budget) }
+
+    before do
+      create(:transaction, budget:, user: budget.user)
+    end
+
+    it "returns a Budget as an hash" do
+      expect(budget.serialize).to be_a Hash
+    end
+
+    it "includes an array of Transaction" do
+      expect(budget.serialize[:transactions]).to all be_a Transaction
+    end
+  end
 end
