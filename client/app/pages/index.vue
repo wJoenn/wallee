@@ -58,12 +58,12 @@
   const { data: budgets } = await useWalleeApi(async api => {
     const { _data } = await api.budgets.index()
     return _data!
-  })
+  }, { deep: true })
 
   const { data: transactions } = await useWalleeApi(async api => {
     const { _data } = await api.transactions.index()
     return _data!
-  })
+  }, { deep: true })
 
   const presentingElement = ref<HTMLDivElement>()
   const showBudgetForm = ref(false)

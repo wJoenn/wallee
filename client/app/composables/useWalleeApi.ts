@@ -1,3 +1,4 @@
+import type { AsyncDataOptions } from "#app"
 import type { RecursiveRecord } from "~~/types"
 import type { Budget, Transaction, User } from "~~/types/api"
 
@@ -45,6 +46,6 @@ export const walleeApi = {
   }
 }
 
-export const useWalleeApi = <T>(call: (api: typeof walleeApi) => Promise<T>) => (
-  useAsyncData(crypto.randomUUID(), () => call(walleeApi))
+export const useWalleeApi = <T>(call: (api: typeof walleeApi) => Promise<T>, options?: AsyncDataOptions<T>) => (
+  useAsyncData(crypto.randomUUID(), () => call(walleeApi), options)
 )
