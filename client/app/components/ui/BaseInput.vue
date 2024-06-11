@@ -4,7 +4,7 @@
       :id
       ref="input"
       v-model="value"
-      :class="{ invalid: isInvalid }"
+      :class="{ focused, invalid: isInvalid }"
       :disabled
       :name
       :placeholder
@@ -58,7 +58,7 @@
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
 
-    &:has(input:focus) {
+    &:has(input:focus), &:has(input.focused) {
       border: 1px solid var(--color-primary);
     }
 
