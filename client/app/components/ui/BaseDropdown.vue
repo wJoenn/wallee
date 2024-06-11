@@ -34,7 +34,6 @@
       border: 1px solid var(--color-secondary);
       border-radius: 0.25rem;
       box-shadow: 0 0 10px black;
-      padding: 1rem;
       position: absolute;
       width: 100%;
       z-index: 10;
