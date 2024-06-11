@@ -16,8 +16,7 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       compilerOptions: {
-        allowImportingTsExtensions: true,
-        moduleDetection: "force"
+        allowImportingTsExtensions: true
       }
     }
   },
