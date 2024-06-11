@@ -4,7 +4,6 @@
       <BaseField :errors :label :name :optional>
         <BaseInput
           :id="name"
-          ref="input"
           v-model:value="value"
           :disabled
           :focused
@@ -45,8 +44,6 @@
   const { errors, value } = useField<Timestamp>(props.name)
 
   const dropdown = ref<InstanceType<typeof BaseDropdown>>()
-  const input = ref()
-
   const focused = ref(false)
 
   const handleFocus = () => {
