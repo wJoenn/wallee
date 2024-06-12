@@ -1,3 +1,4 @@
+import type { FetchResponse } from "ofetch"
 import type { AsyncDataOptions } from "#app"
 import type { RecursiveRecord } from "~~/types"
 import type { Budget, Transaction, User } from "~~/types/api"
@@ -47,6 +48,10 @@ export const walleeApi = {
   }
 }
 
-export const useWalleeApi = <T>(call: (api: typeof walleeApi) => Promise<T>, options?: AsyncDataOptions<T>) => (
-  useAsyncData(crypto.randomUUID(), () => call(walleeApi), options)
-)
+export const useWalleeApi = <T>(
+  call: (api: typeof walleeApi) => Promise<FetchResponse<T>>,
+  options?: AsyncDataOptions<T>
+) => useAsyncData(crypto.randomUUID(), async () => {
+    const { _data } = await call(walleeApi)
+    return _data!
+  }, options)

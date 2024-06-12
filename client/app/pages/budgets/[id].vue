@@ -22,11 +22,7 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { params: { id } } = useRoute() as Route
-
-  const { data: budget } = await useWalleeApi(async api => {
-    const { _data } = await api.budgets.show(id)
-    return _data!
-  })
+  const { data: budget } = await useWalleeApi(api => api.budgets.show(id))
 
   const show = ref(false)
 

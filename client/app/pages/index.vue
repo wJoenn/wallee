@@ -42,16 +42,8 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
-
-  const { data: budgets } = await useWalleeApi(async api => {
-    const { _data } = await api.budgets.index()
-    return _data!
-  })
-
-  const { data: transactions } = await useWalleeApi(async api => {
-    const { _data } = await api.transactions.index()
-    return _data!
-  }, { deep: true })
+  const { data: budgets } = await useWalleeApi(api => api.budgets.index())
+  const { data: transactions } = await useWalleeApi(api => api.transactions.index(), { deep: true })
 
   const presentingElement = ref<HTMLDivElement>()
   const showBudgetForm = ref(false)

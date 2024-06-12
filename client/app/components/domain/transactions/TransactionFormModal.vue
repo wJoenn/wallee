@@ -70,11 +70,7 @@
   }>()
 
   const { t } = useI18n()
-
-  const { data: budgets } = await useWalleeApi(async api => {
-    const { _data } = await api.budgets.index()
-    return _data!
-  }, { deep: true })
+  const { data: budgets } = await useWalleeApi(api => api.budgets.index())
 
   const validationSchema = useZodSchema(({ number, object, optional, price, string, timestamp }) => object({
     budget_id: optional(number()),
