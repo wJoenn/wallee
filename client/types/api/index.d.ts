@@ -10,6 +10,7 @@ export type Budget = {
 }
 
 export type Transaction = {
+  budget_id?: number
   description?: string
   id: number
   transacted_at: Timestamp

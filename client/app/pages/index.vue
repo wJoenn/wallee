@@ -13,12 +13,12 @@
 
     <h2>{{ t("sections.budgets") }}</h2>
 
-    <ul class="budgets">
-      <li v-for="budget in budgets" :key="budget.id">
+    <nav class="budgets">
+      <NuxtLink v-for="budget in budgets" :key="budget.id" :to="localePath(`/budgets/${budget.id}`)">
         <span>{{ budget.name }}</span>
         <p>{{ toEuro(budget.balance) }}</p>
-      </li>
-    </ul>
+      </NuxtLink>
+    </nav>
 
     <h2>{{ t("sections.transactions") }}</h2>
 
@@ -46,7 +46,7 @@
   const { data: budgets } = await useWalleeApi(async api => {
     const { _data } = await api.budgets.index()
     return _data!
-  }, { deep: true })
+  })
 
   const { data: transactions } = await useWalleeApi(async api => {
     const { _data } = await api.transactions.index()
@@ -96,7 +96,7 @@
       gap: 1rem;
       grid-template-columns: repeat(2, minmax(0, 1fr));
 
-      li {
+      a {
         background-color: var(--background-primary);
         border: 1px solid var(--color-secondary);
         border-radius: 0.25rem;

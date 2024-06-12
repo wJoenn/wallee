@@ -20,6 +20,7 @@
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
 
       <SelectField
+        :disabled="!!budgetId"
         :label="t('labels.budget')"
         name="budget_id"
         optional
@@ -63,6 +64,7 @@
   }>()
 
   const props = defineProps<{
+    budgetId?: number
     show: boolean
     transaction?: Transaction
   }>()
@@ -88,14 +90,17 @@
   ))
 
   const initialValues = computed(() => {
-    if (!props.transaction) { return {} }
-
-    const { description, transacted_at, value } = props.transaction
-    return {
-      description,
-      transacted_at: dayjs(transacted_at).format("YYYY-MM-DD"),
-      value: Math.abs(value / 100)
+    if (props.transaction) {
+      const { budget_id, description, transacted_at, value } = props.transaction
+      return {
+        budget_id,
+        description,
+        transacted_at: dayjs(transacted_at).format("YYYY-MM-DD"),
+        value: Math.abs(value / 100)
+      }
     }
+
+    return { budget_id: props.budgetId }
   })
 
   const handleSubmit = async (values: TransactionForm) => {
