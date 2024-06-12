@@ -1,5 +1,5 @@
 <template>
-  <div class="base-input">
+  <div class="base-input" :class="{ disabled }">
     <input
       :id
       ref="input"
@@ -65,6 +65,11 @@
     &:has(input.invalid) {
       background-color: var(--background-negative);
       border: 1px solid var(--text-negative);
+    }
+
+    &.disabled {
+      background-color: var(--color-secondary);
+      color: #ffffff80;
     }
 
     input {
