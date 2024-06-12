@@ -1,5 +1,5 @@
 <template>
-  <div v-if="transactions" id="index" ref="presentingElement">
+  <div id="index" ref="presentingElement">
     <div class="header">
       <div>
         <h1>{{ t("title") }}</h1>
@@ -25,15 +25,15 @@
     <TransactionList :transactions />
     <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
     <BaseButton @click="showBudgetForm = true">{{ t("newBudget") }}</BaseButton>
+
+    <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
+
+    <TransactionFormModal
+      :show="showTransactionForm"
+      @close="showTransactionForm = false"
+      @create="handleCreateTransaction"
+    />
   </div>
-
-  <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
-
-  <TransactionFormModal
-    :show="showTransactionForm"
-    @close="showTransactionForm = false"
-    @create="handleCreateTransaction"
-  />
 </template>
 
 <script setup lang="ts">

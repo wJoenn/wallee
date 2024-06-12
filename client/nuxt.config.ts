@@ -27,6 +27,7 @@ export default defineNuxtConfig({
 
   modules: [
     "nuxt-icon",
+    "@nuxt/eslint",
     "@nuxt/image",
     "@nuxtjs/i18n",
     "@pinia/nuxt",
@@ -35,6 +36,12 @@ export default defineNuxtConfig({
 
   devtools: {
     enabled: true
+  },
+
+  eslint: {
+    config: {
+      standalone: false
+    }
   },
 
   image: {

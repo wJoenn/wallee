@@ -4,9 +4,9 @@
     <TransactionList :transactions="filteredTransactions" />
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
-  </div>
 
-  <TransactionFormModal v-if="budget" :budget-id="budget.id" :show @close="show = false" @create="handleCreate" />
+    <TransactionFormModal v-if="budget" :budget-id="budget.id" :show @close="show = false" @create="handleCreate" />
+  </div>
 </template>
 
 <script setup lang="ts">
