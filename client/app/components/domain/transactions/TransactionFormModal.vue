@@ -82,7 +82,7 @@
   const transactionModifier = ref(-1)
 
   const budgetOptions = computed(() => (
-    budgets.value?.map(budget => ({ ...budget, key: budget.id, label: budget.name })) ?? []
+    budgets.value!.map(budget => ({ ...budget, key: budget.id, label: budget.name }))
   ))
 
   const initialValues = computed(() => {
@@ -101,7 +101,7 @@
 
   const handleSubmit = async (values: TransactionForm) => {
     values.value *= transactionModifier.value * 100
-    const budgetId = budgets.value?.find(budgetOption => budgetOption.id === values.budget_id)?.id
+    const budgetId = budgets.value!.find(budgetOption => budgetOption.id === values.budget_id)?.id
 
     if (props.transaction) {
       const { _data } = await walleeApi.transactions.update(props.transaction.id, values)

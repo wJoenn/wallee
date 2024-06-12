@@ -42,7 +42,7 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
-  const { data: budgets } = await useWalleeApi(api => api.budgets.index())
+  const { data: budgets } = await useWalleeApi(api => api.budgets.index(), { deep: true })
   const { data: transactions } = await useWalleeApi(api => api.transactions.index(), { deep: true })
 
   const presentingElement = ref<HTMLDivElement>()
@@ -50,18 +50,16 @@
   const showTransactionForm = ref(false)
 
   const handleCreateTransaction = ({ budgetId, transaction }: { budgetId?: number, transaction: Transaction }) => {
-    transactions.value?.push(transaction)
+    transactions.value!.push(transaction)
 
-    const budget = budgets.value?.find(budgetOption => budgetOption.id === budgetId)
-    if (budget) {
-      budget.balance += transaction.value
-    }
+    const budget = budgets.value!.find(budgetOption => budgetOption.id === budgetId)
+    if (budget) { budget.balance += transaction.value }
 
     showTransactionForm.value = false
   }
 
   const handleCreateBudget = (budget: Budget) => {
-    budgets.value?.push(budget)
+    budgets.value!.push(budget)
   }
 </script>
 

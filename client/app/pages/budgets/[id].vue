@@ -1,11 +1,11 @@
 <template>
   <div id="budgets-id">
     <pre>{{ budget }}</pre>
-    <TransactionList :transactions="budget?.transactions" />
+    <TransactionList :transactions="budget!.transactions" />
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
-    <TransactionFormModal v-if="budget" :budget-id="budget.id" :show @close="show = false" @create="handleCreate" />
+    <TransactionFormModal :budget-id="budget!.id" :show @close="show = false" @create="handleCreate" />
   </div>
 </template>
 
@@ -21,8 +21,14 @@
 
   const { t } = useI18n()
   const localePath = useLocalePath()
+  const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: budget } = await useWalleeApi(api => api.budgets.show(id))
+  const { data: budget, error } = await useWalleeApi(api => api.budgets.show(id))
+
+  if (error.value) {
+    await router.replace(localePath("/"))
+    // TODO: add failure notification
+  }
 
   const show = ref(false)
 
