@@ -10,6 +10,6 @@ class Budget < ApplicationRecord
   end
 
   def serialize
-    { balance:, description:, id:, name: }
+    { balance:, description:, id:, name:, transactions: }
   end
 end

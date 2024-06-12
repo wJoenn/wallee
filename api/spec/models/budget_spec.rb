@@ -68,16 +68,14 @@ RSpec.describe Budget do
 
   describe "#serialize" do
     let(:budget) { create(:budget) }
-
-    before do
-      create(:transaction, budget:, user: budget.user)
-    end
+    let!(:transaction) { create(:transaction, budget:, user: budget.user) }
 
     it "returns a Budget as an hash" do
       expect(budget.serialize).to include(
         balance: 1,
         description: nil,
-        name: "My budget"
+        name: "My budget",
+        transactions: [transaction]
       )
     end
   end

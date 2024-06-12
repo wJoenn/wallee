@@ -1,7 +1,7 @@
 <template>
   <div id="budgets-id">
     <pre>{{ budget }}</pre>
-    <TransactionList :transactions="filteredTransactions" />
+    <TransactionList :transactions="budget?.transactions" />
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
@@ -28,16 +28,7 @@
     return _data!
   })
 
-  const { data: transactions } = await useWalleeApi(async api => {
-    const { _data } = await api.transactions.index()
-    return _data!
-  }, { deep: true })
-
   const show = ref(false)
-
-  const filteredTransactions = computed(() => transactions.value?.filter(transaction => (
-    transaction.budget_id === budget.value!.id
-  )))
 
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
     budget.value!.balance += transaction.value
