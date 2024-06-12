@@ -53,6 +53,19 @@ RSpec.describe Budget do
     end
   end
 
+  describe "#balance" do
+    let(:budget) { create(:budget) }
+
+    before do
+      create(:transaction, budget:, user: budget.user, value: 100_00)
+      create(:transaction, budget:, user: budget.user, value: -200_00)
+    end
+
+    it "returns the sum of its Transactions value" do
+      expect(budget.balance).to be(-100_00)
+    end
+  end
+
   describe "#serialize" do
     let(:budget) { create(:budget) }
 
@@ -61,11 +74,11 @@ RSpec.describe Budget do
     end
 
     it "returns a Budget as an hash" do
-      expect(budget.serialize).to be_a Hash
-    end
-
-    it "includes an array of Transaction" do
-      expect(budget.serialize[:transactions]).to all be_a Transaction
+      expect(budget.serialize).to include(
+        balance: 1,
+        description: nil,
+        name: "My budget"
+      )
     end
   end
 end

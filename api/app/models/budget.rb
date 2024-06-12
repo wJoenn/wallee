@@ -5,7 +5,11 @@ class Budget < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  def balance
+    transactions.sum(&:value)
+  end
+
   def serialize
-    { description:, id:, name:, transactions: }
+    { balance:, description:, id:, name: }
   end
 end

@@ -3,11 +3,10 @@ import type { Timestamp } from "../index"
 export type * from "./errors.d.ts"
 
 export type Budget = {
+  balance: number
   description?: string
   id: number
   name: string
-
-  transactions: Transaction[]
 }
 
 export type Transaction = {

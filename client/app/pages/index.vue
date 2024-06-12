@@ -16,7 +16,7 @@
     <ul class="budgets">
       <li v-for="budget in budgets" :key="budget.id">
         <span>{{ budget.name }}</span>
-        <p>{{ toEuro(budget.transactions.reduce((sum, transaction) => sum + transaction.value, 0)) }}</p>
+        <p>{{ toEuro(budget.balance) }}</p>
       </li>
     </ul>
 
@@ -83,7 +83,9 @@
     transactions.value?.push(transaction)
 
     const budget = budgets.value?.find(budgetOption => budgetOption.id === budgetId)
-    budget?.transactions.push(transaction)
+    if (budget) {
+      budget.balance += transaction.value
+    }
 
     showTransactionForm.value = false
   }
