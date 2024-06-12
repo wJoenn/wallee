@@ -103,6 +103,12 @@
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     dropdown.value!.toggle()
   }
+
+  watch(value, () => {
+    if (value.value) {
+      selectedOption.value = props.options.find(option => option[props.selectBy] === value.value)
+    }
+  }, { immediate: true })
 </script>
 
 <style scoped>
