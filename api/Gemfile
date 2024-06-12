@@ -57,6 +57,10 @@ group :development do
 end
 
 group :development, :test do
+  # help to kill N+1 queries and unused eager loading
+  # [https://github.com/flyerhzm/bullet]
+  gem "bullet", "~> 7.1.6"
+
   # Rails integration of factory_bot, a fixtures replacement with a straightforward definition syntax
   # [https://github.com/thoughtbot/factory_bot_rails]
   gem "factory_bot_rails", "~> 6.4.3"
