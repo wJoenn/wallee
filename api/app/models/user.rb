@@ -13,6 +13,10 @@ class User < ApplicationRecord
 
   after_create :create_main_account
 
+  def main_account
+    accounts.find_by(main: true)
+  end
+
   private
 
   def create_main_account

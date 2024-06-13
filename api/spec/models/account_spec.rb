@@ -9,18 +9,11 @@ RSpec.describe Account do
       expect(account.user).to be_a User
     end
 
-    context "with transactions" do
-      let(:account) { create(:account, user:) }
-      let!(:transaction) { create(:transaction, account:, user:) }
+    it "has many Transaction" do
+      account = create(:account, user:)
+      create(:transaction, account:, user:)
 
-      it "has many Transaction" do
-        expect(account.transactions).to all be_a Transaction
-      end
-
-      it "nullifies transactions on destroy" do
-        account.destroy
-        expect(transaction.reload.account).to be_nil
-      end
+      expect(account.transactions).to all be_a Transaction
     end
   end
 
@@ -50,6 +43,30 @@ RSpec.describe Account do
 
       expect(account).not_to be_persisted
       expect(account.error_codes).to eq({ user: %i[blank] })
+    end
+  end
+
+  describe "hooks" do
+    context "when Account is main" do
+      it "destroys transactions" do
+        create(:transaction, account: user.main_account, user:)
+        expect { user.main_account.destroy }.to change(Transaction, :count).by(-1)
+      end
+    end
+
+    context "when Account is not main" do
+      let(:account) { create(:account, user:) }
+      let!(:transaction) { create(:transaction, account:, user:) }
+
+      it "reassigns transactions to main account if it exists" do
+        account.destroy
+        expect(transaction.reload.account_id).to be user.main_account.id
+      end
+
+      it "destroys transactions if main account doesn't exist" do
+        user.main_account.destroy
+        expect { account.destroy }.to change(Transaction, :count).by(-1)
+      end
     end
   end
 
