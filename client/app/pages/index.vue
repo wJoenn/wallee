@@ -11,6 +11,11 @@
       </p>
     </div>
 
+    <div class="actions">
+      <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
+      <BaseButton @click="showBudgetForm = true">{{ t("newBudget") }}</BaseButton>
+    </div>
+
     <h2>{{ t("sections.budgets") }}</h2>
 
     <nav class="budgets">
@@ -23,8 +28,6 @@
     <h2>{{ t("sections.transactions") }}</h2>
 
     <TransactionList :transactions />
-    <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
-    <BaseButton @click="showBudgetForm = true">{{ t("newBudget") }}</BaseButton>
 
     <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
 
@@ -79,6 +82,12 @@
       h1 {
         margin: 0;
       }
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
     }
 
     .budgets {
