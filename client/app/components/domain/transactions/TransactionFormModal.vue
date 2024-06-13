@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :show>
+  <BaseModal>
     <div class="transaction-modifier">
       <label>{{ t("globals.forms.labels.direction") }}</label>
 
@@ -65,7 +65,6 @@
 
   const props = defineProps<{
     budgetId?: number
-    show: boolean
     transaction?: Transaction
   }>()
 
@@ -134,6 +133,8 @@
       transactionModifier.value = -1
     }
   }, { immediate: true })
+
+  onMounted(() => { console.log("mounted") })
 </script>
 
 <style>

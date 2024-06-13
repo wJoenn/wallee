@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :show>
+  <BaseModal>
     <BaseForm :action="handleSubmit" :validation-schema>
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
@@ -27,10 +27,6 @@
   const emit = defineEmits<{
     (event: "close"): void
     (event: "create", payload: Budget): void
-  }>()
-
-  defineProps<{
-    show: boolean
   }>()
 
   const { t } = useI18n()

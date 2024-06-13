@@ -5,7 +5,7 @@
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
-    <TransactionFormModal :budget-id="budget!.id" :show @close="show = false" @create="handleCreate" />
+    <TransactionFormModal v-if="show" :budget-id="budget!.id" @close="show = false" @create="handleCreate" />
   </div>
 </template>
 

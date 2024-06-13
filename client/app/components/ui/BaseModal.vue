@@ -1,16 +1,12 @@
 <template>
   <Teleport to="#teleports">
-    <div v-if="show" class="base-modal">
+    <div class="base-modal">
       <slot />
     </div>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-  defineProps<{
-    show: boolean
-  }>()
-
   defineSlots<{
     default: never
   }>()

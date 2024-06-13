@@ -5,7 +5,7 @@
     <BaseButton @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
-    <TransactionFormModal :show :transaction @close="show = false" @update="handleUpdate" />
+    <TransactionFormModal v-if="show" :transaction @close="show = false" @update="handleUpdate" />
   </div>
 </template>
 

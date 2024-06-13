@@ -29,10 +29,10 @@
 
     <TransactionList :transactions />
 
-    <BudgetFormModal :show="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
+    <BudgetFormModal v-if="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
 
     <TransactionFormModal
-      :show="showTransactionForm"
+      v-if="showTransactionForm"
       @close="showTransactionForm = false"
       @create="handleCreateTransaction"
     />
