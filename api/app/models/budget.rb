@@ -9,7 +9,10 @@ class Budget < ApplicationRecord
     transactions.sum(&:value)
   end
 
-  def serialize
-    { balance:, description:, id:, name:, transactions: }
+  def serialize(include = false)
+    budget = { balance:, description:, id:, name: }
+    budget[:transactions] = transactions if include
+
+    budget
   end
 end

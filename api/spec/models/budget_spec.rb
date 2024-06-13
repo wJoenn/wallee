@@ -71,10 +71,19 @@ RSpec.describe Budget do
     let!(:transaction) { create(:transaction, budget:, user: budget.user) }
 
     it "returns a Budget as an hash" do
-      expect(budget.serialize).to include(
+      serialized = budget.serialize
+
+      expect(serialized).to include(
         balance: 1,
         description: nil,
-        name: "My budget",
+        name: "My budget"
+      )
+
+      expect(serialized[:transactions]).to be_nil
+    end
+
+    it "includes transactions when Truthy argument is used" do
+      expect(budget.serialize(true)).to include(
         transactions: [transaction]
       )
     end

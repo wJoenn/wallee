@@ -7,7 +7,7 @@ class BudgetsController < ApplicationController
   end
 
   def show
-    render json: @resource.serialize, status: :ok
+    render json: @resource.serialize(true), status: :ok
   end
 
   def create
@@ -22,7 +22,7 @@ class BudgetsController < ApplicationController
 
   def update
     if @resource.update(budget_params)
-      render json: @resource.serialize, status: :ok
+      render json: @resource.serialize(true), status: :ok
     else
       render json: { errors: @resource.error_codes }, status: :unprocessable_entity
     end
