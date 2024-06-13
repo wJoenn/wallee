@@ -5,11 +5,6 @@
       <BaseButton @click="signOut">{{ t("globals.actions.signOut") }}</BaseButton>
     </div>
 
-    <div class="actions">
-      <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
-      <BaseButton @click="showAccountForm = true">{{ t("newAccount") }}</BaseButton>
-    </div>
-
     <h2>{{ t("sections.mainAccount") }}</h2>
 
     <NuxtLink v-if="mainAccount" class="account" :to="localePath(`/accounts/${mainAccount.id}`)">
@@ -30,6 +25,11 @@
         <p>{{ toEuro(account.balance) }}</p>
       </NuxtLink>
     </nav>
+
+    <div class="actions">
+      <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
+      <BaseButton @click="showAccountForm = true">{{ t("newAccount") }}</BaseButton>
+    </div>
 
     <AccountFormModal v-if="showAccountForm" @close="showAccountForm = false" @create="handleCreateAccount" />
 
@@ -86,9 +86,14 @@
     }
 
     .actions {
+      bottom: 0;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
+      left: 0;
+      padding: 2rem;
+      position: fixed;
+      right: 0;
     }
 
     .account {

@@ -1,9 +1,22 @@
 <template>
   <div id="accounts-id">
-    <pre>{{ account }}</pre>
-    <TransactionList :transactions="account!.transactions" />
-    <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
-    <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
+    <div class="header">
+      <div>
+        <p>{{ account!.name }}</p>
+        <h1>{{ toEuro(account!.balance) }}</h1>
+      </div>
+
+      <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
+    </div>
+
+    <div>
+      <h2>{{ t("transactions") }}</h2>
+      <TransactionList :transactions="account!.transactions" />
+    </div>
+
+    <div class="footer">
+      <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
+    </div>
 
     <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
   </div>
@@ -45,10 +58,29 @@
     flex-direction: column;
     gap: 2rem;
     padding: 2rem;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer {
+      background-color: var(--background-primary);
+      bottom: 0;
+      left: 0;
+      padding: 2rem;
+      position: fixed;
+      right: 0;
+
+      button {
+        width: 100%
+      }
+    }
   }
 </style>
 
 <i18n lang="yaml">
   en:
     newTransaction: New transaction
+    transactions: Transactions
 </i18n>
