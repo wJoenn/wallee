@@ -133,8 +133,6 @@
       transactionModifier.value = -1
     }
   }, { immediate: true })
-
-  onMounted(() => { console.log("mounted") })
 </script>
 
 <style>
