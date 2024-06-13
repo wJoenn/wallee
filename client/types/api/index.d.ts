@@ -2,7 +2,7 @@ import type { Timestamp } from "../index"
 
 export type * from "./errors.d.ts"
 
-export type Budget = {
+export type Account = {
   balance: number
   description?: string
   id: number
@@ -12,7 +12,7 @@ export type Budget = {
 }
 
 export type Transaction = {
-  budget_id?: number
+  account_id?: number
   description?: string
   id: number
   transacted_at: Timestamp

@@ -1,21 +1,21 @@
 RSpec.describe Transaction do
-  let(:budget) { create(:budget) }
+  let(:account) { create(:account) }
   let(:description) { "A transaction" }
-  let(:sub_category) { create(:sub_category, user: budget.user) }
+  let(:sub_category) { create(:sub_category, user: account.user) }
   let(:transacted_at) { 1.day.ago }
-  let(:user) { budget.user }
+  let(:user) { account.user }
   let(:value) { 1 }
 
   describe "associations" do
     it "belongs to a User" do
-      transaction = described_class.create(budget:, description:, sub_category:, transacted_at:, user:, value:)
+      transaction = described_class.create(account:, description:, sub_category:, transacted_at:, user:, value:)
       expect(transaction.user).to be_a User
     end
   end
 
   describe "validations" do
     it "creates a new Transaction with proper params" do
-      transaction = described_class.create(budget:, description:, sub_category:, transacted_at:, user:, value:)
+      transaction = described_class.create(account:, description:, sub_category:, transacted_at:, user:, value:)
       expect(transaction).to be_persisted
     end
 

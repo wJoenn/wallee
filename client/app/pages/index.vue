@@ -13,15 +13,15 @@
 
     <div class="actions">
       <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
-      <BaseButton @click="showBudgetForm = true">{{ t("newBudget") }}</BaseButton>
+      <BaseButton @click="showAccountForm = true">{{ t("newAccount") }}</BaseButton>
     </div>
 
-    <h2>{{ t("sections.budgets") }}</h2>
+    <h2>{{ t("sections.accounts") }}</h2>
 
-    <nav class="budgets">
-      <NuxtLink v-for="budget in budgets" :key="budget.id" :to="localePath(`/budgets/${budget.id}`)">
-        <span>{{ budget.name }}</span>
-        <p>{{ toEuro(budget.balance) }}</p>
+    <nav class="accounts">
+      <NuxtLink v-for="account in accounts" :key="account.id" :to="localePath(`/accounts/${account.id}`)">
+        <span>{{ account.name }}</span>
+        <p>{{ toEuro(account.balance) }}</p>
       </NuxtLink>
     </nav>
 
@@ -29,7 +29,7 @@
 
     <TransactionList :transactions />
 
-    <BudgetFormModal v-if="showBudgetForm" @close="showBudgetForm = false" @create="handleCreateBudget" />
+    <AccountFormModal v-if="showAccountForm" @close="showAccountForm = false" @create="handleCreateAccount" />
 
     <TransactionFormModal
       v-if="showTransactionForm"
@@ -40,29 +40,29 @@
 </template>
 
 <script setup lang="ts">
-  import type { Budget, Transaction } from "~~/types/api"
+  import type { Account, Transaction } from "~~/types/api"
 
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
-  const { data: budgets } = await useWalleeApi(api => api.budgets.index(), { deep: true })
+  const { data: accounts } = await useWalleeApi(api => api.accounts.index(), { deep: true })
   const { data: transactions } = await useWalleeApi(api => api.transactions.index(), { deep: true })
 
   const presentingElement = ref<HTMLDivElement>()
-  const showBudgetForm = ref(false)
+  const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
 
   const handleCreateTransaction = ({ budgetId, transaction }: { budgetId?: number, transaction: Transaction }) => {
     transactions.value!.push(transaction)
 
-    const budget = budgets.value!.find(budgetOption => budgetOption.id === budgetId)
-    if (budget) { budget.balance += transaction.value }
+    const account = accounts.value!.find(accountOption => accountOption.id === accountId)
+    if (account) { account.balance += transaction.value }
 
     showTransactionForm.value = false
   }
 
-  const handleCreateBudget = (budget: Budget) => {
-    budgets.value!.push(budget)
+  const handleCreateAccount = (account: Account) => {
+    accounts.value!.push(account)
   }
 </script>
 
@@ -90,7 +90,7 @@
       gap: 1rem;
     }
 
-    .budgets {
+    .accounts {
       display: grid;
       gap: 1rem;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -108,10 +108,10 @@
 
 <i18n lang="yaml">
   en:
-    newBudget: New budget
+    newAccount: New account
     newTransaction: New transaction
     sections:
-      budgets: Budgets
+      accounts: Accounts
       transactions: Transactions
     title: Home page
     total: "Total: {amount}"

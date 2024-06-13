@@ -1,7 +1,7 @@
 import type { FetchResponse } from "ofetch"
 import type { AsyncDataOptions } from "#app"
 import type { RecursiveRecord } from "~~/types"
-import type { Budget, Transaction, User } from "~~/types/api"
+import type { Account, Transaction, User } from "~~/types/api"
 
 type Options = {
   body?: RecursiveRecord
@@ -25,10 +25,10 @@ const _fetchApi = <T>(path: string, options?: Options) => $fetch.raw<T>(`${API_U
 })
 
 export const walleeApi = {
-  budgets: {
-    create: (body: RecursiveRecord) => _fetchApi<Budget>("/budgets", { body, method: "POST" }),
-    index: () => _fetchApi<Budget[]>("/budgets"),
-    show: (id: number | string) => _fetchApi<Budget>(`/budgets/${id}`)
+  accounts: {
+    create: (body: RecursiveRecord) => _fetchApi<Omit<Account, "transactions">>("/accounts", { body, method: "POST" }),
+    index: () => _fetchApi<Omit<Account, "transactions">[]>("/accounts"),
+    show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`)
   },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),

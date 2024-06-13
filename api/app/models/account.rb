@@ -1,4 +1,4 @@
-class Budget < ApplicationRecord
+class Account < ApplicationRecord
   belongs_to :user
 
   has_many :transactions, dependent: :nullify
@@ -10,9 +10,9 @@ class Budget < ApplicationRecord
   end
 
   def serialize(include = false)
-    budget = { balance:, description:, id:, name: }
-    budget[:transactions] = transactions if include
+    account = { balance:, description:, id:, name: }
+    account[:transactions] = transactions if include
 
-    budget
+    account
   end
 end

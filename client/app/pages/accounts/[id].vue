@@ -1,11 +1,11 @@
 <template>
-  <div id="budgets-id">
-    <pre>{{ budget }}</pre>
-    <TransactionList :transactions="budget!.transactions" />
+  <div id="accounts-id">
+    <pre>{{ account }}</pre>
+    <TransactionList :transactions="account!.transactions" />
     <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
-    <TransactionFormModal v-if="show" :budget-id="budget!.id" @close="show = false" @create="handleCreate" />
+    <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
   </div>
 </template>
 
@@ -23,7 +23,7 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: budget, error } = await useWalleeApi(api => api.budgets.show(id), { deep: true })
+  const { data: account, error } = await useWalleeApi(api => api.accounts.show(id), { deep: true })
 
   if (error.value) {
     await router.replace(localePath("/"))
@@ -33,14 +33,14 @@
   const show = ref(false)
 
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
-    budget.value!.balance += transaction.value
-    budget.value!.transactions.push(transaction)
+    account.value!.balance += transaction.value
+    account.value!.transactions.push(transaction)
     show.value = false
   }
 </script>
 
 <style scoped>
-  #budgets-id {
+  #accounts-id {
     display: flex;
     flex-direction: column;
     gap: 2rem;

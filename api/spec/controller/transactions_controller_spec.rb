@@ -71,7 +71,7 @@ RSpec.describe TransactionsController, type: :request do
   end
 
   describe "POST /transactions" do
-    let(:budget_id) { create(:budget, user:).id }
+    let(:account_id) { create(:account, user:).id }
     let(:description) { "A description" }
     let(:sub_category_id) { create(:sub_category, user:).id }
     let(:transacted_at) { 2.days.ago }
@@ -86,7 +86,7 @@ RSpec.describe TransactionsController, type: :request do
         before do
           post "/transactions", params: {
             transaction: {
-              budget_id:,
+              account_id:,
               description:,
               sub_category_id:,
               transacted_at:,
@@ -107,7 +107,7 @@ RSpec.describe TransactionsController, type: :request do
         it "returns the new instance of Transaction" do
           data = response.parsed_body
           expect(data).to include({
-            "budget_id" => budget_id,
+            "account_id" => account_id,
             "description" => description,
             "sub_category_id" => sub_category_id,
             "transacted_at" => transacted_at.floor,
@@ -152,7 +152,7 @@ RSpec.describe TransactionsController, type: :request do
       it "returns a unauthorized HTTP status" do
         post "/transactions", params: {
           transaction: {
-            budget_id:,
+            account_id:,
             description:,
             sub_category_id:,
             transacted_at:,

@@ -17,16 +17,16 @@
 </template>
 
 <script setup lang="ts">
-  import type { Budget } from "~~/types/api"
+  import type { Account } from "~~/types/api"
 
-  type BudgetForm = {
+  type AccountForm = {
     description?: string
     name: string
   }
 
   const emit = defineEmits<{
     (event: "close"): void
-    (event: "create", payload: Budget): void
+    (event: "create", payload: Account): void
   }>()
 
   const { t } = useI18n()
@@ -36,8 +36,8 @@
     name: requiredString()
   }))
 
-  const handleSubmit = async (values: BudgetForm) => {
-    const { _data } = await walleeApi.budgets.create(values)
+  const handleSubmit = async (values: AccountForm) => {
+    const { _data } = await walleeApi.accounts.create(values)
     emit("create", _data!)
     emit("close")
   }
@@ -46,5 +46,5 @@
 <i18n lang="yaml">
   en:
     placeholders:
-      name: My budget
+      name: My account
 </i18n>

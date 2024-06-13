@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :budget do
-    name { "My budget" }
+  factory :account do
+    name { "My account" }
 
     user { association :user }
   end

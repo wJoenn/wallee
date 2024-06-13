@@ -5,18 +5,18 @@ RSpec.describe User do
   describe "associations" do
     let(:user) { create(:user) }
 
-    context "with budgets" do
+    context "with accounts" do
       before do
-        create(:budget, user:)
+        create(:account, user:)
       end
 
-      it "has many Budget" do
-        expect(user.budgets).to all be_a Budget
+      it "has many Account" do
+        expect(user.accounts).to all be_a Account
       end
 
-      it "destroys budgets on destroy" do
+      it "destroys accounts on destroy" do
         user.destroy
-        expect(Budget.count).to be 0
+        expect(Account.count).to be 0
       end
     end
 

@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_05_163416) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_13_094843) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "budgets", force: :cascade do |t|
+  create_table "accounts", force: :cascade do |t|
     t.string "description"
     t.string "name", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_budgets_on_user_id"
+    t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -43,12 +43,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_05_163416) do
     t.integer "value", null: false
     t.string "description"
     t.datetime "transacted_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.bigint "budget_id"
+    t.bigint "account_id"
     t.bigint "user_id", null: false
     t.bigint "sub_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["budget_id"], name: "index_transactions_on_budget_id"
+    t.index ["account_id"], name: "index_transactions_on_account_id"
     t.index ["sub_category_id"], name: "index_transactions_on_sub_category_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -63,10 +63,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_05_163416) do
     t.index ["jti"], name: "index_users_on_jti", unique: true
   end
 
-  add_foreign_key "budgets", "users"
+  add_foreign_key "accounts", "users"
   add_foreign_key "sub_categories", "categories"
   add_foreign_key "sub_categories", "users"
-  add_foreign_key "transactions", "budgets"
+  add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "sub_categories"
   add_foreign_key "transactions", "users"
 end
