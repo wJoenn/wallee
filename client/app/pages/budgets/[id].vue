@@ -23,7 +23,7 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: budget, error } = await useWalleeApi(api => api.budgets.show(id))
+  const { data: budget, error } = await useWalleeApi(api => api.budgets.show(id), { deep: true })
 
   if (error.value) {
     await router.replace(localePath("/"))
@@ -34,6 +34,7 @@
 
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
     budget.value!.balance += transaction.value
+    budget.value!.transactions.push(transaction)
     show.value = false
   }
 </script>
