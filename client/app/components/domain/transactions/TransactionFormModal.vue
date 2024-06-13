@@ -104,11 +104,26 @@
     const budgetId = budgets.value!.find(budgetOption => budgetOption.id === values.budget_id)?.id
 
     if (props.transaction) {
+      if (values.transacted_at === dayjs(props.transaction.transacted_at).format("YYYY-MM-DD")) {
+        values.transacted_at = props.transaction.transacted_at
+      } else {
+        values.transacted_at = toTimestamp(values.transacted_at)
+      }
+
       const { _data } = await walleeApi.transactions.update(props.transaction.id, values)
       emit("update", { budgetId, transaction: _data! })
     } else {
+      values.transacted_at = toTimestamp(values.transacted_at)
+
       const { _data } = await walleeApi.transactions.create(values)
       emit("create", { budgetId, transaction: _data! })
+    }
+  }
+
+  const toTimestamp = (dateString?: string) => {
+    if (dateString) {
+      const [year, month, date] = dateString.split("-")
+      return dayjs().year(+year!).month(+month!).date(+date!).toString()
     }
   }
 
