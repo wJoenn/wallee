@@ -10,4 +10,12 @@ class User < ApplicationRecord
   has_many :accounts, dependent: :destroy
   has_many :sub_categories, dependent: :destroy
   has_many :transactions, dependent: :destroy
+
+  after_create :create_main_account
+
+  private
+
+  def create_main_account
+    accounts.create(name: I18n.t("accounts.main_account_default_name"), main: true)
+  end
 end

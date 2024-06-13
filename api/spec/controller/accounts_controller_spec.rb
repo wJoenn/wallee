@@ -80,21 +80,21 @@ RSpec.describe AccountsController, type: :request do
       end
 
       context "with proper params" do
-        before do
-          post "/accounts", params: { account: { description:, name: } }
-        end
-
         it "returns a JSON object" do
+          post "/accounts", params: { account: { description:, name: } }
+
           expect(response.body).to be_a String
           expect(response.parsed_body).to have_key "id"
         end
 
         it "creates an instance of Account" do
-          expect(Account.count).to eq 1
+          expect { post "/accounts", params: { account: { description:, name: } } }.to change(Account, :count).by(1)
         end
 
         it "returns the new instance of Account" do
+          post "/accounts", params: { account: { description:, name: } }
           data = response.parsed_body
+
           expect(data).to include({
             "description" => description,
             "name" => name
@@ -102,30 +102,32 @@ RSpec.describe AccountsController, type: :request do
         end
 
         it "returns a created HTTP status" do
+          post "/accounts", params: { account: { description:, name: } }
           expect(response).to have_http_status :created
         end
       end
 
       context "without proper params" do
-        before do
-          post "/accounts", params: { account: { name: nil } }
-        end
-
         it "returns a JSON object" do
+          post "/accounts", params: { account: { name: nil } }
+
           expect(response.body).to be_a String
           expect(response.parsed_body).to have_key "errors"
         end
 
         it "does not create an instance of Account" do
-          expect(Account.count).to eq 0
+          expect { post "/accounts", params: { account: { name: nil } } }.not_to change(Account, :count)
         end
 
         it "returns a list of error messages" do
+          post "/accounts", params: { account: { name: nil } }
           data = response.parsed_body
+
           expect(data["errors"]).to eq({ "name" => %w[blank] })
         end
 
         it "returns a unprocessable_entity HTTP status" do
+          post "/accounts", params: { account: { name: nil } }
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -202,19 +204,19 @@ RSpec.describe AccountsController, type: :request do
   end
 
   describe "DELETE /accounts/:id" do
-    let(:account) { create(:account, user:) }
+    let!(:account) { create(:account, user:) }
 
     context "when a User is authenticated" do
       before do
         sign_in user
-        delete "/accounts/#{account.id}"
       end
 
       it "destroys the instance of Account" do
-        expect(Account.count).to be 0
+        expect { delete "/accounts/#{account.id}" }.to change(Account, :count).by(-1)
       end
 
       it "returns a ok HTTP status" do
+        delete "/accounts/#{account.id}"
         expect(response).to have_http_status :ok
       end
     end

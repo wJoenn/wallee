@@ -29,6 +29,8 @@ class AccountsController < ApplicationController
   end
 
   def destroy
+    raise if @resource.main
+
     @resource.destroy!
     render status: :ok
   end

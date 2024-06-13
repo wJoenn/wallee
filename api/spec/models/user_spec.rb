@@ -93,4 +93,12 @@ RSpec.describe User do
       expect(user.error_codes).to eq({ password_confirmation: %i[confirmation] })
     end
   end
+
+  describe "hooks" do
+    let(:user) { create(:user) }
+
+    it "creates a main Account after beign created" do
+      expect(user.accounts.first).to be_a Account
+    end
+  end
 end
