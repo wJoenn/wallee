@@ -109,6 +109,7 @@
   watch(value, () => {
     if (value.value) {
       selectedOption.value = props.options.find(option => option[props.selectBy] === value.value)
+      search.value = selectedOption.value?.label
     }
   }, { immediate: true })
 </script>
@@ -135,5 +136,5 @@
 
 <i18n lang="yaml">
   en:
-    notfound: No found option
+    notFound: No found option
 </i18n>
