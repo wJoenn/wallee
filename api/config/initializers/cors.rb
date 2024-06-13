@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "http://localhost:3000"
+    origins ENV.fetch("CLIENT_URL")
 
     resource "*",
       expose: %w[Authorization],
