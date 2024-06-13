@@ -12,7 +12,7 @@ class Account < ApplicationRecord
   end
 
   def serialize(include = false)
-    account = { balance:, description:, id:, name: }
+    account = { balance:, description:, id:, name:, main: }
     account[:transactions] = transactions if include
 
     account

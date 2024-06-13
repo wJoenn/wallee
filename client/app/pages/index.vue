@@ -1,14 +1,8 @@
 <template>
-  <div id="index" ref="presentingElement">
+  <div id="index">
     <div class="header">
-      <div>
-        <h1>{{ t("title") }}</h1>
-        <BaseButton @click="signOut">{{ t("globals.actions.signOut") }}</BaseButton>
-      </div>
-
-      <p>
-        {{ t("total", { amount: toEuro(transactions?.reduce((sum, transaction) => sum + transaction.value, 0)) }) }}
-      </p>
+      <h1>{{ t("title") }}</h1>
+      <BaseButton @click="signOut">{{ t("globals.actions.signOut") }}</BaseButton>
     </div>
 
     <div class="actions">
@@ -16,18 +10,26 @@
       <BaseButton @click="showAccountForm = true">{{ t("newAccount") }}</BaseButton>
     </div>
 
+    <h2>{{ t("sections.mainAccount") }}</h2>
+
+    <NuxtLink v-if="mainAccount" class="account" :to="localePath(`/accounts/${mainAccount.id}`)">
+      <span>{{ mainAccount!.name }}</span>
+      <p>{{ toEuro(mainAccount!.balance) }}</p>
+    </NuxtLink>
+
     <h2>{{ t("sections.accounts") }}</h2>
 
     <nav class="accounts">
-      <NuxtLink v-for="account in accounts" :key="account.id" :to="localePath(`/accounts/${account.id}`)">
+      <NuxtLink
+        v-for="account in secondaryAccounts"
+        :key="account.id"
+        class="account"
+        :to="localePath(`/accounts/${account.id}`)"
+      >
         <span>{{ account.name }}</span>
         <p>{{ toEuro(account.balance) }}</p>
       </NuxtLink>
     </nav>
-
-    <h2>{{ t("sections.transactions") }}</h2>
-
-    <TransactionList :transactions />
 
     <AccountFormModal v-if="showAccountForm" @close="showAccountForm = false" @create="handleCreateAccount" />
 
@@ -45,18 +47,17 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
-  const { data: accounts } = await useWalleeApi(api => api.accounts.index(), { deep: true })
-  const { data: transactions } = await useWalleeApi(api => api.transactions.index(), { deep: true })
+  const { data: accounts } = useWalleeApi(api => api.accounts.index(), { deep: true })
 
-  const presentingElement = ref<HTMLDivElement>()
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
 
-  const handleCreateTransaction = ({ budgetId, transaction }: { budgetId?: number, transaction: Transaction }) => {
-    transactions.value!.push(transaction)
+  const mainAccount = computed(() => accounts.value?.find(account => account.main))
+  const secondaryAccounts = computed(() => accounts.value?.filter(account => !account.main))
 
-    const account = accounts.value!.find(accountOption => accountOption.id === accountId)
-    if (account) { account.balance += transaction.value }
+  const handleCreateTransaction = ({ accountId, transaction }: { accountId?: number, transaction: Transaction }) => {
+    const account = accounts.value!.find(accountOption => accountOption.id === accountId)!
+    account.balance += transaction.value
 
     showTransactionForm.value = false
   }
@@ -74,7 +75,7 @@
     min-height: 1px;
     padding: 2rem;
 
-    .header > div {
+    .header {
       align-items: center;
       display: flex;
       justify-content: space-between;
@@ -90,18 +91,18 @@
       gap: 1rem;
     }
 
+    .account {
+      background-color: var(--background-primary);
+      border: 1px solid var(--color-secondary);
+      border-radius: 0.25rem;
+      box-shadow: 0 0 10px black;
+      padding: 1rem;
+    }
+
     .accounts {
       display: grid;
       gap: 1rem;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-
-      a {
-        background-color: var(--background-primary);
-        border: 1px solid var(--color-secondary);
-        border-radius: 0.25rem;
-        box-shadow: 0 0 10px black;
-        padding: 1rem;
-      }
     }
   }
 </style>
@@ -112,7 +113,7 @@
     newTransaction: New transaction
     sections:
       accounts: Accounts
-      transactions: Transactions
+      mainAccount: Main account
     title: Home page
     total: "Total: {amount}"
 </i18n>

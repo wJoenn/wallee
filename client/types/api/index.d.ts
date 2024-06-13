@@ -6,6 +6,7 @@ export type Account = {
   balance: number
   description?: string
   id: number
+  main: boolean
   name: string
 
   transactions: Transaction[]
