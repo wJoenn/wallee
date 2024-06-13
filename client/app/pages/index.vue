@@ -9,7 +9,11 @@
 
     <NuxtLink v-if="mainAccount" class="account" :to="localePath(`/accounts/${mainAccount.id}`)">
       <span>{{ mainAccount!.name }}</span>
-      <p>{{ toEuro(mainAccount!.balance) }}</p>
+
+      <div>
+        <p>{{ toEuro(mainAccount!.balance) }}</p>
+        <span v-if="dueAmounts">Due amounts included: {{ toEuro(mainAccount!.balance + dueAmounts) }}</span>
+      </div>
     </NuxtLink>
 
     <h2>{{ t("sections.accounts") }}</h2>
@@ -51,6 +55,10 @@
 
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
+
+  const dueAmounts = computed(() => (
+    secondaryAccounts.value?.reduce((sum, account) => account.balance < 0 ? sum + account.balance : sum, 0)
+  ))
 
   const mainAccount = computed(() => accounts.value?.find(account => account.main))
   const secondaryAccounts = computed(() => accounts.value?.filter(account => !account.main))
@@ -102,6 +110,19 @@
       border-radius: 0.25rem;
       box-shadow: 0 0 10px black;
       padding: 1rem;
+
+      div {
+        text-align: end;
+
+        p {
+          font-size: 1.2rem;
+        }
+
+        span {
+          color: #ffffff80;
+          font-size: 0.8rem;
+        }
+      }
     }
 
     .accounts {
