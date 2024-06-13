@@ -19,6 +19,17 @@ const price = () => {
     .multipleOf(0.01, t("globals.forms.validations.maxDecimals"))
 }
 
+const requiredNumber = (message?: string) => {
+  const { t } = useI18n()
+
+  const computedMessage = message ?? t("globals.forms.validations.required")
+
+  return number({
+    invalid_type_error: computedMessage,
+    required_error: computedMessage
+  })
+}
+
 const requiredString = (message?: string) => {
   const { t } = useI18n()
 
@@ -46,6 +57,7 @@ const zodSchema = {
   optional,
   password,
   price,
+  requiredNumber,
   requiredString,
   string,
   timestamp

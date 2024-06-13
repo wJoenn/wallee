@@ -20,21 +20,28 @@ RSpec.describe Transaction do
     end
 
     it "validates the presence of the value" do
-      transaction = described_class.create(user:)
+      transaction = described_class.create(account:, user:)
 
       expect(transaction).not_to be_persisted
       expect(transaction.error_codes).to eq({ value: %i[blank] })
     end
 
     it "validates that value not equal to 0" do
-      transaction = described_class.create(user:, value: 0)
+      transaction = described_class.create(account:, user:, value: 0)
 
       expect(transaction).not_to be_persisted
       expect(transaction.error_codes).to eq({ value: %i[other_than_0] })
     end
 
+    it "validates the presence of the Account" do
+      transaction = described_class.create(user:, value:)
+
+      expect(transaction).not_to be_persisted
+      expect(transaction.error_codes).to eq({ account: %i[blank] })
+    end
+
     it "validates the presence of the User" do
-      transaction = described_class.create(value:)
+      transaction = described_class.create(account:, value:)
 
       expect(transaction).not_to be_persisted
       expect(transaction.error_codes).to eq({ user: %i[blank] })

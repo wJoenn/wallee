@@ -23,7 +23,6 @@
         :disabled="!!accountId"
         :label="t('labels.account')"
         name="account_id"
-        optional
         :options="accountOptions"
         :placeholder="t('placeholders.account')"
         select-by="id"
@@ -71,8 +70,8 @@
   const { t } = useI18n()
   const { data: accounts } = await useWalleeApi(api => api.accounts.index())
 
-  const validationSchema = useZodSchema(({ number, object, optional, price, string, timestamp }) => object({
-    account_id: optional(number()),
+  const validationSchema = useZodSchema(({ object, optional, price, requiredNumber, string, timestamp }) => object({
+    account_id: requiredNumber(),
     description: optional(string()),
     transacted_at: timestamp(),
     value: price()

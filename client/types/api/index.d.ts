@@ -12,7 +12,7 @@ export type Account = {
 }
 
 export type Transaction = {
-  account_id?: number
+  account_id: number
   description?: string
   id: number
   transacted_at: Timestamp

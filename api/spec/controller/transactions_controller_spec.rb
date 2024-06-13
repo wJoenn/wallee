@@ -123,7 +123,7 @@ RSpec.describe TransactionsController, type: :request do
 
       context "without proper params" do
         before do
-          post "/transactions", params: { transaction: { value: nil } }
+          post "/transactions", params: { transaction: { account_id: nil, value: nil } }
         end
 
         it "returns a JSON object" do
@@ -138,6 +138,7 @@ RSpec.describe TransactionsController, type: :request do
         it "returns a list of error messages" do
           data = response.parsed_body
           expect(data["errors"]).to eq({
+            "account" => %w[blank],
             "value" => %w[blank]
           })
         end
