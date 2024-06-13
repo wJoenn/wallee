@@ -9,8 +9,6 @@ type Options = {
   method?: "DELETE" | "GET" | "PATCH" | "POST"
 }
 
-const API_URL = "http://localhost:8080"
-
 const _defaultOptions = (): Options => ({
   headers: {
     "Authorization": localStorage.getItem("bearerToken") ?? "",
@@ -19,10 +17,14 @@ const _defaultOptions = (): Options => ({
   method: "GET"
 })
 
-const _fetchApi = <T>(path: string, options?: Options) => $fetch.raw<T>(`${API_URL}${path}`, {
-  ..._defaultOptions(),
-  ...options
-})
+const _fetchApi = <T>(path: string, options?: Options) => {
+  const { public: { apiUrl } } = useRuntimeConfig()
+
+  return $fetch.raw<T>(`${apiUrl}${path}`, {
+    ..._defaultOptions(),
+    ...options
+  })
+}
 
 export const walleeApi = {
   accounts: {

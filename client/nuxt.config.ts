@@ -17,6 +17,12 @@ export default defineNuxtConfig({
     "~/assets/stylesheets/index.css"
   ],
 
+  runtimeConfig: {
+    public: {
+      apiUrl: ""
+    }
+  },
+
   typescript: {
     tsConfig: {
       compilerOptions: {
