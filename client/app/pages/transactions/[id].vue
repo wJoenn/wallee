@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div id="transactions-id">
     <pre>{{ transaction }}</pre>
     <BaseButton @click="show = true">{{ t("editTransaction") }}</BaseButton>
+    <BaseButton @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
     <TransactionFormModal :show :transaction @close="show = false" @update="handleUpdate" />
@@ -31,13 +32,28 @@
 
   const show = ref(false)
 
+  const handleDelete = async () => {
+    await walleeApi.transactions.destroy(transaction.value!.id)
+    await router.replace(localePath("/"))
+  }
+
   const handleUpdate = ({ transaction: updatedTransaction }: { transaction: Transaction }) => {
     transaction.value = updatedTransaction
     show.value = false
   }
 </script>
 
+<style scoped>
+  #transactions-id {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+  }
+</style>
+
 <i18n lang="yaml">
   en:
+    deleteTransaction: Delete transaction
     editTransaction: Edit transaction
 </i18n>
