@@ -61,6 +61,10 @@ group :development, :test do
   # [https://github.com/flyerhzm/bullet]
   gem "bullet", "~> 7.1.6"
 
+  # A Ruby gem to load environment variables from `.env`.
+  # [https://github.com/bkeepers/dotenv]
+  gem "dotenv", "~> 3.1.2"
+
   # Rails integration of factory_bot, a fixtures replacement with a straightforward definition syntax
   # [https://github.com/thoughtbot/factory_bot_rails]
   gem "factory_bot_rails", "~> 6.4.3"
