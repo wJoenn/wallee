@@ -94,7 +94,7 @@
       }
     }
 
-    return { account_id: props.accountId }
+    return { account_id: props.accountId ?? accounts.value!.find(account => account.main)!.id }
   })
 
   const handleSubmit = async (values: TransactionForm) => {
