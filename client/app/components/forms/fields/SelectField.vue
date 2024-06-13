@@ -101,9 +101,11 @@
   const handleToggle = () => {
     if (props.disabled) { return }
 
-    focused.value = !focused.value
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     dropdown.value!.toggle()
+    focused.value = !focused.value
+
+    if (!focused.value) { search.value = selectedOption.value?.label }
   }
 
   watch(value, () => {
