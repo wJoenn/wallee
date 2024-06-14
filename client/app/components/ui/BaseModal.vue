@@ -16,6 +16,7 @@
   .base-modal {
     background: var(--background-primary);
     inset: 0;
+    overflow-y: scroll;
     padding: 2rem;
     position: fixed;
   }
