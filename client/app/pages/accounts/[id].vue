@@ -12,10 +12,10 @@
     <div>
       <h2>{{ t("transactions") }}</h2>
       <TransactionList :transactions="account!.transactions" />
-    </div>
 
-    <div class="footer">
-      <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
+      <div class="footer">
+        <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
+      </div>
     </div>
 
     <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
@@ -57,7 +57,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 2rem;
+    padding: 2rem 2rem 0;
 
     .header {
       display: flex;
@@ -68,8 +68,8 @@
       background-color: var(--background-primary);
       bottom: 0;
       left: 0;
-      padding: 2rem;
-      position: fixed;
+      padding: 2rem 0;
+      position: sticky;
       right: 0;
 
       button {
