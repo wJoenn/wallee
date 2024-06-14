@@ -16,7 +16,10 @@
       </div>
     </NuxtLink>
 
-    <h2>{{ t("sections.accounts") }}</h2>
+    <h2>
+      <span>{{ t("sections.accounts") }}</span>
+      <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
+    </h2>
 
     <nav class="accounts">
       <NuxtLink
@@ -30,9 +33,8 @@
       </NuxtLink>
     </nav>
 
-    <div class="actions">
+    <div class="footer">
       <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
-      <BaseButton @click="showAccountForm = true">{{ t("newAccount") }}</BaseButton>
     </div>
 
     <AccountFormModal v-if="showAccountForm" @close="showAccountForm = false" @create="handleCreateAccount" />
@@ -93,15 +95,23 @@
       }
     }
 
-    .actions {
-      bottom: 0;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    h2 {
+      align-items: center;
+      display: flex;
       gap: 1rem;
+    }
+
+    .footer {
+      background-color: var(--background-primary);
+      bottom: 0;
       left: 0;
       padding: 2rem;
       position: fixed;
       right: 0;
+
+      button {
+        width: 100%
+      }
     }
 
     .account {
