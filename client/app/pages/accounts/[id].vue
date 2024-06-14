@@ -9,13 +9,13 @@
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
     </div>
 
-    <div>
+    <div class="main">
       <h2>{{ t("transactions") }}</h2>
       <TransactionList :transactions="account!.transactions" />
+    </div>
 
-      <div class="footer">
-        <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
-      </div>
+    <div class="footer">
+      <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
     </div>
 
     <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
@@ -56,18 +56,16 @@
   #accounts-id {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
     gap: 2rem;
     padding: 2rem 2rem 0;
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-    }
 
     .footer {
       background-color: var(--background-primary);
       bottom: 0;
       left: 0;
+      margin-top: -2rem;
       padding: 2rem 0;
       position: sticky;
       right: 0;
@@ -75,6 +73,15 @@
       button {
         width: 100%
       }
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .main {
+      flex-grow: 1;
     }
   }
 </style>

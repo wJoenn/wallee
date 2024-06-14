@@ -83,7 +83,7 @@
     flex-direction: column;
     gap: 2rem;
     min-height: 1px;
-    padding: 2rem;
+    padding: 2rem 2rem 0;
 
     .header {
       align-items: center;
@@ -105,8 +105,9 @@
       background-color: var(--background-primary);
       bottom: 0;
       left: 0;
-      padding: 2rem;
-      position: fixed;
+      margin-top: -2rem;
+      padding: 2rem 0;
+      position: sticky;
       right: 0;
 
       button {
