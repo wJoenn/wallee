@@ -121,7 +121,7 @@
   const toTimestamp = (dateString?: string) => {
     if (dateString) {
       const [year, month, date] = dateString.split("-")
-      return dayjs().year(+year!).month(+month!).date(+date!).toString()
+      return dayjs().year(+year!).month(+month! - 1).date(+date!).toString()
     }
   }
 
