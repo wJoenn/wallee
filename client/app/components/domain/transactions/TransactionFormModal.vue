@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Timestamp } from "~~/types"
+  import type { DateString, Timestamp } from "~~/types"
   import type { Transaction } from "~~/types/api"
 
   import dayjs from "~~/libs/dayjs.ts"
@@ -56,7 +56,7 @@
   type TransactionForm = {
     account_id?: number
     description?: string
-    transacted_at?: Timestamp
+    transacted_at?: DateString
     value: number
   }
 
@@ -73,10 +73,10 @@
   const { t } = useI18n()
   const { data: accounts, status } = useWalleeApi(api => api.accounts.index())
 
-  const validationSchema = useZodSchema(({ object, optional, price, requiredNumber, string, timestamp }) => object({
+  const validationSchema = useZodSchema(({ datestring, object, optional, price, requiredNumber, string }) => object({
     account_id: requiredNumber(),
     description: optional(string()),
-    transacted_at: timestamp(),
+    transacted_at: datestring(),
     value: price()
   }))
 
@@ -127,7 +127,7 @@
     emit("close")
   }
 
-  const toTimestamp = (dateString?: string) => {
+  const toTimestamp = (dateString?: DateString): Timestamp | undefined => {
     if (dateString) {
       const [year, month, date] = dateString.split("-")
       return dayjs().year(+year!).month(+month! - 1).date(+date!).toString()

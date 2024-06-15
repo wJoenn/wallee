@@ -22,21 +22,21 @@
 </template>
 
 <script setup lang="ts">
-  import type { Timestamp } from "~~/types"
+  import type { DateString } from "~~/types"
 
   import dayjs from "~~/libs/dayjs.ts"
 
   type DayOption = {
     disabled?: boolean
     label: number
-    value?: Timestamp
+    value?: DateString
   }
 
   const emit = defineEmits<{
     (event: "selected"): void
   }>()
 
-  const date = defineModel<Timestamp>("date")
+  const date = defineModel<DateString>("date")
 
   const monthIndex = ref(dayjs().month())
 
@@ -45,7 +45,7 @@
   const days = computed(() => {
     const currentMonthDays = times(month.value.daysInMonth(), (_, index) => ({
       label: index + 1,
-      value: timestampAt(index + 1)
+      value: dateStringAt(index + 1)
     }))
 
     const firstDayOfCurrentMonth = month.value.startOf("month").day() || 7
@@ -80,7 +80,7 @@
     new Array(n).fill(null).map(call)
   )
 
-  const timestampAt = (day: number) => month.value.date(day).format("YYYY-MM-DD")
+  const dateStringAt = (day: number): DateString => month.value.date(day).format("YYYY-MM-DD")
 
   watch(date, () => {
     if (date.value && dayjs(date.value, "YYYY-MM-DD", true).isValid()) {

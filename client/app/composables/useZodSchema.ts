@@ -41,7 +41,7 @@ const requiredString = (message?: string) => {
   }).min(1, computedMessage)
 }
 
-const timestamp = () => {
+const datestring = () => {
   const { t } = useI18n()
 
   return string().optional().refine(value => (
@@ -52,6 +52,7 @@ const timestamp = () => {
 }
 
 const zodSchema = {
+  datestring,
   number,
   object,
   optional,
@@ -59,8 +60,7 @@ const zodSchema = {
   price,
   requiredNumber,
   requiredString,
-  string,
-  timestamp
+  string
 }
 
 export const useZodSchema = <T extends ZodSchema>(call: (schema: typeof zodSchema) => T) => call(zodSchema)

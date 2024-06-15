@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Timestamp } from "~~/types"
+  import type { DateString } from "~~/types"
 
   import dayjs from "dayjs"
 
@@ -41,7 +41,7 @@
   }>()
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
-  const { errors, value } = useField<Timestamp>(props.name)
+  const { errors, value } = useField<DateString>(props.name)
 
   const dropdown = ref<InstanceType<typeof BaseDropdown>>()
   const focused = ref(false)
