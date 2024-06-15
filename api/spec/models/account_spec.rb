@@ -30,12 +30,15 @@ RSpec.describe Account do
       expect(account.error_codes).to eq({ name: %i[blank] })
     end
 
-    it "validates the uniqueness of the name" do
+    it "validates the uniqueness of the name for this user" do
       described_class.create(name:, user:)
       account = described_class.create(name:, user:)
 
       expect(account).not_to be_persisted
       expect(account.error_codes).to eq({ name: %i[taken] })
+
+      account = described_class.create(name:, user: create(:user, email: "another@user.com"))
+      expect(account).to be_persisted
     end
 
     it "validates the presence of the User" do

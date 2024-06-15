@@ -3,7 +3,7 @@ class Account < ApplicationRecord
 
   has_many :transactions
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :user_id }
 
   before_destroy :manage_transactions
 
