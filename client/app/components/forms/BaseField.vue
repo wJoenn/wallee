@@ -4,7 +4,9 @@
       <span>{{ label }}</span>
       <span v-if="optional" class="optional">({{ t("optional") }})</span>
     </label>
-    <slot />
+
+    <BaseSkeleton v-if="loading" container style="height: 45px;" />
+    <slot v-else />
 
     <BaseError :errors />
   </div>
@@ -14,6 +16,7 @@
   defineProps<{
     errors?: string[]
     label?: string
+    loading?: boolean
     name?: string
     optional?: boolean
   }>()

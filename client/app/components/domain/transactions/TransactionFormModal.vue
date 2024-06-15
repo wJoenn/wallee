@@ -22,6 +22,7 @@
       <SelectField
         :disabled="!!accountId"
         :label="t('labels.account')"
+        :loading="status === 'pending'"
         name="account_id"
         :options="accountOptions"
         :placeholder="t('placeholders.account')"
@@ -37,7 +38,9 @@
         :placeholder="t('globals.forms.placeholders.description')"
       />
 
-      <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton :loading="loading || status === 'pending'" type="submit">
+        {{ t("globals.actions.submit") }}
+      </BaseButton>
     </BaseForm>
 
     <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
@@ -68,7 +71,7 @@
   }>()
 
   const { t } = useI18n()
-  const { data: accounts } = await useWalleeApi(api => api.accounts.index())
+  const { data: accounts, status } = useWalleeApi(api => api.accounts.index())
 
   const validationSchema = useZodSchema(({ object, optional, price, requiredNumber, string, timestamp }) => object({
     account_id: requiredNumber(),
@@ -81,7 +84,7 @@
   const transactionModifier = ref(-1)
 
   const accountOptions = computed(() => (
-    accounts.value!.map(account => ({ ...account, key: account.id, label: account.name }))
+    accounts.value?.map(account => ({ ...account, key: account.id, label: account.name })) ?? []
   ))
 
   const initialValues = computed(() => {
@@ -95,7 +98,7 @@
       }
     }
 
-    return { account_id: props.accountId ?? accounts.value!.find(account => account.main)!.id }
+    return { account_id: props.accountId }
   })
 
   const handleSubmit = async (values: TransactionForm) => {

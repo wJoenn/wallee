@@ -1,8 +1,8 @@
 <template>
   <div id="transactions-id">
     <pre>{{ transaction }}</pre>
-    <BaseButton @click="show = true">{{ t("editTransaction") }}</BaseButton>
-    <BaseButton @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
+    <BaseButton :loading="status === 'pending'" @click="show = true">{{ t("editTransaction") }}</BaseButton>
+    <BaseButton :loading="status === 'pending'" @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
     <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
 
     <TransactionFormModal v-if="show" :transaction @close="show = false" @update="handleUpdate" />
@@ -23,12 +23,7 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: transaction, error } = await useWalleeApi(api => api.transactions.show(id))
-
-  if (error.value) {
-    await router.replace(localePath("/"))
-    // TODO: add failure notification
-  }
+  const { data: transaction, status } = useWalleeApi(api => api.transactions.show(id))
 
   const show = ref(false)
 
@@ -40,6 +35,13 @@
   const handleUpdate = ({ transaction: updatedTransaction }: { transaction: Transaction }) => {
     transaction.value = updatedTransaction
   }
+
+  watch(status, async () => {
+    if (status.value === "error") {
+      await router.replace(localePath("/"))
+      // TODO: add failure notification
+    }
+  }, { immediate: true })
 </script>
 
 <style scoped>

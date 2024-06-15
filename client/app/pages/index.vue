@@ -5,33 +5,55 @@
       <BaseButton @click="signOut">{{ t("globals.actions.signOut") }}</BaseButton>
     </div>
 
-    <h2>{{ t("sections.mainAccount") }}</h2>
+    <div class="main">
+      <section>
+        <h2>{{ t("sections.mainAccount") }}</h2>
 
-    <NuxtLink v-if="mainAccount" class="account" :to="localePath(`/accounts/${mainAccount.id}`)">
-      <span>{{ mainAccount!.name }}</span>
+        <BaseSkeleton v-if="status === 'pending'" class="account" container>
+          <BaseSkeleton as="span" style="height: 1rem; width: 10ch;" />
 
-      <div>
-        <p>{{ toEuro(mainAccount!.balance) }}</p>
-        <span v-if="dueAmounts">Due amounts included: {{ toEuro(mainAccount!.balance + dueAmounts) }}</span>
-      </div>
-    </NuxtLink>
+          <div>
+            <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
+            <BaseSkeleton as="span" style="height: 0.8rem; width: 20ch;" />
+          </div>
+        </BaseSkeleton>
 
-    <h2>
-      <span>{{ t("sections.accounts") }}</span>
-      <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
-    </h2>
+        <NuxtLink v-else-if="mainAccount" class="account" :to="localePath(`/accounts/${mainAccount.id}`)">
+          <span>{{ mainAccount!.name }}</span>
 
-    <nav class="accounts">
-      <NuxtLink
-        v-for="account in secondaryAccounts"
-        :key="account.id"
-        class="account"
-        :to="localePath(`/accounts/${account.id}`)"
-      >
-        <span>{{ account.name }}</span>
-        <p>{{ toEuro(account.balance) }}</p>
-      </NuxtLink>
-    </nav>
+          <div>
+            <p>{{ toEuro(mainAccount!.balance) }}</p>
+            <span v-if="dueAmounts">Due amounts included: {{ toEuro(mainAccount!.balance + dueAmounts) }}</span>
+          </div>
+        </NuxtLink>
+      </section>
+
+      <section>
+        <h2>
+          <span>{{ t("sections.accounts") }}</span>
+          <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
+        </h2>
+
+        <nav v-if="status === 'pending'" class="accounts">
+          <BaseSkeleton v-for="i in 4" :key="i" class="account" container>
+            <BaseSkeleton as="span" style="height: 1rem; width: 10ch;" />
+            <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
+          </BaseSkeleton>
+        </nav>
+
+        <nav v-else class="accounts">
+          <NuxtLink
+            v-for="account in secondaryAccounts"
+            :key="account.id"
+            class="account"
+            :to="localePath(`/accounts/${account.id}`)"
+          >
+            <span>{{ account.name }}</span>
+            <p>{{ toEuro(account.balance) }}</p>
+          </NuxtLink>
+        </nav>
+      </section>
+    </div>
 
     <div class="footer">
       <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
@@ -53,7 +75,7 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
-  const { data: accounts } = useWalleeApi(api => api.accounts.index(), { deep: true })
+  const { data: accounts, status } = useWalleeApi(api => api.accounts.index(), { deep: true })
 
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
@@ -80,7 +102,8 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    min-height: 1px;
+    min-height: 100vh;
+    min-height: 100svh;
     padding: 2rem 2rem 0;
 
     .header {
@@ -93,10 +116,52 @@
       }
     }
 
-    h2 {
-      align-items: center;
+    .main {
       display: flex;
-      gap: 1rem;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 2rem;
+
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        h2 {
+          align-items: center;
+          display: flex;
+          gap: 1rem;
+        }
+
+        .account {
+          background-color: var(--background-primary);
+          border: 1px solid var(--color-secondary);
+          border-radius: 0.25rem;
+          box-shadow: 0 0 10px black;
+          padding: 1rem;
+
+          div {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+
+            p {
+              font-size: 1.2rem;
+            }
+
+            span {
+              color: #ffffff80;
+              font-size: 0.8rem;
+            }
+          }
+        }
+
+        .accounts {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
     }
 
     .footer {
@@ -111,33 +176,6 @@
       button {
         width: 100%
       }
-    }
-
-    .account {
-      background-color: var(--background-primary);
-      border: 1px solid var(--color-secondary);
-      border-radius: 0.25rem;
-      box-shadow: 0 0 10px black;
-      padding: 1rem;
-
-      div {
-        text-align: end;
-
-        p {
-          font-size: 1.2rem;
-        }
-
-        span {
-          color: #ffffff80;
-          font-size: 0.8rem;
-        }
-      }
-    }
-
-    .accounts {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

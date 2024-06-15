@@ -1,9 +1,14 @@
 <template>
   <div id="accounts-id">
     <div class="header">
-      <div>
-        <p>{{ account!.name }}</p>
-        <h1>{{ toEuro(account!.balance) }}</h1>
+      <div v-if="status === 'pending'">
+        <BaseSkeleton container style="height: 1rem; width: 10ch;" />
+        <BaseSkeleton container style="height: 2rem; width: 15ch;" />
+      </div>
+
+      <div v-else-if="account">
+        <p>{{ account.name }}</p>
+        <h1>{{ toEuro(account.balance) }}</h1>
       </div>
 
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
@@ -11,11 +16,11 @@
 
     <div class="main">
       <h2>{{ t("transactions") }}</h2>
-      <TransactionList :transactions="account!.transactions" />
+      <TransactionList :loading="status === 'pending'" :transactions="account?.transactions" />
     </div>
 
     <div class="footer">
-      <BaseButton @click="show = true">{{ t("newTransaction") }}</BaseButton>
+      <BaseButton :loading="status === 'pending'" @click="show = true">{{ t("newTransaction") }}</BaseButton>
     </div>
 
     <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
@@ -36,12 +41,7 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: account, error } = await useWalleeApi(api => api.accounts.show(id), { deep: true })
-
-  if (error.value) {
-    await router.replace(localePath("/"))
-    // TODO: add failure notification
-  }
+  const { data: account, status } = useWalleeApi(api => api.accounts.show(id), { deep: true })
 
   const show = ref(false)
 
@@ -49,6 +49,13 @@
     account.value!.balance += transaction.value
     account.value!.transactions.push(transaction)
   }
+
+  watch(status, async () => {
+    if (status.value === "error") {
+      await router.replace(localePath("/"))
+      // TODO: add failure notification
+    }
+  }, { immediate: true })
 </script>
 
 <style scoped>

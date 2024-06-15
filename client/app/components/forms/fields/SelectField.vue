@@ -1,7 +1,7 @@
 <template>
   <BaseDropdown ref="dropdown" v-on-click-outside="handleClickOutside" class="select-field">
     <template #trigger>
-      <BaseField :errors :label :name :optional>
+      <BaseField :errors :label :loading :name :optional>
         <BaseInput
           :id="name"
           v-model:value="search"
@@ -45,6 +45,7 @@
   const props = defineProps<{
     disabled?: boolean
     label: string
+    loading?: boolean
     name: string
     options: T[]
     optional?: boolean
@@ -108,12 +109,15 @@
     if (!focused.value) { search.value = selectedOption.value?.label }
   }
 
-  watch(value, () => {
+  const setDefaultValue = () => {
     if (value.value) {
       selectedOption.value = props.options.find(option => option[props.selectBy] === value.value)
       search.value = selectedOption.value?.label
     }
-  }, { immediate: true })
+  }
+
+  watch(value, setDefaultValue, { immediate: true })
+  watch(() => props.options, setDefaultValue, { immediate: true })
 </script>
 
 <style scoped>

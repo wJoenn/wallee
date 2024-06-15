@@ -1,20 +1,36 @@
 <template>
   <nav class="transaction-list">
-    <NuxtLink
-      v-for="transaction in sortedTransactions"
-      :key="transaction.id"
-      :to="localePath(`/transactions/${transaction.id}`)"
-    >
-      <div class="date">
-        <p>{{ dayjs(transaction.transacted_at).format("DD") }}</p>
-        <p>{{ dayjs(transaction.transacted_at).format("MMM") }}</p>
-      </div>
+    <template v-if="loading">
+      <BaseSkeleton v-for="i in 10" :key="i" as="a">
+        <div class="date">
+          <BaseSkeleton as="p" container style="height: 1rem; width: 2ch;" />
+          <BaseSkeleton as="p" container style="height: 1rem; width: 3ch;" />
+        </div>
 
-      <div class="amount">
-        <p>{{ toEuro(transaction.value) }}</p>
-        <span>{{ transaction.description }}</span>
-      </div>
-    </NuxtLink>
+        <div class="amount">
+          <BaseSkeleton as="p" container style="height: 1.2rem; width: 8ch;" />
+          <BaseSkeleton as="span" container style="height: 1rem; width: 15ch;" />
+        </div>
+      </BaseSkeleton>
+    </template>
+
+    <template v-else>
+      <NuxtLink
+        v-for="transaction in sortedTransactions"
+        :key="transaction.id"
+        :to="localePath(`/transactions/${transaction.id}`)"
+      >
+        <div class="date">
+          <p>{{ dayjs(transaction.transacted_at).format("DD") }}</p>
+          <p>{{ dayjs(transaction.transacted_at).format("MMM") }}</p>
+        </div>
+
+        <div class="amount">
+          <p>{{ toEuro(transaction.value) }}</p>
+          <span>{{ transaction.description }}</span>
+        </div>
+      </NuxtLink>
+    </template>
   </nav>
 </template>
 
@@ -24,6 +40,7 @@
   import dayjs from "~~/libs/dayjs.ts"
 
   const props = defineProps<{
+    loading?: boolean
     transactions?: Transaction[]
   }>()
 
@@ -59,7 +76,9 @@
       }
 
       .amount {
-        text-align: end;
+        align-items: flex-end;
+        display: flex;
+        flex-direction: column;
 
         p {
           font-size: 1.2rem;
@@ -68,7 +87,9 @@
       }
 
       .date {
-        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
       }
     }
   }

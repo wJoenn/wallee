@@ -53,7 +53,7 @@ export const walleeApi = {
 export const useWalleeApi = <T>(
   call: (api: typeof walleeApi) => Promise<FetchResponse<T>>,
   options?: AsyncDataOptions<T>
-) => useAsyncData(crypto.randomUUID(), async () => {
+) => useLazyAsyncData(crypto.randomUUID(), async () => {
     const { _data } = await call(walleeApi)
     return _data!
   }, options)
