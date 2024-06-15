@@ -81,7 +81,9 @@
   }))
 
   const loading = ref(false)
-  const transactionModifier = ref(-1)
+
+  // eslint-disable-next-line vue/no-setup-props-reactivity-loss
+  const transactionModifier = ref(props.transaction && props.transaction.value > 0 ? 1 : -1)
 
   const accountOptions = computed(() => (
     accounts.value?.map(account => ({ ...account, key: account.id, label: account.name })) ?? []
@@ -131,14 +133,6 @@
       return dayjs().year(+year!).month(+month! - 1).date(+date!).toString()
     }
   }
-
-  watch(() => props.transaction, () => {
-    if (props.transaction && props.transaction.value > 0) {
-      transactionModifier.value = 1
-    } else {
-      transactionModifier.value = -1
-    }
-  }, { immediate: true })
 </script>
 
 <style>
