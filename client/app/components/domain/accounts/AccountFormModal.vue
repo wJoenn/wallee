@@ -12,6 +12,7 @@
 
       <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
+
     <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
   </BaseModal>
 </template>
@@ -26,7 +27,7 @@
 
   const emit = defineEmits<{
     (event: "close"): void
-    (event: "create", payload: Account): void
+    (event: "create", payload: Omit<Account, "transactions">): void
   }>()
 
   const { t } = useI18n()

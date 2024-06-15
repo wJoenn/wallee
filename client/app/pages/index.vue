@@ -72,7 +72,7 @@
     showTransactionForm.value = false
   }
 
-  const handleCreateAccount = (account: Account) => {
+  const handleCreateAccount = (account: Omit<Account, "transactions">) => {
     accounts.value!.push(account)
   }
 </script>
