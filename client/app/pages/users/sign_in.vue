@@ -3,7 +3,7 @@
     <BaseForm ref="form" :action="handleSubmit" :validation-schema>
       <TextField :label="t('globals.forms.labels.email')" name="email" placeholder="user@example.com" />
       <PasswordField :label="t('globals.forms.labels.password')" name="password" />
-      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
     <p>
@@ -29,8 +29,10 @@
   }))
 
   const form = ref<InstanceType<typeof BaseForm>>()
+  const loading = ref(false)
 
   const handleSubmit = async (values: RecursiveRecord) => {
+    loading.value = true
     const { status } = await signIn(values)
 
     if (status === "unauthorized") {
@@ -38,6 +40,8 @@
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         form.value?.setFieldError(path, t("validations.user.invalid_email_or_password"))
       })
+
+      loading.value = false
     } else {
       await router.replace("/")
     }

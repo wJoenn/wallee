@@ -4,7 +4,7 @@
       <TextField :label="t('globals.forms.labels.email')" name="email" placeholder="user@example.com" />
       <PasswordField :label="t('globals.forms.labels.password')" name="password" />
       <PasswordField :label="t('globals.forms.labels.passwordConfirmation')" name="password_confirmation" />
-      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
     <p>
@@ -34,14 +34,19 @@
   }))
 
   const form = ref<InstanceType<typeof BaseForm>>()
+  const loading = ref(false)
 
   const handleSubmit = async (values: RecursiveRecord) => {
+    loading.value = true
     const { data, status } = await signUp(values)
+
     if (status === "unprocessable_entity") {
       Object.entries(data.errors).forEach(([path, errors]) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         errors.forEach(error => { form.value?.setFieldError(path, t(`validations.${path}.${error}`)) })
       })
+
+      loading.value = false
     } else {
       await router.replace("/")
     }

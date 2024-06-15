@@ -37,7 +37,7 @@
         :placeholder="t('globals.forms.placeholders.description')"
       />
 
-      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
     <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
@@ -77,6 +77,7 @@
     value: price()
   }))
 
+  const loading = ref(false)
   const transactionModifier = ref(-1)
 
   const accountOptions = computed(() => (
@@ -98,6 +99,7 @@
   })
 
   const handleSubmit = async (values: TransactionForm) => {
+    loading.value = true
     values.value *= transactionModifier.value * 100
     const accountId = accounts.value!.find(accountOption => accountOption.id === values.account_id)?.id
 

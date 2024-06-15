@@ -10,7 +10,7 @@
         :placeholder="t('globals.forms.placeholders.description')"
       />
 
-      <BaseButton type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
     </BaseForm>
 
     <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
@@ -37,7 +37,10 @@
     name: requiredString()
   }))
 
+  const loading = ref(false)
+
   const handleSubmit = async (values: AccountForm) => {
+    loading.value = true
     const { _data } = await walleeApi.accounts.create(values)
     emit("create", _data!)
     emit("close")
