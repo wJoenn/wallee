@@ -2,8 +2,8 @@
   <div id="accounts-id">
     <div class="header">
       <div v-if="status === 'pending'">
-        <BaseSkeleton container style="height: 1rem; width: 10ch;" />
-        <BaseSkeleton container style="height: 2rem; width: 15ch;" />
+        <BaseSkeleton style="height: 1rem; width: 10ch;" />
+        <BaseSkeleton style="height: 2rem; width: 15ch;" />
       </div>
 
       <div v-else-if="account">

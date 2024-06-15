@@ -9,12 +9,12 @@
       <section>
         <h2>{{ t("sections.mainAccount") }}</h2>
 
-        <BaseSkeleton v-if="status === 'pending'" class="account" container>
-          <BaseSkeleton as="span" style="height: 1rem; width: 10ch;" />
+        <BaseSkeleton v-if="status === 'pending'" class="account">
+          <BaseSkeleton as="span" primary style="height: 1rem; width: 10ch;" />
 
           <div>
-            <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
-            <BaseSkeleton as="span" style="height: 0.8rem; width: 20ch;" />
+            <BaseSkeleton as="p" primary style="height: 1.2rem; width: 8ch;" />
+            <BaseSkeleton as="span" primary style="height: 0.8rem; width: 20ch;" />
           </div>
         </BaseSkeleton>
 
@@ -35,9 +35,9 @@
         </h2>
 
         <nav v-if="status === 'pending'" class="accounts">
-          <BaseSkeleton v-for="i in 4" :key="i" class="account" container>
-            <BaseSkeleton as="span" style="height: 1rem; width: 10ch;" />
-            <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
+          <BaseSkeleton v-for="i in 4" :key="i" class="account">
+            <BaseSkeleton as="span" primary style="height: 1rem; width: 10ch;" />
+            <BaseSkeleton as="p" primary style="height: 1.2rem; width: 8ch;" />
           </BaseSkeleton>
         </nav>
 

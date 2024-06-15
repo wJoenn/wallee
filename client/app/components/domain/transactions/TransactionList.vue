@@ -3,13 +3,13 @@
     <template v-if="loading">
       <BaseSkeleton v-for="i in 10" :key="i" as="a">
         <div class="date">
-          <BaseSkeleton as="p" container style="height: 1rem; width: 2ch;" />
-          <BaseSkeleton as="p" container style="height: 1rem; width: 3ch;" />
+          <BaseSkeleton as="p" style="height: 1rem; width: 2ch;" />
+          <BaseSkeleton as="p" style="height: 1rem; width: 3ch;" />
         </div>
 
         <div class="amount">
-          <BaseSkeleton as="p" container style="height: 1.2rem; width: 8ch;" />
-          <BaseSkeleton as="span" container style="height: 1rem; width: 15ch;" />
+          <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
+          <BaseSkeleton as="span" style="height: 1rem; width: 15ch;" />
         </div>
       </BaseSkeleton>
     </template>

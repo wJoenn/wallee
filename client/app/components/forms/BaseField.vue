@@ -5,7 +5,7 @@
       <span v-if="optional" class="optional">({{ t("optional") }})</span>
     </label>
 
-    <BaseSkeleton v-if="loading" container style="height: 45px;" />
+    <BaseSkeleton v-if="loading" style="height: 45px;" />
     <slot v-else />
 
     <BaseError :errors />

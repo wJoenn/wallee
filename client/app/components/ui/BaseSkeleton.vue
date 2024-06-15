@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
   const props = withDefaults(defineProps<{
-    secondary?: boolean
+    primary?: boolean
     as?: string
   }>(), {
     as: "div"
@@ -17,7 +17,7 @@
   }>()
 
   const css = computed(() => ({
-    backgroundColor: `var(--${props.secondary ? "color-secondary" : "background-primary"})`
+    backgroundColor: `var(--${props.primary ? "background-primary" : "color-secondary"})`
   }))
 </script>
 
