@@ -48,7 +48,6 @@
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
     account.value!.balance += transaction.value
     account.value!.transactions.push(transaction)
-    show.value = false
   }
 </script>
 

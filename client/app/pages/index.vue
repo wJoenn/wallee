@@ -68,8 +68,6 @@
   const handleCreateTransaction = ({ accountId, transaction }: { accountId?: number, transaction: Transaction }) => {
     const account = accounts.value!.find(accountOption => accountOption.id === accountId)!
     account.balance += transaction.value
-
-    showTransactionForm.value = false
   }
 
   const handleCreateAccount = (account: Omit<Account, "transactions">) => {

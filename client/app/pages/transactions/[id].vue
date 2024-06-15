@@ -39,7 +39,6 @@
 
   const handleUpdate = ({ transaction: updatedTransaction }: { transaction: Transaction }) => {
     transaction.value = updatedTransaction
-    show.value = false
   }
 </script>
 

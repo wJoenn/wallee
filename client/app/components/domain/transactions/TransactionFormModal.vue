@@ -116,6 +116,8 @@
       const { _data } = await walleeApi.transactions.create(values)
       emit("create", { accountId, transaction: _data! })
     }
+
+    emit("close")
   }
 
   const toTimestamp = (dateString?: string) => {
