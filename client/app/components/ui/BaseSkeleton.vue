@@ -37,6 +37,6 @@
     background-color: v-bind("css.backgroundColor") !important;
     border-radius: 0.25rem;
     display: block;
-    margin: 1px 0;
+    margin: 2px 0;
   }
 </style>

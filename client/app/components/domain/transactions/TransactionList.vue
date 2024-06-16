@@ -79,6 +79,7 @@
         align-items: flex-end;
         display: flex;
         flex-direction: column;
+        text-align: end;
 
         p {
           font-size: 1.2rem;

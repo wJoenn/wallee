@@ -4,11 +4,13 @@
       <div v-if="status === 'pending'">
         <BaseSkeleton style="height: 1rem; width: 10ch;" />
         <BaseSkeleton style="height: 2rem; width: 15ch;" />
+        <BaseSkeleton style="height: 0.8rem; width: 25ch" />
       </div>
 
       <div v-else-if="account">
         <p>{{ account.name }}</p>
         <h1>{{ toEuro(account.balance) }}</h1>
+        <span>Average monthly spendings: {{ toEuro(averageMonthlySpending) }}</span>
       </div>
 
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
@@ -31,6 +33,8 @@
   import type { RouteLocationNormalizedLoaded } from "vue-router"
   import type { Transaction } from "~~/types/api"
 
+  import dayjs from "~~/libs/dayjs.ts"
+
   type Route = RouteLocationNormalizedLoaded & {
     params: {
       id: string
@@ -44,6 +48,27 @@
   const { data: account, status } = useWalleeApi(api => api.accounts.show(id), { deep: true })
 
   const show = ref(false)
+
+  const averageMonthlySpending = computed(() => {
+    if (!account.value) { return 0 }
+
+    const transactionDates = account.value.transactions.map(transaction => dayjs(transaction.transacted_at))
+    const max = dayjs().subtract(1, "month").endOf("month")
+    let min = dayjs.min(...transactionDates)
+    if (!min || max.isBefore(min)) { return 0 }
+
+    const twelveMonthsAgo = dayjs().subtract(1, "year")
+    min = dayjs.max(twelveMonthsAgo, min)!.startOf("month")
+    const diff = Math.ceil(max.diff(min, "month")) + 1
+
+    const spendings = account.value.transactions.reduce((sum, transaction) => {
+      const date = dayjs(transaction.transacted_at)
+      if (transaction.value > 0 || date.isAfter(max) || date.isBefore(min)) { return sum }
+      return sum + transaction.value
+    }, 0)
+
+    return Math.round(spendings / diff)
+  })
 
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
     account.value!.balance += transaction.value
@@ -84,6 +109,11 @@
     .header {
       display: flex;
       justify-content: space-between;
+
+      span {
+        color: #ffffff80;
+        font-size: 0.8rem;
+      }
     }
 
     .main {
