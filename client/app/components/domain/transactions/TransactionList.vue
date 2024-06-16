@@ -1,7 +1,7 @@
 <template>
   <nav class="transaction-list">
     <template v-if="loading">
-      <BaseSkeleton v-for="i in 10" :key="i" as="a">
+      <a v-for="i in 10" :key="i">
         <div class="date">
           <BaseSkeleton as="p" style="height: 1rem; width: 2ch;" />
           <BaseSkeleton as="p" style="height: 1rem; width: 3ch;" />
@@ -11,7 +11,7 @@
           <BaseSkeleton as="p" style="height: 1.2rem; width: 8ch;" />
           <BaseSkeleton as="span" style="height: 1rem; width: 15ch;" />
         </div>
-      </BaseSkeleton>
+      </a>
     </template>
 
     <template v-else>
