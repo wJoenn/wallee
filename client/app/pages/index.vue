@@ -31,7 +31,7 @@
       <section>
         <h2>
           <span>{{ t("sections.budgets") }}</span>
-          <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
+          <Icon name="ion:add-circle-outline" @click="newAccountCategory = 'budget'; showAccountForm = true" />
         </h2>
 
         <nav v-if="status === 'pending'" class="accounts">
@@ -57,7 +57,7 @@
       <section>
         <h2>
           <span>{{ t("sections.savings") }}</span>
-          <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
+          <Icon name="ion:add-circle-outline" @click="newAccountCategory = 'saving'; showAccountForm = true" />
         </h2>
 
         <nav v-if="status === 'pending'" class="accounts">
@@ -85,7 +85,12 @@
       <BaseButton @click="showTransactionForm = true">{{ t("newTransaction") }}</BaseButton>
     </div>
 
-    <AccountFormModal v-if="showAccountForm" @close="showAccountForm = false" @create="handleCreateAccount" />
+    <AccountFormModal
+      v-if="showAccountForm"
+      :category="newAccountCategory"
+      @close="showAccountForm = false"
+      @create="handleCreateAccount"
+    />
 
     <TransactionFormModal
       v-if="showTransactionForm"
@@ -102,6 +107,8 @@
   const localePath = useLocalePath()
   const { signOut } = useUserStore()
   const { data: accounts, status } = useWalleeApi(api => api.accounts.index(), { deep: true })
+
+  const newAccountCategory = ref<"budget" | "saving">("budget")
 
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)

@@ -37,7 +37,7 @@
   </BaseDropdown>
 </template>
 
-<script setup lang="ts" generic="T extends { key: number, label: string } & RecursiveRecord">
+<script setup lang="ts" generic="T extends { key: number | string, label: string } & RecursiveRecord">
   import type { RecursiveRecord } from "~~/types"
 
   import BaseDropdown from "~/components/ui/BaseDropdown.vue"
