@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   before_action :set_resource, only: %i[destroy show update]
 
   def index
-    accounts = current_user.accounts.includes(:transactions)
+    accounts = current_user.accounts
     render json: accounts.map(&:serialize), status: :ok
   end
 

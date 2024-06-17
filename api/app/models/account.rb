@@ -17,7 +17,13 @@ class Account < ApplicationRecord
 
   def serialize(include = false)
     account = { balance:, category:, description:, id:, name: }
-    account[:transactions] = transactions if include
+
+    if include
+      account[:transactions] = {
+        executed: transactions.executed.order(transacted_at: :desc),
+        planned: transactions.planned.order(:transacted_at)
+      }
+    end
 
     account
   end

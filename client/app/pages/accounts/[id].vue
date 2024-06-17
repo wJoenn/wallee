@@ -19,7 +19,6 @@
     </div>
 
     <div class="main">
-      <h2>{{ t("transactions") }}</h2>
       <TransactionList :loading="status === 'pending'" :transactions="account?.transactions" />
     </div>
 
@@ -54,7 +53,7 @@
   const averageMonthlySpending = computed(() => {
     if (!account.value) { return 0 }
 
-    const transactionDates = account.value.transactions.map(transaction => dayjs(transaction.transacted_at))
+    const transactionDates = account.value.transactions.executed.map(transaction => dayjs(transaction.transacted_at))
     const max = dayjs().subtract(1, "month").endOf("month")
     let min = dayjs.min(...transactionDates)
     if (!min || max.isBefore(min)) { return 0 }
@@ -63,7 +62,7 @@
     min = dayjs.max(twelveMonthsAgo, min)!.startOf("month")
     const diff = Math.ceil(max.diff(min, "month")) + 1
 
-    const spendings = account.value.transactions.reduce((sum, transaction) => {
+    const spendings = account.value.transactions.executed.reduce((sum, transaction) => {
       const date = dayjs(transaction.transacted_at)
       if (transaction.value > 0 || date.isAfter(max) || date.isBefore(min)) { return sum }
       return sum + transaction.value
@@ -74,7 +73,12 @@
 
   const handleCreate = ({ transaction }: { transaction: Transaction }) => {
     account.value!.balance += transaction.value
-    account.value!.transactions.push(transaction)
+
+    if (dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))) {
+      account.value!.transactions.executed.push(transaction)
+    } else {
+      account.value!.transactions.planned.push(transaction)
+    }
   }
 
   watch(status, async () => {
@@ -127,5 +131,4 @@
 <i18n lang="yaml">
   en:
     newTransaction: New transaction
-    transactions: Transactions
 </i18n>

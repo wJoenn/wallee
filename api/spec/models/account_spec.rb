@@ -111,7 +111,8 @@ RSpec.describe Account do
 
   describe "#serialize" do
     let(:account) { create(:account) }
-    let!(:transaction) { create(:transaction, account:) }
+    let!(:executed_transaction) { create(:transaction, account:) }
+    let!(:planned_transaction) { create(:transaction, account:, transacted_at: Time.zone.tomorrow) }
 
     it "returns a account as an hash" do
       serialized = account.serialize
@@ -127,7 +128,10 @@ RSpec.describe Account do
 
     it "includes transactions when Truthy argument is used" do
       expect(account.serialize(true)).to include(
-        transactions: [transaction]
+        transactions: {
+          executed: [executed_transaction],
+          planned: [planned_transaction]
+        }
       )
     end
   end

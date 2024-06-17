@@ -9,7 +9,10 @@ export type Account = {
   id: number
   name: string
 
-  transactions: Transaction[]
+  transactions: {
+    executed: Transaction[]
+    planned: Transaction[]
+  }
 }
 
 export type Transaction = {
