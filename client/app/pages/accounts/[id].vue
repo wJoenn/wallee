@@ -10,7 +10,9 @@
       <div v-else-if="account">
         <p>{{ account.name }}</p>
         <h1>{{ toEuro(account.balance) }}</h1>
-        <span>Average monthly spendings: {{ toEuro(averageMonthlySpending) }}</span>
+        <span v-if="account.category === 'budget'">
+          Average monthly spendings: {{ toEuro(averageMonthlySpending) }}
+        </span>
       </div>
 
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
