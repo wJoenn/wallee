@@ -14,12 +14,12 @@ class User < ApplicationRecord
   after_create :create_main_account
 
   def main_account
-    accounts.find_by(main: true)
+    accounts.find_by(category: :main)
   end
 
   private
 
   def create_main_account
-    accounts.create(name: I18n.t("accounts.main_account_default_name"), main: true)
+    accounts.create(name: I18n.t("accounts.main_account_default_name"), category: :main)
   end
 end

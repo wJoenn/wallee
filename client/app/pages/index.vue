@@ -84,8 +84,8 @@
     secondaryAccounts.value?.reduce((sum, account) => account.balance < 0 ? sum + account.balance : sum, 0)
   ))
 
-  const mainAccount = computed(() => accounts.value?.find(account => account.main))
-  const secondaryAccounts = computed(() => accounts.value?.filter(account => !account.main))
+  const mainAccount = computed(() => accounts.value?.find(account => account.category === "main"))
+  const secondaryAccounts = computed(() => accounts.value?.filter(account => account.category !== "main"))
 
   const handleCreateTransaction = ({ accountId, transaction }: { accountId?: number, transaction: Transaction }) => {
     const account = accounts.value!.find(accountOption => accountOption.id === accountId)!

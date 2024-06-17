@@ -71,6 +71,7 @@ RSpec.describe AccountsController, type: :request do
   end
 
   describe "POST /accounts" do
+    let(:category) { :budget }
     let(:description) { "A generic account" }
     let(:name) { "My account" }
 
@@ -81,18 +82,20 @@ RSpec.describe AccountsController, type: :request do
 
       context "with proper params" do
         it "returns a JSON object" do
-          post "/accounts", params: { account: { description:, name: } }
+          post "/accounts", params: { account: { category:, description:, name: } }
 
           expect(response.body).to be_a String
           expect(response.parsed_body).to have_key "id"
         end
 
         it "creates an instance of Account" do
-          expect { post "/accounts", params: { account: { description:, name: } } }.to change(Account, :count).by(1)
+          expect {
+            post "/accounts", params: { account: { category:, description:, name: } }
+          }.to change(Account, :count).by(1)
         end
 
         it "returns the new instance of Account" do
-          post "/accounts", params: { account: { description:, name: } }
+          post "/accounts", params: { account: { category:, description:, name: } }
           data = response.parsed_body
 
           expect(data).to include({
@@ -102,7 +105,7 @@ RSpec.describe AccountsController, type: :request do
         end
 
         it "returns a created HTTP status" do
-          post "/accounts", params: { account: { description:, name: } }
+          post "/accounts", params: { account: { category:, description:, name: } }
           expect(response).to have_http_status :created
         end
       end
@@ -120,10 +123,13 @@ RSpec.describe AccountsController, type: :request do
         end
 
         it "returns a list of error messages" do
-          post "/accounts", params: { account: { name: nil } }
+          post "/accounts", params: { account: { category: nil, name: nil } }
           data = response.parsed_body
 
-          expect(data["errors"]).to eq({ "name" => %w[blank] })
+          expect(data["errors"]).to eq({
+            "category" => %w[blank],
+            "name" => %w[blank]
+          })
         end
 
         it "returns a unprocessable_entity HTTP status" do

@@ -1,11 +1,12 @@
 RSpec.describe Account do
+  let(:category) { :budget }
   let(:description) { "A generic account" }
   let(:name) { "My account" }
   let(:user) { create(:user) }
 
   describe "associations" do
     it "belongs to a User" do
-      account = described_class.create(description:, name:, user:)
+      account = create(:account, user:)
       expect(account.user).to be_a User
     end
 
@@ -19,30 +20,51 @@ RSpec.describe Account do
 
   describe "validations" do
     it "creates a new account with proper params" do
-      account = described_class.create(description:, name:, user:)
+      account = described_class.create(category:, description:, name:, user:)
+      expect(account).to be_persisted
+    end
+
+    it "validates the presence of the category" do
+      account = described_class.create(name:, user:)
+
+      expect(account).not_to be_persisted
+      expect(account.error_codes).to eq({ category: %i[blank] })
+    end
+
+    it "validates uniqueness of the category: :main account for this user" do
+      user.accounts.destroy_all # :main account already exists: User#create_main_account
+      described_class.create(category: :main, name:, user:)
+      account = described_class.create(category: :main, name: "another-name", user:)
+
+      expect(account).not_to be_persisted
+      expect(account.error_codes).to eq({ category: %i[taken] })
+
+      another_user = create(:user, email: "another@user.com")
+      another_user.accounts.destroy_all # :main account already exists: User#create_main_account
+      account = described_class.create(category: :main, name:, user: another_user)
       expect(account).to be_persisted
     end
 
     it "validates the presence of the name" do
-      account = described_class.create(user:)
+      account = described_class.create(category:, user:)
 
       expect(account).not_to be_persisted
       expect(account.error_codes).to eq({ name: %i[blank] })
     end
 
     it "validates the uniqueness of the name for this user" do
-      described_class.create(name:, user:)
-      account = described_class.create(name:, user:)
+      described_class.create(category:, name:, user:)
+      account = described_class.create(category:, name:, user:)
 
       expect(account).not_to be_persisted
       expect(account.error_codes).to eq({ name: %i[taken] })
 
-      account = described_class.create(name:, user: create(:user, email: "another@user.com"))
+      account = described_class.create(category:, name:, user: create(:user, email: "another@user.com"))
       expect(account).to be_persisted
     end
 
     it "validates the presence of the User" do
-      account = described_class.create(name:)
+      account = described_class.create(category:, name:)
 
       expect(account).not_to be_persisted
       expect(account.error_codes).to eq({ user: %i[blank] })
@@ -58,7 +80,7 @@ RSpec.describe Account do
     end
 
     context "when Account is not main" do
-      let(:account) { create(:account, user:) }
+      let(:account) { create(:account, category: :budget, user:) }
       let!(:transaction) { create(:transaction, account:, user:) }
 
       it "reassigns transactions to main account if it exists" do

@@ -4,9 +4,9 @@ export type * from "./errors.d.ts"
 
 export type Account = {
   balance: number
+  category: "budget" | "main" | "saving"
   description?: string
   id: number
-  main: boolean
   name: string
 
   transactions: Transaction[]

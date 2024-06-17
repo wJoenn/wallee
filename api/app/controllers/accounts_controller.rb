@@ -29,7 +29,7 @@ class AccountsController < ApplicationController
   end
 
   def destroy
-    if @resource.main
+    if @resource.main?
       render status: :method_not_allowed
     else
       @resource.destroy!
@@ -40,6 +40,6 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.require(:account).permit(:description, :name)
+    params.require(:account).permit(:category, :description, :name)
   end
 end
