@@ -16,7 +16,7 @@ RSpec.describe SubCategory do
 
     context "with transactions" do
       let(:sub_category) { create(:sub_category, user:) }
-      let!(:transaction) { create(:transaction, sub_category:, user:) }
+      let!(:transaction) { create(:transaction, account: create(:account, user:), sub_category:) }
 
       it "has many Transaction" do
         expect(sub_category.transactions).to all be_a Transaction

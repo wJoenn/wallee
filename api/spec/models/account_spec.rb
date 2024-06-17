@@ -12,7 +12,7 @@ RSpec.describe Account do
 
     it "has many Transaction" do
       account = create(:account, user:)
-      create(:transaction, account:, user:)
+      create(:transaction, account:)
 
       expect(account.transactions).to all be_a Transaction
     end
@@ -74,14 +74,14 @@ RSpec.describe Account do
   describe "hooks" do
     context "when Account is main" do
       it "destroys transactions" do
-        create(:transaction, account: user.main_account, user:)
+        create(:transaction, account: user.main_account)
         expect { user.main_account.destroy }.to change(Transaction, :count).by(-1)
       end
     end
 
     context "when Account is not main" do
       let(:account) { create(:account, category: :budget, user:) }
-      let!(:transaction) { create(:transaction, account:, user:) }
+      let!(:transaction) { create(:transaction, account:) }
 
       it "reassigns transactions to main account if it exists" do
         account.destroy
@@ -99,8 +99,8 @@ RSpec.describe Account do
     let(:account) { create(:account) }
 
     before do
-      create(:transaction, account:, user: account.user, value: 100_00)
-      create(:transaction, account:, user: account.user, value: -200_00)
+      create(:transaction, account:, value: 100_00)
+      create(:transaction, account:, value: -200_00)
     end
 
     it "returns the sum of its Transactions value" do
@@ -110,7 +110,7 @@ RSpec.describe Account do
 
   describe "#serialize" do
     let(:account) { create(:account) }
-    let!(:transaction) { create(:transaction, account:, user: account.user) }
+    let!(:transaction) { create(:transaction, account:) }
 
     it "returns a account as an hash" do
       serialized = account.serialize

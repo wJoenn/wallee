@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   has_many :accounts, dependent: :destroy
   has_many :sub_categories, dependent: :destroy
-  has_many :transactions, dependent: :destroy
+  has_many :transactions, through: :accounts
 
   after_create :create_main_account
 

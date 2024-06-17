@@ -1,11 +1,10 @@
 RSpec.describe TransactionsController, type: :request do
-  let(:user) { create(:user) }
-
   describe "GET /transactions" do
     context "when a User is authenticated" do
+      let(:transaction) { create(:transaction) }
+
       before do
-        create(:transaction, user:)
-        sign_in user
+        sign_in transaction.user
         get "/transactions"
       end
 
@@ -39,11 +38,11 @@ RSpec.describe TransactionsController, type: :request do
   end
 
   describe "GET /transactions/:id" do
-    let(:transaction) { create(:transaction, user:) }
+    let(:transaction) { create(:transaction) }
 
     context "when a User is authenticated" do
       before do
-        sign_in user
+        sign_in transaction.user
         get "/transactions/#{transaction.id}"
       end
 
@@ -71,6 +70,7 @@ RSpec.describe TransactionsController, type: :request do
   end
 
   describe "POST /transactions" do
+    let(:user) { create(:user) }
     let(:account_id) { create(:account, user:).id }
     let(:description) { "A description" }
     let(:sub_category_id) { create(:sub_category, user:).id }
@@ -111,7 +111,6 @@ RSpec.describe TransactionsController, type: :request do
             "description" => description,
             "sub_category_id" => sub_category_id,
             "transacted_at" => transacted_at.floor,
-            "user_id" => user.id,
             "value" => value
           })
         end
@@ -166,11 +165,11 @@ RSpec.describe TransactionsController, type: :request do
   end
 
   describe "PATCH /transactions/:id" do
-    let(:transaction) { create(:transaction, user:) }
+    let(:transaction) { create(:transaction) }
 
     context "when a User is authenticated" do
       before do
-        sign_in user
+        sign_in transaction.user
       end
 
       context "with proper params" do
@@ -228,11 +227,11 @@ RSpec.describe TransactionsController, type: :request do
   end
 
   describe "DELETE /transactions/:id" do
-    let(:transaction) { create(:transaction, user:) }
+    let(:transaction) { create(:transaction) }
 
     context "when a User is authenticated" do
       before do
-        sign_in user
+        sign_in transaction.user
         delete "/transactions/#{transaction.id}"
       end
 

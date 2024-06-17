@@ -37,7 +37,7 @@ RSpec.describe User do
 
     context "with transactions" do
       before do
-        create(:transaction, user:)
+        create(:transaction, account: create(:account, user:))
       end
 
       it "has many Transaction" do
