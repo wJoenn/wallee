@@ -105,7 +105,7 @@
 
   const handleSubmit = async (values: TransactionForm) => {
     loading.value = true
-    values.value *= transactionModifier.value * 100
+    values.value = Math.round(values.value * transactionModifier.value * 100)
     const accountId = accounts.value!.find(accountOption => accountOption.id === values.account_id)?.id
 
     if (props.transaction) {
