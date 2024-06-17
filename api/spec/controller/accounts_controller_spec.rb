@@ -211,13 +211,26 @@ RSpec.describe AccountsController, type: :request do
         sign_in user
       end
 
-      it "destroys the instance of Account" do
-        expect { delete "/accounts/#{account.id}" }.to change(Account, :count).by(-1)
+      context "when the Account is the user's main account" do
+        it "does not destroy the instance of Account" do
+          expect { delete "/accounts/#{user.main_account.id}" }.not_to change(Account, :count)
+        end
+
+        it "returns a method_not_allowed HTTP status" do
+          delete "/accounts/#{user.main_account.id}"
+          expect(response).to have_http_status :method_not_allowed
+        end
       end
 
-      it "returns a ok HTTP status" do
-        delete "/accounts/#{account.id}"
-        expect(response).to have_http_status :ok
+      context "when the Account is not the user's main account" do
+        it "destroys the instance of Account" do
+          expect { delete "/accounts/#{account.id}" }.to change(Account, :count).by(-1)
+        end
+
+        it "returns a ok HTTP status" do
+          delete "/accounts/#{account.id}"
+          expect(response).to have_http_status :ok
+        end
       end
     end
 
