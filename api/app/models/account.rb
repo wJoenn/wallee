@@ -12,7 +12,7 @@ class Account < ApplicationRecord
   before_destroy :manage_transactions
 
   def balance
-    transactions.sum(&:value)
+    transactions.executed.sum(&:value)
   end
 
   def serialize(include = false)

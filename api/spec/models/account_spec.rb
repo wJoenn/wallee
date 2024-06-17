@@ -101,9 +101,10 @@ RSpec.describe Account do
     before do
       create(:transaction, account:, value: 100_00)
       create(:transaction, account:, value: -200_00)
+      create(:transaction, account:, transacted_at: Time.zone.tomorrow, value: 100_00)
     end
 
-    it "returns the sum of its Transactions value" do
+    it "returns the sum of its completed Transactions value" do
       expect(account.balance).to be(-100_00)
     end
   end
