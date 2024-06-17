@@ -30,7 +30,7 @@
 
       <section>
         <h2>
-          <span>{{ t("sections.accounts") }}</span>
+          <span>{{ t("sections.budgets") }}</span>
           <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
         </h2>
 
@@ -43,7 +43,33 @@
 
         <nav v-else class="accounts">
           <NuxtLink
-            v-for="account in secondaryAccounts"
+            v-for="account in budgetAccounts"
+            :key="account.id"
+            class="account"
+            :to="localePath(`/accounts/${account.id}`)"
+          >
+            <span>{{ account.name }}</span>
+            <p>{{ toEuro(account.balance) }}</p>
+          </NuxtLink>
+        </nav>
+      </section>
+
+      <section>
+        <h2>
+          <span>{{ t("sections.savings") }}</span>
+          <Icon name="ion:add-circle-outline" @click="showAccountForm = true" />
+        </h2>
+
+        <nav v-if="status === 'pending'" class="accounts">
+          <BaseSkeleton v-for="i in 2" :key="i" class="account">
+            <BaseSkeleton as="span" primary style="height: 1rem; width: 10ch;" />
+            <BaseSkeleton as="p" primary style="height: 1.2rem; width: 8ch;" />
+          </BaseSkeleton>
+        </nav>
+
+        <nav v-else class="accounts">
+          <NuxtLink
+            v-for="account in savingAccounts"
             :key="account.id"
             class="account"
             :to="localePath(`/accounts/${account.id}`)"
@@ -80,12 +106,13 @@
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
 
-  const dueAmounts = computed(() => (
-    secondaryAccounts.value?.reduce((sum, account) => account.balance < 0 ? sum + account.balance : sum, 0)
-  ))
-
+  const budgetAccounts = computed(() => accounts.value?.filter(account => account.category === "budget"))
   const mainAccount = computed(() => accounts.value?.find(account => account.category === "main"))
-  const secondaryAccounts = computed(() => accounts.value?.filter(account => account.category !== "main"))
+  const savingAccounts = computed(() => accounts.value?.filter(account => account.category === "saving"))
+
+  const dueAmounts = computed(() => (
+    budgetAccounts.value?.reduce((sum, account) => account.balance < 0 ? sum + account.balance : sum, 0)
+  ))
 
   const handleCreateTransaction = ({ accountId, transaction }: { accountId?: number, transaction: Transaction }) => {
     const account = accounts.value!.find(accountOption => accountOption.id === accountId)!
@@ -185,8 +212,9 @@
     newAccount: New account
     newTransaction: New transaction
     sections:
-      accounts: Accounts
+      budgets: Budgets
       mainAccount: Main account
+      savings: Savings
     title: Home page
     total: "Total: {amount}"
 </i18n>
