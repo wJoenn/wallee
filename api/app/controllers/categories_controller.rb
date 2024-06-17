@@ -8,6 +8,4 @@ class CategoriesController < ApplicationController
   def show
     render json: @resource, status: :ok
   end
-
-  private
 end
