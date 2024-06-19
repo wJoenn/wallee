@@ -26,7 +26,7 @@
           v-for="option in filteredOptions"
           :key="option.label"
           :class="{ selected: selectedOption?.[selectBy] === option[selectBy] }"
-          @mouseenter="handleSelected(option)"
+          @click="handleSelected(option)"
         >
           {{ option.label }}
         </li>
