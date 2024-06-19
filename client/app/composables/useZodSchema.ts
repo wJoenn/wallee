@@ -1,16 +1,18 @@
+import type { ComputedRef } from "vue"
+
 import { literal, number, object, string, type ZodSchema } from "zod"
 import dayjs from "~~/libs/dayjs.ts"
 
-const optional = (schema: ZodSchema) => schema.optional().or(literal(null))
+const optional = (schema: ZodSchema, condition = true) => condition ? schema.optional().or(literal(null)) : schema
 
 const password = () => {
-  const { t } = useI18n()
+  const { $i18n: { t } } = useNuxtApp()
 
   return requiredString().refine(value => value.length === 0 || value.length >= 6, t("validations.password.tooSmall"))
 }
 
 const price = () => {
-  const { t } = useI18n()
+  const { $i18n: { t } } = useNuxtApp()
 
   return number({
     invalid_type_error: t("globals.forms.validations.required"),
@@ -20,7 +22,7 @@ const price = () => {
 }
 
 const requiredNumber = (message?: string) => {
-  const { t } = useI18n()
+  const { $i18n: { t } } = useNuxtApp()
 
   const computedMessage = message ?? t("globals.forms.validations.required")
 
@@ -31,7 +33,7 @@ const requiredNumber = (message?: string) => {
 }
 
 const requiredString = (message?: string) => {
-  const { t } = useI18n()
+  const { $i18n: { t } } = useNuxtApp()
 
   const computedMessage = message ?? t("globals.forms.validations.required")
 
@@ -42,7 +44,7 @@ const requiredString = (message?: string) => {
 }
 
 const datestring = () => {
-  const { t } = useI18n()
+  const { $i18n: { t } } = useNuxtApp()
 
   return string().optional().refine(value => (
     !value || dayjs(value, "YYYY-MM-DD", true).isValid()
@@ -63,4 +65,6 @@ const zodSchema = {
   string
 }
 
-export const useZodSchema = <T extends ZodSchema>(call: (schema: typeof zodSchema) => T) => call(zodSchema)
+export const useZodSchema = <T extends ComputedRef<ZodSchema> | ZodSchema>(call: (zod: typeof zodSchema) => T) => (
+  call(zodSchema)
+)

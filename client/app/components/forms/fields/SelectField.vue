@@ -53,6 +53,8 @@
     selectBy: keyof T
   }>()
 
+  const watcher = defineModel<unknown>("watcher")
+
   const { t } = useI18n()
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
@@ -116,7 +118,10 @@
     }
   }
 
-  watch(value, setDefaultValue, { immediate: true })
+  watch(value, () => {
+    watcher.value = value.value
+    setDefaultValue()
+  }, { immediate: true })
   watch(() => props.options, setDefaultValue, { immediate: true })
 </script>
 

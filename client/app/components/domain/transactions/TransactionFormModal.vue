@@ -20,14 +20,38 @@
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
 
       <SelectField
+        v-model:watcher="selectedAccountId"
         :disabled="!!accountId"
         :label="t('labels.account')"
         :loading="status === 'pending'"
         name="account_id"
-        :options="accountOptions"
+        :options="accountOptions.filter(account => account.id !== fromAccountId)"
         :placeholder="t('placeholders.account')"
         select-by="id"
       />
+
+      <template v-if="!transaction">
+        <div class="toggle">
+          <p>{{ t(`toppingUp?.${transactionModifier}`) }}</p>
+
+          <div class="trigger" @click="toppingUp = !toppingUp">
+            <div :class="{ enabled: toppingUp }" />
+          </div>
+        </div>
+
+        <span class="toggle-description">{{ t("topUpExplanation") }}</span>
+
+        <SelectField
+          v-if="toppingUp"
+          v-model:watcher="fromAccountId"
+          :label="t(`labels.topUp.${transactionModifier}`)"
+          :loading="status === 'pending'"
+          name="from_account_id"
+          :options="accountOptions.filter(account => account.id !== selectedAccountId)"
+          :placeholder="t('placeholders.account')"
+          select-by="id"
+        />
+      </template>
 
       <DateField :label="t('globals.forms.labels.date')" name="transacted_at" optional />
 
@@ -54,8 +78,9 @@
   import dayjs from "~~/libs/dayjs.ts"
 
   type TransactionForm = {
-    account_id?: number
+    account_id: number
     description?: string
+    from_account_id?: number
     transacted_at?: DateString
     value: number
   }
@@ -73,14 +98,18 @@
   const { t } = useI18n()
   const { data: accounts, status } = useWalleeApi(api => api.accounts.index())
 
-  const validationSchema = useZodSchema(({ datestring, object, optional, price, requiredNumber, string }) => object({
-    account_id: requiredNumber(),
-    description: optional(string()),
-    transacted_at: datestring(),
-    value: price()
-  }))
+  const validationSchema = useZodSchema(zod => computed(() => zod.object({
+    account_id: zod.requiredNumber(),
+    description: zod.optional(zod.string()),
+    from_account_id: zod.optional(zod.requiredNumber(), !toppingUp.value),
+    transacted_at: zod.datestring(),
+    value: zod.price()
+  })))
 
+  const fromAccountId = ref<number>()
   const loading = ref(false)
+  const selectedAccountId = ref<number>()
+  const toppingUp = ref(false)
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const transactionModifier = ref(props.transaction && props.transaction.value > 0 ? 1 : -1)
@@ -123,6 +152,19 @@
 
       const { _data } = await walleeApi.transactions.create(values)
       emit("create", { accountId, transaction: _data! })
+
+      if (values.from_account_id) {
+        const toppedUpAccount = accounts.value!.find(account => account.id === values.account_id)!
+
+        const topUpTransaction = {
+          ...values,
+          account_id: values.from_account_id,
+          description: t(`topUpDescription.${transactionModifier.value}`, { account: toppedUpAccount.name }),
+          value: values.value * -1
+        }
+
+        await walleeApi.transactions.create(topUpTransaction)
+      }
     }
 
     emit("close")
@@ -140,6 +182,47 @@
   .base-modal {
     form {
       margin-bottom: 2rem;
+    }
+
+    form {
+      .toggle {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+
+        .trigger {
+          background-color: var(--color-secondary);
+          border-radius: 9999px;
+          display: flex;
+          justify-content: center;
+          padding: 0.25rem;
+          transition: background-color 0.3s ease;
+          width: 3rem;
+
+          &:has(div.enabled) {
+            background-color: var(--color-primary);
+          }
+
+          div {
+            background-color: white;
+            border-radius: 50%;
+            height: 1.2rem;
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
+            width: 1.2rem;
+
+            &.enabled {
+            transform: translateX(50%);
+          }
+          }
+        }
+      }
+
+      .toggle-description {
+        color: #ffffff80;
+        font-size: 0.8rem;
+        margin-top: -1.5rem;
+      }
     }
 
     .transaction-modifier {
@@ -181,10 +264,20 @@
   en:
     labels:
       account: Account
+      topUp:
+        "1": From
+        "-1": To
       paid: Paid
       received: Received
     placeholders:
       account: My account
+    toppingUp?:
+      "1": Transferring from another account ?
+      "-1": Transferring to another account ?
+    topUpDescription:
+      "1": "top up to {account}"
+      "-1": "top up from {account}"
+    topUpExplanation: By enabling this toggle the corresponding transfer will be automatically created in the selected account
     validations:
       value:
         other_than_0: The value must be positive
