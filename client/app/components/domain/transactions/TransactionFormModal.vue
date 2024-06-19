@@ -92,6 +92,7 @@
   const initialValues = computed(() => {
     if (props.transaction) {
       const { account_id, description, transacted_at, value } = props.transaction
+
       return {
         account_id,
         description,

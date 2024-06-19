@@ -8,7 +8,11 @@
       </div>
 
       <div v-else-if="account">
-        <p>{{ account.name }}</p>
+        <p @click="showAccountForm = true">
+          {{ account.name }}
+          <Icon name="ion:settings-sharp" />
+        </p>
+
         <h1>{{ toEuro(account.balance) }}</h1>
         <span v-if="account.category === 'budget'">
           Average monthly spendings: {{ toEuro(averageMonthlySpending) }}
@@ -23,16 +27,25 @@
     </div>
 
     <div class="footer">
-      <BaseButton :loading="status === 'pending'" @click="show = true">{{ t("newTransaction") }}</BaseButton>
+      <BaseButton :loading="status === 'pending'" @click="showTransactionForm = true">
+        {{ t("newTransaction") }}
+      </BaseButton>
     </div>
 
-    <TransactionFormModal v-if="show" :account-id="account!.id" @close="show = false" @create="handleCreate" />
+    <AccountFormModal v-if="showAccountForm" :account @close="showAccountForm = false" @update="handleAccountUpdate" />
+
+    <TransactionFormModal
+      v-if="showTransactionForm"
+      :account-id="account!.id"
+      @close="showTransactionForm = false"
+      @create="handleTransactionCreate"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
   import type { RouteLocationNormalizedLoaded } from "vue-router"
-  import type { Transaction } from "~~/types/api"
+  import type { Account, Transaction } from "~~/types/api"
 
   import dayjs from "~~/libs/dayjs.ts"
 
@@ -48,7 +61,8 @@
   const { params: { id } } = useRoute() as Route
   const { data: account, status } = useWalleeApi(api => api.accounts.show(id), { deep: true })
 
-  const show = ref(false)
+  const showAccountForm = ref(false)
+  const showTransactionForm = ref(false)
 
   const averageMonthlySpending = computed(() => {
     if (!account.value) { return 0 }
@@ -71,7 +85,11 @@
     return Math.round(spendings / diff)
   })
 
-  const handleCreate = ({ transaction }: { transaction: Transaction }) => {
+  const handleAccountUpdate = ({ category, description, name }: Account) => {
+    account.value = { ...account.value!, category, description, name }
+  }
+
+  const handleTransactionCreate = ({ transaction }: { transaction: Transaction }) => {
     account.value!.balance += transaction.value
 
     if (dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))) {
@@ -115,6 +133,12 @@
     .header {
       display: flex;
       justify-content: space-between;
+
+      p {
+        align-items: center;
+        display: flex;
+        gap: 0.5rem;
+      }
 
       span {
         color: #ffffff80;

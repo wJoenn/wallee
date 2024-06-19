@@ -14,7 +14,7 @@ class AccountsController < ApplicationController
     @resource = current_user.accounts.new(account_params)
 
     if @resource.save
-      render json: @resource.serialize, status: :created
+      render json: @resource.serialize(true), status: :created
     else
       render json: { errors: @resource.error_codes }, status: :unprocessable_entity
     end

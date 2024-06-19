@@ -28,9 +28,13 @@ const _fetchApi = <T>(path: string, options?: Options) => {
 
 export const walleeApi = {
   accounts: {
-    create: (body: RecursiveRecord) => _fetchApi<Omit<Account, "transactions">>("/accounts", { body, method: "POST" }),
+    create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
     index: () => _fetchApi<Omit<Account, "transactions">[]>("/accounts"),
-    show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`)
+    show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`),
+    update: (id: number | string, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
+      body,
+      method: "PATCH"
+    })
   },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),

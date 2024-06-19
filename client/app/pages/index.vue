@@ -126,7 +126,7 @@
     account.balance += transaction.value
   }
 
-  const handleCreateAccount = (account: Omit<Account, "transactions">) => {
+  const handleCreateAccount = (account: Account) => {
     accounts.value!.push(account)
   }
 </script>

@@ -4,7 +4,7 @@
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
       <SelectField
-        disabled
+        :disabled="!!category"
         :label="t('labels.category')"
         name="category"
         :options="categoryOptions"
@@ -36,11 +36,12 @@
 
   const emit = defineEmits<{
     (event: "close"): void
-    (event: "create", payload: Omit<Account, "transactions">): void
+    (event: "create" | "update", payload: Account): void
   }>()
 
   const props = defineProps<{
-    category: "budget" | "saving"
+    account?: Account
+    category?: "budget" | "saving"
   }>()
 
   const { t } = useI18n()
@@ -58,14 +59,23 @@
 
   const loading = ref(false)
 
-  const initialValues = computed(() => ({
-    category: props.category
-  }))
+  const initialValues = computed(() => {
+    if (props.account) { return props.account }
+
+    return { category: props.category }
+  })
 
   const handleSubmit = async (values: AccountForm) => {
     loading.value = true
-    const { _data } = await walleeApi.accounts.create(values)
-    emit("create", _data!)
+
+    if (props.account) {
+      const { _data } = await walleeApi.accounts.update(props.account.id, values)
+      emit("update", _data!)
+    } else {
+      const { _data } = await walleeApi.accounts.create(values)
+      emit("create", _data!)
+    }
+
     emit("close")
   }
 </script>
