@@ -23,13 +23,11 @@
     </div>
 
     <div class="main">
-      <TransactionList :loading="status === 'pending'" :transactions="account?.transactions" />
-    </div>
-
-    <div class="footer">
-      <BaseButton :loading="status === 'pending'" @click="showTransactionForm = true">
-        {{ t("newTransaction") }}
-      </BaseButton>
+      <TransactionList
+        :loading="status === 'pending'"
+        :transactions="account?.transactions"
+        @add="showTransactionForm = true"
+      />
     </div>
 
     <AccountFormModal v-if="showAccountForm" :account @close="showAccountForm = false" @update="handleAccountUpdate" />

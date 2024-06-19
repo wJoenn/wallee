@@ -1,10 +1,16 @@
 <template>
   <div class="transaction-list">
-    <h2>{{ t("transactions") }}</h2>
+    <div class="header">
+      <h2>
+        <span>{{ t("transactions") }}</span>
+        <Icon v-if="loading" name="svg-spinners:ring-resize" />
+        <Icon v-else name="ion:add-circle-outline" @click="$emit('add')" />
+      </h2>
 
-    <div class="switch">
-      <button :class="{ active: activeList === 'executed' }" @click="activeList = 'executed'">Executed</button>
-      <button :class="{ active: activeList === 'planned' }" @click="activeList = 'planned'">Planned</button>
+      <div class="switch">
+        <button :class="{ active: activeList === 'executed' }" @click="activeList = 'executed'">Executed</button>
+        <button :class="{ active: activeList === 'planned' }" @click="activeList = 'planned'">Planned</button>
+      </div>
     </div>
 
     <nav>
@@ -48,6 +54,10 @@
 
   import dayjs from "~~/libs/dayjs.ts"
 
+  defineEmits<{
+    (event: "add"): void
+  }>()
+
   const props = defineProps<{
     loading?: boolean
     transactions?: Account["transactions"]
@@ -72,6 +82,8 @@
 
 <style scoped>
   .transaction-list {
+    margin-top: -1rem;
+
     nav {
       display: flex;
       flex-direction: column;
@@ -109,24 +121,37 @@
       }
     }
 
-    .switch {
-      background-color: var(--color-secondary);
-      border-radius: 0.25rem;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin: 1rem 0;
+    .header {
+      background-color: var(--background-primary);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
 
-      button {
-        background-color: transparent;
-        border: none;
+      h2 {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+      }
+
+      .switch {
+        background-color: var(--color-secondary);
         border-radius: 0.25rem;
-        font-size: 0.8rem;
-        margin: 0.25rem;
-        padding: 0.25rem;
-        transition: background-color 0.3s ease;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin: 1rem 0;
 
-        &.active {
-          background-color: var(--background-primary);
+        button {
+          background-color: transparent;
+          border: none;
+          border-radius: 0.25rem;
+          font-size: 0.8rem;
+          margin: 0.25rem;
+          padding: 0.25rem;
+          transition: background-color 0.3s ease;
+
+          &.active {
+            background-color: var(--background-primary);
+          }
         }
       }
     }
