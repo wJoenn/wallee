@@ -2,11 +2,11 @@
   <div v-on-click-outside="disable" class="base-dropdown">
     <slot name="trigger" />
 
-    <Transition name="slide-y">
+    <TransitionSlideY :from="2">
       <div v-if="show" class="content">
         <slot name="content" />
       </div>
-    </Transition>
+    </TransitionSlideY>
   </div>
 </template>
 

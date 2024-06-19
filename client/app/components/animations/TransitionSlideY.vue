@@ -1,17 +1,25 @@
 <template>
-  <TransitionGroup name="slide-y" tag="div">
+  <component :is="component" name="slide-y" tag="div">
     <slot />
-  </TransitionGroup>
+  </component>
 </template>
 
 <script setup lang="ts">
-  const props = defineProps<{
-    from: number
-  }>()
+  // eslint-disable-next-line import/named
+  import { Transition, TransitionGroup } from "vue"
+
+  const props = withDefaults(defineProps<{
+    from?: number
+    group?: boolean
+  }>(), {
+    from: 1
+  })
 
   defineSlots<{
     default: never
   }>()
+
+  const component = computed(() => props.group ? TransitionGroup : Transition)
 
   const css = computed(() => ({
     transform: `translateY(calc(0.25rem * ${props.from}))`
