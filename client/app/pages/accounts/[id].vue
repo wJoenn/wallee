@@ -90,9 +90,8 @@
   }
 
   const handleTransactionCreate = ({ transaction }: { transaction: Transaction }) => {
-    account.value!.balance += transaction.value
-
     if (dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))) {
+      account.value!.balance += transaction.value
       account.value!.transactions.executed.push(transaction)
     } else {
       account.value!.transactions.planned.push(transaction)
