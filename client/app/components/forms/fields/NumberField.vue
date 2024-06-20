@@ -27,13 +27,15 @@
   const { errors, value } = useField<number>(props.name)
 
   const handleValueUpdate = (newValue: string) => {
-    if (!newValue) {
-      // @ts-expect-error: value is Ref<number> but I want to reset the value
-      value.value = undefined
-      return
-    }
+    if (newValue === "-") { return }
 
     const toNumber = Number(newValue.replace(",", "."))
-    if (!isNaN(toNumber)) { value.value = toNumber }
+
+    if (!newValue || isNaN(toNumber)) {
+      // @ts-expect-error: value is Ref<number> but I want to reset the value
+      value.value = undefined
+    } else {
+      value.value = toNumber
+    }
   }
 </script>
