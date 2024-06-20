@@ -5,8 +5,10 @@
         <BaseInput
           :id="name"
           v-model:value="value"
+          v-maska="'####-##-##'"
           :disabled
           :focused
+          inputmode="numeric"
           :is-invalid="errors.length > 0"
           :name
           :placeholder="dayjs().format('YYYY-MM-DD')"
@@ -30,6 +32,7 @@
   import type { DateString } from "~~/types"
 
   import dayjs from "dayjs"
+  import { vMaska } from "maska/vue"
 
   import BaseDropdown from "~/components/ui/BaseDropdown.vue"
 
