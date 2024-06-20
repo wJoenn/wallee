@@ -88,7 +88,7 @@
       return sum + transaction.value
     }, 0)
 
-    return Math.round(spendings / diff)
+    return Math.abs(Math.round(spendings / diff))
   })
 
   const handleAccountDelete = async () => {
