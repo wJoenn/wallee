@@ -3,7 +3,7 @@
     <pre>{{ transaction }}</pre>
     <BaseButton :loading="status === 'pending'" @click="show = true">{{ t("editTransaction") }}</BaseButton>
     <BaseButton :loading="status === 'pending'" @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
-    <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
+    <BaseButton @click="router.back">{{ t("globals.actions.back") }}</BaseButton>
 
     <TransactionFormModal v-if="show" :transaction @close="show = false" @update="handleUpdate" />
   </div>

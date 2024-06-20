@@ -1,6 +1,7 @@
 export default {
   globals: {
     actions: {
+      back: "Back",
       close: "Close",
       home: "Home",
       signIn: "Sign In",
