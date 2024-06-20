@@ -278,7 +278,4 @@
       "1": "top up to {account}"
       "-1": "top up from {account}"
     topUpExplanation: By enabling this toggle the corresponding transfer will be automatically created in the selected account
-    validations:
-      value:
-        other_than_0: The value must be positive
 </i18n>

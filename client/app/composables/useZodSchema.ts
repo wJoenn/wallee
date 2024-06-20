@@ -17,7 +17,7 @@ const price = () => {
   return number({
     invalid_type_error: t("globals.forms.validations.required"),
     required_error: t("globals.forms.validations.required")
-  }).positive(t("validations.value.other_than_0"))
+  }).positive(t("globals.forms.validations.otherThan0"))
     .multipleOf(0.01, t("globals.forms.validations.maxDecimals"))
 }
 

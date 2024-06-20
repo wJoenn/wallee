@@ -26,6 +26,7 @@ export default {
       validations: {
         dateFormat: "This date is not valid",
         maxDecimals: "This field can't have more than two decimals",
+        otherThan0: "The value must be positive",
         required: "This field is required"
       }
     }
