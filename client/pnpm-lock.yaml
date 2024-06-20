@@ -14,6 +14,9 @@ importers:
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
+      maska:
+        specifier: 3.0.0-beta4
+        version: 3.0.0-beta4
       nuxt:
         specifier: ^3.12.2
         version: 3.12.2(@opentelemetry/api@1.8.0)(@parcel/watcher@2.4.1)(@types/node@20.12.8)(@unocss/reset@0.59.4)(encoding@0.1.13)(eslint@8.57.0)(floating-vue@5.2.2(@nuxt/kit@3.12.2(magicast@0.3.4)(rollup@4.17.2))(vue@3.4.26(typescript@5.4.5)))(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.4)(rollup@4.17.2)(terser@5.31.0)(typescript@5.4.5)(unocss@0.59.4(postcss@8.4.38)(rollup@4.17.2)(vite@5.3.1(@types/node@20.12.8)(terser@5.31.0)))(vite@5.3.1(@types/node@20.12.8)(terser@5.31.0))(vue-tsc@2.0.16(typescript@5.4.5))
@@ -4246,6 +4249,9 @@ packages:
   make-fetch-happen@13.0.1:
     resolution: {integrity: sha512-cKTUFc/rbKUd/9meOvgrpJ2WrNzymt6jfRDdwg5UCnVzv9dTpEj9JS5m3wtziXVCjluIXyL8pcaukYqezIzZQA==}
     engines: {node: ^16.14.0 || >=18.0.0}
+
+  maska@3.0.0-beta4:
+    resolution: {integrity: sha512-r+KpVnpbeRPs2JORv69Ih+6crxfHpeOPcFTKda08g5p+un+//Pb0AxMZm8ya2/eIAEOFJBvGSweiPyE8hK76KQ==}
 
   mdn-data@2.0.28:
     resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
@@ -11814,6 +11820,8 @@ snapshots:
       ssri: 10.0.6
     transitivePeerDependencies:
       - supports-color
+
+  maska@3.0.0-beta4: {}
 
   mdn-data@2.0.28: {}
 
