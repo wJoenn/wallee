@@ -31,7 +31,8 @@
       <section>
         <h2>
           <span>{{ t("sections.budgets") }}</span>
-          <Icon name="ion:add-circle-outline" @click="newAccountCategory = 'budget'; showAccountForm = true" />
+          <Icon v-if="status === 'pending'" name="svg-spinners:ring-resize" />
+          <Icon v-else name="ion:add-circle-outline" @click="newAccountCategory = 'budget'; showAccountForm = true" />
         </h2>
 
         <nav v-if="status === 'pending'" class="accounts">
@@ -57,7 +58,8 @@
       <section>
         <h2>
           <span>{{ t("sections.savings") }}</span>
-          <Icon name="ion:add-circle-outline" @click="newAccountCategory = 'saving'; showAccountForm = true" />
+          <Icon v-if="status === 'pending'" name="svg-spinners:ring-resize" />
+          <Icon v-else name="ion:add-circle-outline" @click="newAccountCategory = 'saving'; showAccountForm = true" />
         </h2>
 
         <nav v-if="status === 'pending'" class="accounts">
