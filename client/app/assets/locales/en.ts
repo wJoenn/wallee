@@ -3,6 +3,7 @@ export default {
     actions: {
       back: "Back",
       close: "Close",
+      confirm: "Confirm",
       home: "Home",
       signIn: "Sign In",
       signOut: "Sign out",

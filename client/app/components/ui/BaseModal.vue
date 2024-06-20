@@ -1,6 +1,6 @@
 <template>
   <Teleport to="#teleports">
-    <div class="base-modal">
+    <div class="base-modal" v-bind="$attrs">
       <slot />
     </div>
   </Teleport>
@@ -10,6 +10,10 @@
   defineSlots<{
     default: never
   }>()
+
+  defineOptions({
+    inheritAttrs: false
+  })
 </script>
 
 <style scoped>

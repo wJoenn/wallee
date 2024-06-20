@@ -1,5 +1,5 @@
 <template>
-  <BaseModal>
+  <BaseModal class="account-form-modal">
     <BaseForm :action="handleSubmit" :initial-values :validation-schema>
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
@@ -19,9 +19,23 @@
       />
 
       <BaseButton :loading type="submit">{{ t("globals.actions.submit") }}</BaseButton>
+      <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
     </BaseForm>
 
-    <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
+    <BaseButton v-if="account && account.category !== 'main'" :loading mode="danger" @click="show = true">
+      {{ t("delete.action") }}
+    </BaseButton>
+
+    <TransitionSlideY>
+      <div v-if="show" class="delete-confirmation" @click.self="show = false">
+        <div>
+          <div @click="show = false" />
+          <h2>{{ t("delete.sure?") }}</h2>
+          <p>{{ t("delete.consequence") }}</p>
+          <BaseButton mode="danger" @click="handleAccountDelete">{{ t("globals.actions.confirm") }}</BaseButton>
+        </div>
+      </div>
+    </TransitionSlideY>
   </BaseModal>
 </template>
 
@@ -45,6 +59,7 @@
   }>()
 
   const { t } = useI18n()
+  const router = useLocaleRouter()
 
   const validationSchema = useZodSchema(({ object, optional, requiredString, string }) => object({
     category: requiredString(),
@@ -53,6 +68,7 @@
   }))
 
   const loading = ref(false)
+  const show = ref(false)
 
   const categoryOptions = computed(() => [
     { key: crypto.randomUUID(), label: t("labels.categories.budget"), value: "budget" },
@@ -65,6 +81,12 @@
 
     return { category: props.category }
   })
+
+  const handleAccountDelete = async () => {
+    loading.value = true
+    await walleeApi.accounts.destroy(props.account!.id)
+    await router.replace("/")
+  }
 
   const handleSubmit = async (values: AccountForm) => {
     loading.value = true
@@ -81,8 +103,48 @@
   }
 </script>
 
+<style>
+  .account-form-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .delete-confirmation {
+      align-items: flex-end;
+      backdrop-filter: blur(2px);
+      background-color: #00000080;
+      display: flex;
+      inset: 0;
+      position: fixed;
+
+      > div {
+        background-color: var(--background-primary);
+        border-radius: 0.25rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1rem;
+        padding: 1rem;
+        text-align: center;
+
+        > div {
+          align-self: center;
+          background-color: #ffffff;
+          height: 0.25rem;
+          width: 2rem;
+        }
+      }
+    }
+  }
+</style>
+
 <i18n lang="yaml">
   en:
+    delete:
+      action: Delete account
+      consequence: Deleting your account will reassign all of its transactions to your main account.
+      sure?: Are you sure ?
     labels:
       categories:
         budget: Budget

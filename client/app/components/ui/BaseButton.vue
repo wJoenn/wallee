@@ -8,7 +8,7 @@
 <script setup lang="ts">
   const props = withDefaults(defineProps<{
     loading?: boolean
-    mode?: "primary" | "secondary"
+    mode?: "danger" | "primary"
     type?: "button" | "submit"
   }>(), {
     mode: "primary",
