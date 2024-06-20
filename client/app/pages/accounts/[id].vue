@@ -22,6 +22,14 @@
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
     </div>
 
+    <BaseButton
+      v-if="account && account.category !== 'main'"
+      :loading="status === 'pending'"
+      @click="handleAccountDelete"
+    >
+      {{ t("deleteAccount") }}
+    </BaseButton>
+
     <div class="main">
       <TransactionList
         :loading="status === 'pending'"
@@ -82,6 +90,12 @@
 
     return Math.round(spendings / diff)
   })
+
+  const handleAccountDelete = async () => {
+    status.value = "pending"
+    await walleeApi.accounts.destroy(account.value!.id)
+    await router.replace("/")
+  }
 
   const handleAccountUpdate = ({ category, description, name }: Account) => {
     account.value = { ...account.value!, category, description, name }
@@ -151,5 +165,6 @@
 
 <i18n lang="yaml">
   en:
+    deleteAccount: Delete account
     newTransaction: New transaction
 </i18n>

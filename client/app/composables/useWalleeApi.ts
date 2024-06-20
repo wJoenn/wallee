@@ -3,6 +3,8 @@ import type { AsyncDataOptions } from "#app"
 import type { RecursiveRecord } from "~~/types"
 import type { Account, Transaction, User } from "~~/types/api"
 
+type ID = number | string
+
 type Options = {
   body?: RecursiveRecord
   headers?: Record<string, string>
@@ -29,19 +31,20 @@ const _fetchApi = <T>(path: string, options?: Options) => {
 export const walleeApi = {
   accounts: {
     create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
+    destroy: (id: ID) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
     index: () => _fetchApi<Omit<Account, "transactions">[]>("/accounts"),
-    show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`),
-    update: (id: number | string, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
+    show: (id: ID) => _fetchApi<Account>(`/accounts/${id}`),
+    update: (id: ID, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
       body,
       method: "PATCH"
     })
   },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
-    destroy: (id: number | string) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
+    destroy: (id: ID) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
     index: () => _fetchApi<Transaction[]>("/transactions"),
-    show: (id: number | string) => _fetchApi<Transaction>(`/transactions/${id}`),
-    update: (id: number | string, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
+    show: (id: ID) => _fetchApi<Transaction>(`/transactions/${id}`),
+    update: (id: ID, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
       body,
       method: "PATCH"
     })
