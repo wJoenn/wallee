@@ -2,13 +2,15 @@
   <BaseField :errors :label :name>
     <BaseInput
       :id="name"
-      v-model:value="value"
       :disabled
+      inputmode="decimal"
       :is-invalid="errors.length > 0"
       :name
       :placeholder
       step="any"
-      type="number"
+      type="text"
+      :value="value ? String(value) : ''"
+      @update:value="handleValueUpdate"
     />
   </BaseField>
 </template>
@@ -23,4 +25,15 @@
 
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { errors, value } = useField<number>(props.name)
+
+  const handleValueUpdate = (newValue: string) => {
+    if (!newValue) {
+      // @ts-expect-error: value is Ref<number> but I want to reset the value
+      value.value = undefined
+      return
+    }
+
+    const toNumber = Number(newValue.replace(",", "."))
+    if (!isNaN(toNumber)) { value.value = toNumber }
+  }
 </script>
