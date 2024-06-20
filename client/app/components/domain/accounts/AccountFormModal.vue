@@ -4,7 +4,7 @@
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
       <SelectField
-        :disabled="!!category"
+        :disabled="!!category || account?.category === 'main'"
         :label="t('labels.category')"
         name="category"
         :options="categoryOptions"
@@ -52,12 +52,13 @@
     name: requiredString()
   }))
 
-  const categoryOptions = [
-    { key: crypto.randomUUID(), label: t("labels.categories.budget"), value: "budget" },
-    { key: crypto.randomUUID(), label: t("labels.categories.saving"), value: "saving" }
-  ]
-
   const loading = ref(false)
+
+  const categoryOptions = computed(() => [
+    { key: crypto.randomUUID(), label: t("labels.categories.budget"), value: "budget" },
+    { key: crypto.randomUUID(), label: t("labels.categories.main"), value: "main" },
+    { key: crypto.randomUUID(), label: t("labels.categories.saving"), value: "saving" }
+  ].filter(option => props.account?.category === "main" || option.value !== "main"))
 
   const initialValues = computed(() => {
     if (props.account) { return props.account }
@@ -85,6 +86,7 @@
     labels:
       categories:
         budget: Budget
+        main: Main
         saving: Saving
       category: Category
     placeholders:
