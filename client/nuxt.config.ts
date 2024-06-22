@@ -52,7 +52,8 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@pinia/nuxt",
     "@vee-validate/nuxt",
-    "@vite-pwa/nuxt"
+    "@vite-pwa/nuxt",
+    "@vueuse/nuxt"
   ],
 
   devtools: {
