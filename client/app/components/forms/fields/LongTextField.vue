@@ -8,6 +8,7 @@
       :disabled
       :name
       :placeholder
+      rows="5"
     />
   </BaseField>
 </template>

@@ -23,5 +23,6 @@
     overflow-y: scroll;
     padding: 2rem;
     position: fixed;
+    width: 100vw;
   }
 </style>
