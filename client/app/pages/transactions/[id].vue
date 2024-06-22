@@ -1,11 +1,32 @@
 <template>
   <div id="transactions-id">
-    <pre>{{ transaction }}</pre>
-    <BaseButton :loading="status === 'pending'" @click="show = true">{{ t("editTransaction") }}</BaseButton>
-    <BaseButton :loading="status === 'pending'" @click="handleDelete">{{ t("deleteTransaction") }}</BaseButton>
-    <BaseButton @click="router.back">{{ t("globals.actions.back") }}</BaseButton>
+    <div class="info">
+      <pre>{{ transaction }}</pre>
 
-    <TransactionFormModal v-if="show" :transaction @close="show = false" @update="handleUpdate" />
+      <BaseButton :loading="status === 'pending'" @click="showTransactionForm = true">
+        {{ t("editTransaction") }}
+      </BaseButton>
+
+      <BaseButton @click="router.back">{{ t("globals.actions.back") }}</BaseButton>
+    </div>
+
+    <BaseButton :loading="status === 'pending'" @click="showDeleteConfirmation = true">
+      {{ t("deleteTransaction") }}
+    </BaseButton>
+
+    <DeleteConfirmation
+      :loading="status === 'pending'"
+      :show="showDeleteConfirmation"
+      @close="showDeleteConfirmation = false"
+      @confirm="handleDelete"
+    />
+
+    <TransactionFormModal
+      v-if="showTransactionForm"
+      :transaction
+      @close="showTransactionForm = false"
+      @update="handleUpdate"
+    />
   </div>
 </template>
 
@@ -25,9 +46,11 @@
   const { params: { id } } = useRoute() as Route
   const { data: transaction, status } = useWalleeApi(api => api.transactions.show(id))
 
-  const show = ref(false)
+  const showTransactionForm = ref(false)
+  const showDeleteConfirmation = ref(false)
 
   const handleDelete = async () => {
+    status.value = "pending"
     await walleeApi.transactions.destroy(transaction.value!.id)
     await router.replace(localePath("/"))
   }
@@ -48,8 +71,17 @@
   #transactions-id {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    justify-content: space-between;
+    gap: 4rem;
+    min-height: 100vh;
+    min-height: 100svh;
     padding: 2rem;
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
   }
 </style>
 
