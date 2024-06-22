@@ -32,7 +32,6 @@
   import type { DateString } from "~~/types"
 
   import dayjs from "dayjs"
-  import { vMaska } from "maska/vue"
 
   import BaseDropdown from "~/components/ui/BaseDropdown.vue"
 
