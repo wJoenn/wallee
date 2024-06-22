@@ -22,6 +22,8 @@
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
     </div>
 
+    <p v-if="account?.description" style="white-space: pre-line;">{{ account.description }}</p>
+
     <div class="main">
       <TransactionList
         :loading="status === 'pending'"
