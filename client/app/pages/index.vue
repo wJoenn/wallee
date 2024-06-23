@@ -6,88 +6,21 @@
     </div>
 
     <div class="flex flex-col flex-grow gap-8">
-      <section class="flex flex-col gap-4">
-        <h2 class="flex font-medium gap-4 items-center text-xl">{{ t("sections.mainAccount") }}</h2>
+      <AccountList :accounts category="main" :loading="status === 'pending'" />
 
-        <BaseSkeleton v-if="status === 'pending'" class="border p-4 rounded shadow-black shadow-md">
-          <BaseSkeleton class="bg h-4 w-[10ch]" />
+      <AccountList
+        :accounts
+        category="budget"
+        :loading="status === 'pending'"
+        @add="newAccountCategory = 'budget'; showAccountForm = true"
+      />
 
-          <div class="flex flex-col items-end">
-            <BaseSkeleton class="bg h-5 w-[8ch]" />
-            <BaseSkeleton class="bg h-3 w-[20ch]" />
-          </div>
-        </BaseSkeleton>
-
-        <NuxtLink
-          v-else-if="mainAccount"
-          class="bg border p-4 rounded shadow-black shadow-md"
-          :to="localePath(`/accounts/${mainAccount.id}`)"
-        >
-          <span>{{ mainAccount!.name }}</span>
-
-          <div class="flex flex-col items-end">
-            <p class="text-xl">{{ toEuro(mainAccount!.balance) }}</p>
-
-            <span v-if="dueAmounts" class="text-secondary text-sm">
-              Due amounts included: {{ toEuro(mainAccount!.balance + dueAmounts) }}
-            </span>
-          </div>
-        </NuxtLink>
-      </section>
-
-      <section class="flex flex-col gap-4">
-        <h2 class="flex font-medium gap-4 items-center text-xl">
-          <span>{{ t("sections.budgets") }}</span>
-          <Icon v-if="status === 'pending'" name="svg-spinners:ring-resize" />
-          <Icon v-else name="ion:add-circle-outline" @click="newAccountCategory = 'budget'; showAccountForm = true" />
-        </h2>
-
-        <nav v-if="status === 'pending'" class="gap-4 grid grid-cols-2">
-          <BaseSkeleton v-for="i in 4" :key="i" class="border p-4 rounded shadow-black shadow-md">
-            <BaseSkeleton class="bg h-4 w-[10ch]" />
-            <BaseSkeleton class="bg h-5 w-[8ch]" />
-          </BaseSkeleton>
-        </nav>
-
-        <nav v-else class="gap-4 grid grid-cols-2">
-          <NuxtLink
-            v-for="account in budgetAccounts"
-            :key="account.id"
-            class="bg border p-4 rounded shadow-black shadow-md"
-            :to="localePath(`/accounts/${account.id}`)"
-          >
-            <span>{{ account.name }}</span>
-            <p>{{ toEuro(account.balance) }}</p>
-          </NuxtLink>
-        </nav>
-      </section>
-
-      <section class="flex flex-col gap-4 mb-1">
-        <h2 class="flex font-medium gap-4 items-center text-xl">
-          <span>{{ t("sections.savings") }}</span>
-          <Icon v-if="status === 'pending'" name="svg-spinners:ring-resize" />
-          <Icon v-else name="ion:add-circle-outline" @click="newAccountCategory = 'saving'; showAccountForm = true" />
-        </h2>
-
-        <nav v-if="status === 'pending'" class="gap-4 grid grid-cols-2">
-          <BaseSkeleton v-for="i in 2" :key="i" class="border p-4 rounded shadow-black shadow-md">
-            <BaseSkeleton class="bg h-4 w-[10ch]" />
-            <BaseSkeleton class="bg h-5 w-[8ch]" />
-          </BaseSkeleton>
-        </nav>
-
-        <nav v-else class="gap-4 grid grid-cols-2">
-          <NuxtLink
-            v-for="account in savingAccounts"
-            :key="account.id"
-            class="bg border p-4 rounded shadow-black shadow-md"
-            :to="localePath(`/accounts/${account.id}`)"
-          >
-            <span>{{ account.name }}</span>
-            <p>{{ toEuro(account.balance) }}</p>
-          </NuxtLink>
-        </nav>
-      </section>
+      <AccountList
+        :accounts
+        category="saving"
+        :loading="status === 'pending'"
+        @add="newAccountCategory = 'saving'; showAccountForm = true"
+      />
     </div>
 
     <div class="-m-8 bg bottom-0 inset-x-0 p-8 sticky">
@@ -113,7 +46,6 @@
   import type { Account, Transaction } from "~~/types/api"
 
   const { t } = useI18n()
-  const localePath = useLocalePath()
   const { signOut } = useUserStore()
   const { data: accounts, status } = useWalleeApi(api => api.accounts.index(), { deep: true })
 
@@ -121,14 +53,6 @@
 
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
-
-  const budgetAccounts = computed(() => accounts.value?.filter(account => account.category === "budget"))
-  const mainAccount = computed(() => accounts.value?.find(account => account.category === "main"))
-  const savingAccounts = computed(() => accounts.value?.filter(account => account.category === "saving"))
-
-  const dueAmounts = computed(() => (
-    budgetAccounts.value?.reduce((sum, account) => account.balance < 0 ? sum + account.balance : sum, 0)
-  ))
 
   const handleCreateTransaction = ({ accountId, transaction }: { accountId?: number, transaction: Transaction }) => {
     const account = accounts.value!.find(accountOption => accountOption.id === accountId)!
