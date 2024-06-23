@@ -14,7 +14,12 @@
           @focus="handleFocus"
         >
           <template #caption>
-            <Icon class="duration-300 transition-transform" :class="{ 'rotate-180': focused }" name="ion:chevron-down" @click="handleToggle" />
+            <Icon
+              class="duration-300 transition-transform"
+              :class="{ 'rotate-180': focused }"
+              name="ion:chevron-down"
+              @click="handleToggle"
+            />
           </template>
         </BaseInput>
       </BaseField>
@@ -123,6 +128,7 @@
     watcher.value = value.value
     setDefaultValue()
   }, { immediate: true })
+
   watch(() => props.options, setDefaultValue, { immediate: true })
 </script>
 

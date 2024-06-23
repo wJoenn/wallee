@@ -87,6 +87,7 @@
 
     return [...props.transactions[activeList.value]].sort((a, b) => {
       const order = activeList.value === "executed" ? -1 : 1
+
       if (dayjs(a.transacted_at).isAfter(dayjs(b.transacted_at))) { return order }
       if (dayjs(a.transacted_at).isBefore(dayjs(b.transacted_at))) { return -order }
       return 0

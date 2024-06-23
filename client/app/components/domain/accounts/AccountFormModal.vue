@@ -4,7 +4,7 @@
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
       <SelectField
-        :disabled="!!category || account?.category === 'main'"
+        :disabled="!!category || isMain"
         :label="t('labels.category')"
         name="category"
         :options="categoryOptions"
@@ -22,7 +22,7 @@
       <BaseButton @click="emit('close')">{{ t("globals.actions.close") }}</BaseButton>
     </BaseForm>
 
-    <BaseButton v-if="account && account.category !== 'main'" :loading @click="show = true">
+    <BaseButton v-if="account && !isMain" :loading @click="show = true">
       {{ t("delete.action") }}
     </BaseButton>
 
@@ -63,15 +63,16 @@
   const loading = ref(false)
   const show = ref(false)
 
+  const isMain = computed(() => props.account?.category === "main")
+
   const categoryOptions = computed(() => [
     { key: crypto.randomUUID(), label: t("labels.categories.budget"), value: "budget" },
     { key: crypto.randomUUID(), label: t("labels.categories.main"), value: "main" },
     { key: crypto.randomUUID(), label: t("labels.categories.saving"), value: "saving" }
-  ].filter(option => props.account?.category === "main" || option.value !== "main"))
+  ].filter(option => isMain.value || option.value !== "main"))
 
   const initialValues = computed(() => {
     if (props.account) { return props.account }
-
     return { category: props.category }
   })
 

@@ -8,6 +8,7 @@
         <p>
           <slot />
         </p>
+
         <BaseButton :loading mode="danger" @click="$emit('confirm')">{{ t("globals.actions.confirm") }}</BaseButton>
       </div>
     </div>

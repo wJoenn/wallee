@@ -148,13 +148,29 @@
     return { account_id: props.accountId }
   })
 
+  const createTopUpTransaction = async (values: TransactionForm) => {
+    if (values.from_account_id) {
+      const toppedUpAccount = accounts.value!.find(account => account.id === values.account_id)!
+
+      const topUpTransaction = {
+        ...values,
+        account_id: toppedUpAccount.id,
+        description: t(`topUpDescription.${transactionModifier.value}`, { account: toppedUpAccount.name }),
+        value: values.value * -1
+      }
+
+      await walleeApi.transactions.create(topUpTransaction)
+    }
+  }
+
   const handleSubmit = async (values: TransactionForm) => {
     loading.value = true
+
     values.value = Math.round(values.value * transactionModifier.value * 100)
     const accountId = accounts.value!.find(accountOption => accountOption.id === values.account_id)?.id
 
     if (props.transaction) {
-      if (values.transacted_at === dayjs(props.transaction.transacted_at).format("YYYY-MM-DD")) {
+      if (dayjs(values.transacted_at).isSame(dayjs(props.transaction.transacted_at), "date")) {
         values.transacted_at = props.transaction.transacted_at
       } else {
         values.transacted_at = toTimestamp(values.transacted_at)
@@ -166,20 +182,8 @@
       values.transacted_at = toTimestamp(values.transacted_at)
 
       const { _data } = await walleeApi.transactions.create(values)
+      await createTopUpTransaction(values)
       emit("create", { accountId, transaction: _data! })
-
-      if (values.from_account_id) {
-        const toppedUpAccount = accounts.value!.find(account => account.id === values.account_id)!
-
-        const topUpTransaction = {
-          ...values,
-          account_id: values.from_account_id,
-          description: t(`topUpDescription.${transactionModifier.value}`, { account: toppedUpAccount.name }),
-          value: values.value * -1
-        }
-
-        await walleeApi.transactions.create(topUpTransaction)
-      }
     }
 
     emit("close")
