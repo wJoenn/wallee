@@ -3,10 +3,10 @@
 
   <NuxtPage v-if="isMobile" />
 
-  <div v-else id="desktop">
-    <h1>{{ t("notOnDesktop") }}</h1>
-    <p>{{ t("mobileOnly") }}</p>
-    <p>{{ t("pwa") }}</p>
+  <div v-else id="desktop" class="flex flex-col gap-4 h-screen items-center justify-center">
+    <h1 class="text-3xl">{{ t("notOnDesktop") }}</h1>
+    <p class="max-w-3xl">{{ t("mobileOnly") }}</p>
+    <p class="max-w-3xl">{{ t("pwa") }}</p>
   </div>
 </template>
 
@@ -19,27 +19,6 @@
     isMobile.value = window.innerWidth < 768
   })
 </script>
-
-<style>
-  body {
-    &:has(.base-modal) {
-      overflow: hidden;
-    }
-
-    #desktop {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      gap: 1rem;
-      justify-content: center;
-
-      p {
-        width: 700px;
-      }
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

@@ -1,5 +1,5 @@
 <template>
-  <form class="base-form" @submit.prevent="submit">
+  <form class="flex flex-col gap-8" @submit.prevent="submit">
     <slot />
   </form>
 </template>
@@ -29,12 +29,3 @@
 
   defineExpose({ setFieldError })
 </script>
-
-<style scoped>
-  .base-form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-  }
-</style>

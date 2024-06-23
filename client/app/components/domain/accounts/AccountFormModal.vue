@@ -1,5 +1,5 @@
 <template>
-  <BaseModal class="account-form-modal">
+  <BaseModal class="flex flex-col justify-between">
     <BaseForm :action="handleSubmit" :initial-values :validation-schema>
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
@@ -95,14 +95,6 @@
     emit("close")
   }
 </script>
-
-<style>
-  .account-form-modal {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-</style>
 
 <i18n lang="yaml">
   en:

@@ -1,20 +1,20 @@
 <template>
-  <div id="accounts-id">
-    <div class="header">
+  <div class="flex flex-col gap-8 h-full">
+    <div class="flex justify-between">
       <div v-if="status === 'pending'">
-        <BaseSkeleton style="height: 1rem; width: 10ch;" />
-        <BaseSkeleton style="height: 2rem; width: 15ch;" />
-        <BaseSkeleton style="height: 0.8rem; width: 25ch" />
+        <BaseSkeleton class="h-4 w-[10ch]" />
+        <BaseSkeleton class="h-8 w-[15ch]" />
+        <BaseSkeleton class="h-3 w-[25ch]" />
       </div>
 
       <div v-else-if="account">
-        <p @click="showAccountForm = true">
+        <p class="flex gap-2 items-center" @click="showAccountForm = true">
           {{ account.name }}
           <Icon name="ion:settings-sharp" />
         </p>
 
-        <h1>{{ toEuro(account.balance) }}</h1>
-        <span v-if="account.category === 'budget'">
+        <h1 class="font-semibold text-3xl">{{ toEuro(account.balance) }}</h1>
+        <span v-if="account.category === 'budget'" class="text-secondary text-xs">
           Average monthly spendings: {{ toEuro(averageMonthlySpending) }}
         </span>
       </div>
@@ -22,15 +22,14 @@
       <NuxtLink :to="localePath('/')">{{ t("globals.actions.home") }}</NuxtLink>
     </div>
 
-    <p v-if="account?.description" style="white-space: pre-line;">{{ account.description }}</p>
+    <p v-if="account?.description" class="whitespace-pre-line">{{ account.description }}</p>
 
-    <div class="main">
-      <TransactionList
-        :loading="status === 'pending'"
-        :transactions="account?.transactions"
-        @add="showTransactionForm = true"
-      />
-    </div>
+    <TransactionList
+      class="flex-grow"
+      :loading="status === 'pending'"
+      :transactions="account?.transactions"
+      @add="showTransactionForm = true"
+    />
 
     <AccountFormModal v-if="showAccountForm" :account @close="showAccountForm = false" @update="handleAccountUpdate" />
 
@@ -105,51 +104,6 @@
     }
   }, { immediate: true })
 </script>
-
-<style scoped>
-  #accounts-id {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-height: 100svh;
-    gap: 2rem;
-    padding: 2rem 2rem 0;
-
-    .footer {
-      background-color: var(--background-primary);
-      bottom: 0;
-      left: 0;
-      margin-top: -2rem;
-      padding: 2rem 0;
-      position: sticky;
-      right: 0;
-
-      button {
-        width: 100%
-      }
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-
-      p {
-        align-items: center;
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      span {
-        color: #ffffff80;
-        font-size: 0.8rem;
-      }
-    }
-
-    .main {
-      flex-grow: 1;
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

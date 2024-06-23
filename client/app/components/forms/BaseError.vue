@@ -1,6 +1,6 @@
 <template>
   <TransitionSlideY group>
-    <p v-for="error in errors" :key="error" class="base-error">
+    <p v-for="error in errors" :key="error" class="flex gap-2 items-center text-danger text-sm">
       <Icon name="ion:alert-circle-outline" />
       {{ error }}
     </p>
@@ -12,13 +12,3 @@
     errors?: string[]
   }>()
 </script>
-
-<style scoped>
-  .base-error {
-    align-items: center;
-    color: var(--text-negative);
-    display: flex;
-    font-size: 0.8rem;
-    gap: 0.5rem;
-  }
-</style>

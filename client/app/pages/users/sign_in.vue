@@ -1,5 +1,5 @@
 <template>
-  <div id="users-sign-in">
+  <div class="flex flex-col gap-8">
     <BaseForm ref="form" :action="handleSubmit" :validation-schema>
       <TextField :label="t('globals.forms.labels.email')" name="email" placeholder="user@example.com" />
       <PasswordField :label="t('globals.forms.labels.password')" name="password" />
@@ -8,7 +8,7 @@
 
     <p>
       {{ t("noAccount") }}
-      <NuxtLink class="link" :to="localePath('/users/sign_up')">{{ t("globals.actions.signUp") }}</NuxtLink>
+      <NuxtLink class="text-nuxt" :to="localePath('/users/sign_up')">{{ t("globals.actions.signUp") }}</NuxtLink>
     </p>
   </div>
 </template>
@@ -47,19 +47,6 @@
     }
   }
 </script>
-
-<style scoped>
-  #users-sign-in {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-
-    .link {
-      color: var(--color-primary);
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

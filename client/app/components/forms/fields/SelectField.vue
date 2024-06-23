@@ -14,18 +14,19 @@
           @focus="handleFocus"
         >
           <template #caption>
-            <Icon :class="{ focused }" name="ion:chevron-down" @click="handleToggle" />
+            <Icon class="duration-300 transition-transform" :class="{ 'rotate-180': focused }" name="ion:chevron-down" @click="handleToggle" />
           </template>
         </BaseInput>
       </BaseField>
     </template>
 
     <template #content>
-      <ul class="options">
+      <ul>
         <li
           v-for="option in filteredOptions"
           :key="option.label"
-          :class="{ selected: selectedOption?.[selectBy] === option[selectBy] }"
+          class="p-4"
+          :class="{ 'bg-secondary': selectedOption?.[selectBy] === option[selectBy] }"
           @click="handleSelected(option)"
         >
           {{ option.label }}
@@ -124,26 +125,6 @@
   }, { immediate: true })
   watch(() => props.options, setDefaultValue, { immediate: true })
 </script>
-
-<style scoped>
-  .select-field {
-    svg {
-      transition: transform 0.3s ease;
-
-      &.focused {
-        transform: rotate(180deg);
-      }
-    }
-
-    .options li {
-      padding: 1rem;
-
-      &.selected {
-        background-color: var(--color-secondary);
-      }
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

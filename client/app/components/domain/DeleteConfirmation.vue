@@ -1,8 +1,8 @@
 <template>
   <TransitionSlideY>
-    <div v-if="show" class="delete-confirmation" @click.self="$emit('close')">
-      <div>
-        <div @click="$emit('close')" />
+    <div v-if="show" class="backdrop-blur-sm bg-[#00000080] fixed flex inset-0 items-end" @click.self="$emit('close')">
+      <div class="bg flex flex-col gap-4 m-4 p-4 rounded shadow-black shadow-md text-center w-full">
+        <div class="bg-white h-1 rounded-full self-center w-8" @click="$emit('close')" />
         <h2>{{ t("sure?") }}</h2>
 
         <p>
@@ -30,37 +30,6 @@
 
   const { t } = useI18n()
 </script>
-
-<style scoped>
-  .delete-confirmation {
-    align-items: flex-end;
-    backdrop-filter: blur(2px);
-    background-color: #00000080;
-    display: flex;
-    inset: 0;
-    position: fixed;
-
-    > div {
-      background-color: var(--background-primary);
-      border-radius: 0.25rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin: 1rem;
-      padding: 1rem;
-      text-align: center;
-      width: 100%;
-
-      > div {
-        align-self: center;
-        background-color: #ffffff;
-        height: 0.25rem;
-        width: 2rem;
-      }
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

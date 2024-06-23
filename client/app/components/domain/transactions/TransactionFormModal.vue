@@ -1,22 +1,30 @@
 <template>
-  <BaseModal>
-    <div class="transaction-modifier">
-      <label>{{ t("globals.forms.labels.direction") }}</label>
-
-      <div>
-        <button :class="{ selected: transactionModifier === -1 }" @click="transactionModifier = -1">
-          <Icon name="ion:arrow-up" />
-          <span>{{ t("labels.paid") }}</span>
-        </button>
-
-        <button :class="{ selected: transactionModifier === 1 }" @click="transactionModifier = 1">
-          <Icon name="ion:arrow-down" />
-          <span>{{ t("labels.received") }}</span>
-        </button>
-      </div>
-    </div>
-
+  <BaseModal class="space-y-8">
     <BaseForm :action="handleSubmit" :initial-values :validation-schema>
+      <div class="flex flex-col gap-4">
+        <label class="font-semibold">{{ t("globals.forms.labels.direction") }}</label>
+
+        <div class="gap-4 grid grid-cols-2">
+          <button
+            class="bg border duration-300 flex gap-2 items-center justify-center px-4 py-3 rounded transition-colors"
+            :class="{ 'border-nuxt': transactionModifier === -1 }"
+            @click="transactionModifier = -1"
+          >
+            <Icon name="ion:arrow-up" />
+            <span>{{ t("labels.paid") }}</span>
+          </button>
+
+          <button
+            class="bg border duration-300 flex gap-2 items-center justify-center px-4 py-3 rounded transition-colors"
+            :class="{ 'border-nuxt': transactionModifier === 1 }"
+            @click="transactionModifier = 1"
+          >
+            <Icon name="ion:arrow-down" />
+            <span>{{ t("labels.received") }}</span>
+          </button>
+        </div>
+      </div>
+
       <NumberField :label="t('globals.forms.labels.value')" name="value" placeholder="100.00" />
 
       <SelectField
@@ -31,15 +39,22 @@
       />
 
       <template v-if="!transaction">
-        <div class="toggle">
+        <div class="flex items-center justify-between">
           <p>{{ t(`toppingUp?.${transactionModifier}`) }}</p>
 
-          <div class="trigger" @click="toppingUp = !toppingUp">
-            <div :class="{ enabled: toppingUp }" />
+          <div
+            class="default:bg-secondary duration-300 flex justify-center p-1 rounded-full transition-colors w-12"
+            :class="{ 'bg-nuxt': toppingUp }"
+            @click="toppingUp = !toppingUp"
+          >
+            <div
+              class="bg-white default:-translate-x-1/2 duration-300 rounded-full size-5 transition-transform"
+              :class="{ 'translate-x-1/2': toppingUp }"
+            />
           </div>
         </div>
 
-        <span class="toggle-description">{{ t("topUpExplanation") }}</span>
+        <span class="-mt-6 text-secondary text-xs">{{ t("topUpExplanation") }}</span>
 
         <SelectField
           v-if="toppingUp"
@@ -177,88 +192,6 @@
     }
   }
 </script>
-
-<style>
-  .base-modal {
-    form {
-      margin-bottom: 2rem;
-    }
-
-    form {
-      .toggle {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-
-        .trigger {
-          background-color: var(--color-secondary);
-          border-radius: 9999px;
-          display: flex;
-          justify-content: center;
-          padding: 0.25rem;
-          transition: background-color 0.3s ease;
-          width: 3rem;
-
-          &:has(div.enabled) {
-            background-color: var(--color-primary);
-          }
-
-          div {
-            background-color: white;
-            border-radius: 50%;
-            height: 1.2rem;
-            transform: translateX(-50%);
-            transition: transform 0.3s ease;
-            width: 1.2rem;
-
-            &.enabled {
-            transform: translateX(50%);
-          }
-          }
-        }
-      }
-
-      .toggle-description {
-        color: #ffffff80;
-        font-size: 0.8rem;
-        margin-top: -1.5rem;
-      }
-    }
-
-    .transaction-modifier {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
-
-      div {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-
-        button {
-          align-items: center;
-          background-color: transparent;
-          border: 1px solid var(--color-secondary);
-          border-radius: 0.25rem;
-          display: flex;
-          gap: 0.5rem;
-          justify-content: center;
-          padding: 0.75rem 1rem;
-          transition: border-color 0.3s ease;
-
-          &.selected {
-            border-color: var(--color-primary);
-          }
-        }
-      }
-
-      label {
-        font-weight: 600;
-      }
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

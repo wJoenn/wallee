@@ -1,11 +1,11 @@
 <template>
-  <div class="base-field">
-    <label v-if="label" :for="name">
+  <div class="flex flex-col gap-4">
+    <label v-if="label" class="font-semibold" :for="name">
       <span>{{ label }}</span>
-      <span v-if="optional" class="optional">({{ t("optional") }})</span>
+      <span v-if="optional" class="font-normal ml-2 text-secondary">({{ t("optional") }})</span>
     </label>
 
-    <BaseSkeleton v-if="loading" style="height: 45px;" />
+    <BaseSkeleton v-if="loading" class="h-[45px]" />
     <slot v-else />
 
     <BaseError :errors />
@@ -29,24 +29,8 @@
 </script>
 
 <style>
-  .base-field {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    input:-webkit-autofill {
-      transition: background-color 9999s 0s, color 9999s 0s;
-    }
-
-    label {
-      font-weight: 600;
-
-      .optional {
-        font-weight: 400;
-        margin-left: 0.5rem;
-        opacity: 0.5;
-      }
-    }
+  input:-webkit-autofill {
+    transition: background-color 9999s 0s, color 9999s 0s;
   }
 </style>
 

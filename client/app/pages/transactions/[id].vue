@@ -1,6 +1,6 @@
 <template>
-  <div id="transactions-id">
-    <div class="info">
+  <div class="flex flex-col h-full justify-between">
+    <div class="flex flex-col gap-8 overflow-hidden">
       <pre>{{ transaction }}</pre>
 
       <BaseButton :loading="status === 'pending'" @click="showTransactionForm = true">
@@ -66,24 +66,6 @@
     }
   }, { immediate: true })
 </script>
-
-<style scoped>
-  #transactions-id {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 4rem;
-    min-height: 100vh;
-    min-height: 100svh;
-    padding: 2rem;
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-  }
-</style>
 
 <i18n lang="yaml">
   en:

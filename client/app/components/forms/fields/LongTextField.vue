@@ -3,8 +3,8 @@
     <textarea
       :id="name"
       v-model="value"
-      class="long-text-field"
-      :class="{ invalid: errors.length > 0 }"
+      class="bg border duration-300 focus:border-nuxt focus:outline-none px-4 py-3 rounded transition-colors"
+      :class="{ 'bg-danger border-danger focus:border-danger': errors.length > 0 }"
       :disabled
       :name
       :placeholder
@@ -25,27 +25,3 @@
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { errors, value } = useField<string>(props.name)
 </script>
-
-<style scoped>
-  .long-text-field {
-    background-color: var(--background-primary);
-    border: 1px solid var(--color-secondary);
-    border-radius: 0.25rem;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-
-    &:focus {
-      border: 1px solid var(--color-primary);
-      outline: none;
-    }
-
-    &.invalid {
-      background-color: var(--background-negative);
-      border: 1px solid var(--text-negative);
-
-      &:focus {
-        border: 1px solid var(--text-negative);
-      }
-    }
-  }
-</style>

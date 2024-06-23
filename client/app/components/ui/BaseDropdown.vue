@@ -1,9 +1,9 @@
 <template>
-  <div v-on-click-outside="disable" class="base-dropdown">
+  <div v-on-click-outside="disable" class="relative">
     <slot name="trigger" />
 
     <TransitionSlideY :from="2">
-      <div v-if="show" class="content">
+      <div v-if="show" class="absolute bg border rounded shadow-black shadow-md w-full z-10">
         <slot name="content" />
       </div>
     </TransitionSlideY>
@@ -24,30 +24,3 @@
 
   defineExpose({ disable, enable, show, toggle })
 </script>
-
-<style scoped>
-  .base-dropdown {
-    position: relative;
-
-    .content {
-      background-color: var(--background-primary);
-      border: 1px solid var(--color-secondary);
-      border-radius: 0.25rem;
-      box-shadow: 0 0 10px black;
-      position: absolute;
-      width: 100%;
-      z-index: 10;
-    }
-  }
-
-  .slide-y-enter-from,
-  .slide-y-leave-to {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .slide-y-enter-active,
-  .slide-y-leave-active {
-    transition: all 0.3s ease;
-  }
-</style>

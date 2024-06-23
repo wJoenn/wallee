@@ -1,18 +1,19 @@
 <template>
-  <div class="date-picker">
-    <div class="actions">
+  <div class="flex flex-col gap-4 p-4">
+    <div class="grid grid-cols-3 justify-items-center">
       <Icon name="ion:play-back" @click="monthIndex--" />
       <div>{{ month.format("MMMM") }}</div>
       <Icon name="ion:play-forward" @click="monthIndex++" />
     </div>
 
-    <ul class="days">
-      <li v-for="day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']" :key="day">{{ day }}</li>
+    <ul class="gap-2 grid grid-cols-7">
+      <li v-for="day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']" :key="day" class="text-center">{{ day }}</li>
 
       <li
         v-for="(day, index) in days"
         :key="index"
-        :class="{ disabled: day.disabled, selected: date && date === day.value }"
+        class="border default:border-transparent duration-300 text-center transition-colors"
+        :class="{ 'text-secondary': day.disabled, 'border-nuxt': date && date === day.value }"
         @click="set(day)"
       >
         {{ day.label }}
@@ -92,38 +93,3 @@
     }
   })
 </script>
-
-<style scoped>
-  .date-picker {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      justify-items: center;
-    }
-
-    .days {
-      display: grid;
-      gap: 0.5rem;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-
-      li {
-        border: 1px solid transparent;
-        text-align: center;
-        transition: border-color 0.3s ease;
-
-        &.disabled {
-          color: gray;
-        }
-
-        &.selected {
-          border-color: var(--color-primary);
-        }
-      }
-    }
-  }
-</style>

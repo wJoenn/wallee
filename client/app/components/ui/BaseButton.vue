@@ -1,12 +1,17 @@
 <template>
-  <button class="base-button" :class="{ loading }" :disabled="loading" :type>
+  <button
+    class="duration-300 px-4 py-3 rounded transition-opacity"
+    :class="[css[mode], { 'opacity-50': loading }]"
+    :disabled="loading"
+    :type
+  >
     <Icon v-if="loading" name="svg-spinners:ring-resize" />
     <slot v-else />
   </button>
 </template>
 
 <script setup lang="ts">
-  const props = withDefaults(defineProps<{
+  withDefaults(defineProps<{
     loading?: boolean
     mode?: "danger" | "primary"
     type?: "button" | "submit"
@@ -20,22 +25,7 @@
   }>()
 
   const css = computed(() => ({
-    backgroundColor: `var(--color-${props.mode})`,
-    color: `var(${props.mode === "primary" ? "--background-primary" : "--text-primary"})`
+    danger: "bg-danger",
+    primary: "bg-nuxt text-contrasted"
   }))
 </script>
-
-<style scoped>
-  .base-button {
-    background-color: v-bind("css.backgroundColor");
-    border: none;
-    border-radius: 0.25rem;
-    color: v-bind("css.color");
-    padding: 0.75rem 1rem;
-    transition: opacity 0.3s ease;
-
-    &.loading {
-      opacity: 0.5;
-    }
-  }
-</style>

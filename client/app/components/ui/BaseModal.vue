@@ -1,6 +1,6 @@
 <template>
   <Teleport to="#teleports">
-    <div class="base-modal" v-bind="$attrs">
+    <div class="base-modal bg fixed inset-0 overflow-x-hidden overflow-y-auto p-8 w-screen" v-bind="$attrs">
       <slot />
     </div>
   </Teleport>
@@ -15,14 +15,3 @@
     inheritAttrs: false
   })
 </script>
-
-<style scoped>
-  .base-modal {
-    background: var(--background-primary);
-    inset: 0;
-    overflow-y: scroll;
-    padding: 2rem;
-    position: fixed;
-    width: 100vw;
-  }
-</style>

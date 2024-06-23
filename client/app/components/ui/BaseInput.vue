@@ -1,10 +1,13 @@
 <template>
-  <div class="base-input" :class="{ disabled }">
+  <div
+    class="border duration-300 flex focus-within:border-nuxt gap-2 items-center justify-between px-4 py-3 rounded transition-colors"
+    :class="{ 'bg-secondary text-secondary': disabled, 'border-nuxt': focused, '!bg-negative !border-danger': isInvalid }"
+  >
     <input
       :id
       ref="input"
       v-model="value"
-      :class="{ focused, invalid: isInvalid }"
+      class="bg-transparent flex-grow focus:outline-none"
       :disabled
       :name
       :placeholder
@@ -45,41 +48,3 @@
     if (props.focused) { input.value?.focus() }
   })
 </script>
-
-<style scoped>
-  .base-input {
-    align-items: center;
-    background-color: var(--background-primary);
-    border: 1px solid var(--color-secondary);
-    border-radius: 0.25rem;
-    display: flex;
-    gap: 0.5rem;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-
-    &:has(input:focus), &:has(input.focused) {
-      border: 1px solid var(--color-primary);
-    }
-
-    &:has(input.invalid) {
-      background-color: var(--background-negative);
-      border: 1px solid var(--text-negative);
-    }
-
-    &.disabled {
-      background-color: var(--color-secondary);
-      color: #ffffff80;
-    }
-
-    input {
-      background-color: transparent;
-      border: none;
-      flex-grow: 1;
-
-      &:focus {
-        outline: none;
-      }
-    }
-  }
-</style>
