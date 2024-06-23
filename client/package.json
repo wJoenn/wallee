@@ -24,6 +24,7 @@
     "@nuxt/eslint": "^0.3.13",
     "@nuxt/image": "^1.7.0",
     "@nuxtjs/i18n": "^8.3.1",
+    "@nuxtjs/tailwindcss": "^6.12.0",
     "@vee-validate/nuxt": "^4.12.6",
     "@vee-validate/zod": "^4.12.6",
     "@vite-pwa/nuxt": "^0.8.0",
@@ -33,6 +34,7 @@
     "eslint": "^8.57.0",
     "eslint-config-joenn": "^1.0.4",
     "nuxt-icon": "^0.6.10",
+    "tailwindcss": "^3.4.4",
     "typescript": "^5.4.5",
     "vue-tsc": "^2.0.16",
     "zod": "^3.23.4"

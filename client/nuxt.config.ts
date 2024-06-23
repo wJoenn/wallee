@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/image",
     "@nuxtjs/i18n",
+    "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
     "@vee-validate/nuxt",
     "@vite-pwa/nuxt",
