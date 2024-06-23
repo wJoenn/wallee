@@ -2,7 +2,7 @@
   <div v-on-click-outside="disable" class="relative">
     <slot name="trigger" />
 
-    <TransitionSlideY :from="2">
+    <TransitionSlideY :translate="2">
       <div v-if="show" class="absolute bg border rounded shadow-black shadow-md w-full z-10">
         <slot name="content" />
       </div>

@@ -9,10 +9,10 @@
   import { Transition, TransitionGroup } from "vue"
 
   const props = withDefaults(defineProps<{
-    from?: number
+    translate?: number
     group?: boolean
   }>(), {
-    from: 1
+    translate: 1
   })
 
   defineSlots<{
@@ -22,7 +22,7 @@
   const component = computed(() => props.group ? TransitionGroup : Transition)
 
   const css = computed(() => ({
-    transform: `translateY(calc(0.25rem * ${props.from}))`
+    transform: `translateY(calc(0.25rem * ${props.translate}))`
   }))
 </script>
 
