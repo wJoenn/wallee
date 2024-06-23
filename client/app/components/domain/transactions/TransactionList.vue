@@ -13,7 +13,7 @@
           :class="{ bg: activeList === 'executed' }"
           @click="activeList = 'executed'"
         >
-          Executed
+          {{ t("executed") }}
         </button>
 
         <button
@@ -21,7 +21,7 @@
           :class="{ bg: activeList === 'planned' }"
           @click="activeList = 'planned'"
         >
-          Planned
+          {{ t("planned") }}
         </button>
       </div>
     </div>
@@ -96,5 +96,7 @@
 
 <i18n lang="yaml">
   en:
+    executed: Executed
+    planned: Planned
     transactions: Transactions
 </i18n>

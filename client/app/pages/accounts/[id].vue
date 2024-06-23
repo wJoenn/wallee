@@ -15,7 +15,7 @@
 
         <h1 class="font-semibold text-3xl">{{ toEuro(account.balance) }}</h1>
         <span v-if="account.category === 'budget'" class="text-secondary text-xs">
-          Average monthly spendings: {{ toEuro(averageMonthlySpending) }}
+          {{ t("averageMonthlySpendings", { amount: toEuro(averageMonthlySpending) }) }}
         </span>
       </div>
 
@@ -107,6 +107,7 @@
 
 <i18n lang="yaml">
   en:
+    averageMonthlySpendings: "Average monthly spendings: {amount}"
     deleteAccount: Delete account
     newTransaction: New transaction
 </i18n>
