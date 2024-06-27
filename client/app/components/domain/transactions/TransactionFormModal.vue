@@ -5,23 +5,15 @@
         <label class="font-semibold">{{ t("globals.forms.labels.direction") }}</label>
 
         <div class="gap-4 grid grid-cols-2">
-          <button
-            class="bg border duration-300 flex gap-2 items-center justify-center px-4 py-3 rounded transition-colors"
-            :class="{ 'border-nuxt': transactionModifier === -1 }"
-            @click="transactionModifier = -1"
-          >
+          <BaseButton mode="input" :selected="transactionModifier === -1" @click="transactionModifier = -1">
             <Icon name="ion:arrow-up" />
             <span>{{ t("labels.paid") }}</span>
-          </button>
+          </BaseButton>
 
-          <button
-            class="bg border duration-300 flex gap-2 items-center justify-center px-4 py-3 rounded transition-colors"
-            :class="{ 'border-nuxt': transactionModifier === 1 }"
-            @click="transactionModifier = 1"
-          >
+          <BaseButton mode="input" :selected="transactionModifier === 1" @click="transactionModifier = 1">
             <Icon name="ion:arrow-down" />
             <span>{{ t("labels.received") }}</span>
-          </button>
+          </BaseButton>
         </div>
       </div>
 

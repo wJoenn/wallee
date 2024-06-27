@@ -1,7 +1,7 @@
 <template>
   <button
-    class="duration-300 px-4 py-3 rounded transition-opacity"
-    :class="[css[mode], { 'opacity-50': loading }]"
+    class="duration-300 flex gap-2 items-center justify-center px-4 py-3 rounded transition-all"
+    :class="[css[mode], { 'border-nuxt': selected, 'opacity-50': loading }]"
     :disabled="loading"
     :type
   >
@@ -13,7 +13,8 @@
 <script setup lang="ts">
   withDefaults(defineProps<{
     loading?: boolean
-    mode?: "danger" | "primary"
+    mode?: "danger" | "input" | "primary"
+    selected?: boolean
     type?: "button" | "submit"
   }>(), {
     mode: "primary",
@@ -26,6 +27,7 @@
 
   const css = computed(() => ({
     danger: "bg-danger",
+    input: "bg border",
     primary: "bg-nuxt text-contrasted"
   }))
 </script>
