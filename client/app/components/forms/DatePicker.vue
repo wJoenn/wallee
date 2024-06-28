@@ -12,8 +12,12 @@
       <li
         v-for="(day, index) in days"
         :key="index"
-        class="border default:border-transparent duration-300 text-center transition-colors"
-        :class="{ 'text-secondary': day.disabled, 'border-nuxt': date && date === day.value }"
+        class="border default:border-transparent duration-300 rounded text-center transition-colors"
+        :class="{
+          'bg-secondary': day.value && dayjs(day.value).isSame(dayjs(), 'date'),
+          'border-nuxt': date && date === day.value,
+          'text-secondary': day.disabled
+        }"
         @click="set(day)"
       >
         {{ day.label }}
