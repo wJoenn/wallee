@@ -4,7 +4,7 @@
       <TextField :label="t('globals.forms.labels.name')" name="name" :placeholder="t('placeholders.name')" />
 
       <SelectField
-        :disabled="!!category || isMain"
+        :disabled="isMain"
         :label="t('labels.category')"
         name="category"
         :options="categoryOptions"

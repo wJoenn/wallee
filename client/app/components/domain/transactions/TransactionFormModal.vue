@@ -21,7 +21,6 @@
 
       <SelectField
         v-model:watcher="selectedAccountId"
-        :disabled="!!accountId"
         :label="t('labels.account')"
         :loading="status === 'pending'"
         name="account_id"
