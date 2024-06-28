@@ -17,8 +17,6 @@
 <script setup lang="ts">
   import type { RecursiveRecord } from "~~/types"
 
-  import BaseForm from "~/components/forms/BaseForm.vue"
-
   const { t } = useI18n()
   const localePath = useLocalePath()
   const router = useLocaleRouter()
@@ -33,7 +31,7 @@
     path: ["password_confirmation"]
   }))
 
-  const form = ref<InstanceType<typeof BaseForm>>()
+  const form = ref<ComponentExposed<GlobalComponents["BaseForm"]>>()
   const loading = ref(false)
 
   const handleSubmit = async (values: RecursiveRecord) => {
@@ -42,7 +40,6 @@
 
     if (status === "unprocessable_entity") {
       Object.entries(data.errors).forEach(([path, errors]) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         errors.forEach(error => { form.value?.setFieldError(path, t(`validations.${path}.${error}`)) })
       })
 

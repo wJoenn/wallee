@@ -33,6 +33,7 @@ export default defineNuxtConfig({
 
   imports: {
     presets: [
+      { from: "vue", imports: ["GlobalComponents"], type: true },
       { from: "vue-component-type-helpers", imports: ["ComponentExposed"], type: true }
     ]
   },

@@ -16,8 +16,6 @@
 <script setup lang="ts">
   import type { RecursiveRecord } from "~~/types"
 
-  import BaseForm from "~/components/forms/BaseForm.vue"
-
   const { t } = useI18n()
   const localePath = useLocalePath()
   const router = useLocaleRouter()
@@ -28,7 +26,7 @@
     password: password()
   }))
 
-  const form = ref<InstanceType<typeof BaseForm>>()
+  const form = ref<ComponentExposed<GlobalComponents["BaseForm"]>>()
   const loading = ref(false)
 
   const handleSubmit = async (values: RecursiveRecord) => {
@@ -37,7 +35,6 @@
 
     if (status === "unauthorized") {
       ["email", "password"].forEach(path => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         form.value?.setFieldError(path, t("validations.user.invalid_email_or_password"))
       })
 

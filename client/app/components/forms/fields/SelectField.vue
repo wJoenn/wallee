@@ -46,8 +46,6 @@
 <script setup lang="ts" generic="T extends { key: number | string, label: string } & RecursiveRecord">
   import type { RecursiveRecord } from "~~/types"
 
-  import BaseDropdown from "~/components/ui/BaseDropdown.vue"
-
   const props = defineProps<{
     disabled?: boolean
     label: string
@@ -66,7 +64,7 @@
   // eslint-disable-next-line vue/no-setup-props-reactivity-loss
   const { errors, value } = useField(props.name)
 
-  const dropdown = ref<InstanceType<typeof BaseDropdown>>()
+  const dropdown = ref<ComponentExposed<GlobalComponents["BaseDropdown"]>>()
   const search = ref<string>()
   const selectedOption = ref<T>()
   const focused = ref(false)
@@ -87,7 +85,6 @@
   const handleFocus = () => {
     focused.value = true
     search.value = ""
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     dropdown.value!.enable()
   }
 
@@ -103,14 +100,12 @@
     }
 
     focused.value = false
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     dropdown.value!.disable()
   }
 
   const handleToggle = () => {
     if (props.disabled) { return }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     dropdown.value!.toggle()
     focused.value = !focused.value
 
