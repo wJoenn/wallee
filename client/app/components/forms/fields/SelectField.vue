@@ -79,12 +79,12 @@
 
   const handleClickOutside = () => {
     focused.value = false
-    search.value = selectedOption.value?.label
+    setSelectedOption()
   }
 
   const handleFocus = () => {
-    focused.value = true
     search.value = ""
+    focused.value = true
     dropdown.value!.enable()
   }
 
@@ -106,13 +106,13 @@
   const handleToggle = () => {
     if (props.disabled) { return }
 
-    dropdown.value!.toggle()
     focused.value = !focused.value
+    dropdown.value!.toggle()
 
-    if (!focused.value) { search.value = selectedOption.value?.label }
+    if (!focused.value) { setSelectedOption() }
   }
 
-  const setDefaultValue = () => {
+  const setSelectedOption = () => {
     if (value.value) {
       selectedOption.value = props.options.find(option => option[props.selectBy] === value.value)
       search.value = selectedOption.value?.label
@@ -121,10 +121,10 @@
 
   watch(value, () => {
     watcher.value = value.value
-    setDefaultValue()
+    setSelectedOption()
   }, { immediate: true })
 
-  watch(() => props.options, setDefaultValue, { immediate: true })
+  watch(() => props.options, setSelectedOption, { immediate: true })
 </script>
 
 <i18n lang="yaml">
