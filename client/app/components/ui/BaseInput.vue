@@ -44,7 +44,11 @@
 
   const input = ref<HTMLInputElement>()
 
-  watch(() => props.focused, () => {
-    if (props.focused) { input.value?.focus() }
-  })
+  const focus = () => {
+    input.value?.focus()
+  }
+
+  watch(() => props.focused, () => { if (props.focused) { focus() } })
+
+  defineExpose({ focus })
 </script>
