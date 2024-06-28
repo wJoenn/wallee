@@ -120,17 +120,12 @@ RSpec.describe Account do
       expect(serialized).to include(
         balance: 1,
         description: nil,
-        name: "My account"
+        executed_transactions: [executed_transaction],
+        name: "My account",
+        planned_transactions: [planned_transaction]
       )
 
       expect(serialized[:transactions]).to be_nil
-    end
-
-    it "includes transactions when Truthy argument is used" do
-      expect(account.serialize(true)).to include(
-        executed_transactions: [executed_transaction],
-        planned_transactions: [planned_transaction]
-      )
     end
   end
 end

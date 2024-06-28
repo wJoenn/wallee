@@ -49,7 +49,7 @@
   }>()
 
   const props = defineProps<{
-    accounts?: Omit<Account, "transactions">[]
+    accounts?: Account[]
     category: "budget" | "main" | "saving"
     loading?: boolean
   }>()

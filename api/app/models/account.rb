@@ -17,15 +17,8 @@ class Account < ApplicationRecord
     executed_transactions.sum(&:value)
   end
 
-  def serialize(include = false)
-    account = { balance:, category:, description:, id:, name: }
-
-    if include
-      account[:executed_transactions] = executed_transactions.order(transacted_at: :desc)
-      account[:planned_transactions] = planned_transactions.order(:transacted_at)
-    end
-
-    account
+  def serialize
+    slice(:balance, :category, :description, :executed_transactions, :id, :name, :planned_transactions)
   end
 
   private

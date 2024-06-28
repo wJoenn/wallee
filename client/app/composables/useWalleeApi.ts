@@ -32,7 +32,7 @@ export const walleeApi = {
   accounts: {
     create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
     destroy: (id: ID) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
-    index: () => _fetchApi<Omit<Account, "transactions">[]>("/accounts"),
+    index: () => _fetchApi<Account[]>("/accounts"),
     show: (id: ID) => _fetchApi<Account>(`/accounts/${id}`),
     update: (id: ID, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
       body,
