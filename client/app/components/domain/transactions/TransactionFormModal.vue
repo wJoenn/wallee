@@ -141,7 +141,7 @@
 
   const createTopUpTransaction = async (values: TransactionForm) => {
     if (values.from_account_id) {
-      const toppedUpAccount = accounts.value!.find(account => account.id === values.account_id)!
+      const toppedUpAccount = accounts.value!.find(account => account.id === values.from_account_id)!
 
       const topUpTransaction = {
         ...values,
