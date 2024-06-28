@@ -21,9 +21,9 @@
   const router = useLocaleRouter()
   const { signIn } = useUserStore()
 
-  const validationSchema = useZodSchema(({ object, password, requiredString }) => object({
+  const validationSchema = useZodSchema(({ object, requiredString }) => object({
     email: requiredString(t("validations.email.valid")).email(t("validations.email.valid")),
-    password: password()
+    password: requiredString().min(6, t("validations.password.tooSmall"))
   }))
 
   const form = ref<ComponentExposed<GlobalComponents["BaseForm"]>>()

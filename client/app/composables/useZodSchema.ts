@@ -3,13 +3,17 @@ import type { ComputedRef } from "vue"
 import { literal, number, object, string, type ZodSchema } from "zod"
 import dayjs from "~~/libs/dayjs.ts"
 
-const optional = (schema: ZodSchema, condition = true) => condition ? schema.optional().or(literal(null)) : schema
-
-const password = () => {
+const datestring = () => {
   const { $i18n: { t } } = useNuxtApp()
 
-  return requiredString().refine(value => value.length === 0 || value.length >= 6, t("validations.password.tooSmall"))
+  return string().optional().refine(value => (
+    !value || dayjs(value, "YYYY-MM-DD", true).isValid()
+  ), {
+    message: t("globals.forms.validations.dateFormat")
+  })
 }
+
+const optional = (schema: ZodSchema, condition = true) => condition ? schema.optional().or(literal(null)) : schema
 
 const price = () => {
   const { $i18n: { t } } = useNuxtApp()
@@ -43,22 +47,11 @@ const requiredString = (message?: string) => {
   }).min(1, computedMessage)
 }
 
-const datestring = () => {
-  const { $i18n: { t } } = useNuxtApp()
-
-  return string().optional().refine(value => (
-    !value || dayjs(value, "YYYY-MM-DD", true).isValid()
-  ), {
-    message: t("globals.forms.validations.dateFormat")
-  })
-}
-
 const zodSchema = {
   datestring,
   number,
   object,
   optional,
-  password,
   price,
   requiredNumber,
   requiredString,
