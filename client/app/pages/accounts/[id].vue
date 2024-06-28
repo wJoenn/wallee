@@ -27,7 +27,7 @@
     <TransactionList
       class="flex-grow"
       :loading="status === 'pending'"
-      :transactions="account?.transactions"
+      :transactions="account && { executed: account.executed_transactions, planned: account.planned_transactions }"
       @add="showTransactionForm = true"
     />
 
@@ -66,7 +66,7 @@
   const averageMonthlySpending = computed(() => {
     if (!account.value) { return 0 }
 
-    const transactionDates = account.value.transactions.executed.map(transaction => dayjs(transaction.transacted_at))
+    const transactionDates = account.value.executed_transactions.map(transaction => dayjs(transaction.transacted_at))
     const max = dayjs().subtract(1, "month").endOf("month")
     let min = dayjs.min(...transactionDates)
     if (!min || max.isBefore(min)) { return 0 }
@@ -75,7 +75,7 @@
     min = dayjs.max(twelveMonthsAgo, min)!.startOf("month")
     const diff = Math.ceil(max.diff(min, "month")) + 1
 
-    const spendings = account.value.transactions.executed.reduce((sum, transaction) => {
+    const spendings = account.value.executed_transactions.reduce((sum, transaction) => {
       const date = dayjs(transaction.transacted_at)
       if (transaction.value > 0 || date.isAfter(max) || date.isBefore(min)) { return sum }
       return sum + transaction.value
@@ -91,9 +91,9 @@
   const handleTransactionCreate = ({ transaction }: { transaction: Transaction }) => {
     if (dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))) {
       account.value!.balance += transaction.value
-      account.value!.transactions.executed.push(transaction)
+      account.value!.executed_transactions.push(transaction)
     } else {
-      account.value!.transactions.planned.push(transaction)
+      account.value!.planned_transactions.push(transaction)
     }
   }
 

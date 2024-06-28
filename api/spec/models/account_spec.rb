@@ -128,10 +128,8 @@ RSpec.describe Account do
 
     it "includes transactions when Truthy argument is used" do
       expect(account.serialize(true)).to include(
-        transactions: {
-          executed: [executed_transaction],
-          planned: [planned_transaction]
-        }
+        executed_transactions: [executed_transaction],
+        planned_transactions: [planned_transaction]
       )
     end
   end

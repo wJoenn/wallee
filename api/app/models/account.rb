@@ -21,10 +21,8 @@ class Account < ApplicationRecord
     account = { balance:, category:, description:, id:, name: }
 
     if include
-      account[:transactions] = {
-        executed: executed_transactions.order(transacted_at: :desc),
-        planned: planned_transactions.order(:transacted_at)
-      }
+      account[:executed_transactions] = executed_transactions.order(transacted_at: :desc)
+      account[:planned_transactions] = planned_transactions.order(:transacted_at)
     end
 
     account

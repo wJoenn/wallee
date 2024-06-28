@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Account } from "~~/types/api"
+  import type { Transaction } from "~~/types/api"
 
   import dayjs from "~~/libs/dayjs.ts"
 
@@ -74,7 +74,7 @@
 
   const props = defineProps<{
     loading?: boolean
-    transactions?: Account["transactions"]
+    transactions?: { executed: Transaction[], planned: Transaction[] }
   }>()
 
   const { t } = useI18n()
