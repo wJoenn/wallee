@@ -31,6 +31,12 @@ export default defineNuxtConfig({
     "~/assets/stylesheets/index.css"
   ],
 
+  imports: {
+    presets: [
+      { from: "vue-component-type-helpers", imports: ["ComponentExposed"], type: true }
+    ]
+  },
+
   runtimeConfig: {
     public: {
       apiUrl: ""
