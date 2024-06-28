@@ -1,6 +1,8 @@
 class Account < ApplicationRecord
   belongs_to :user
 
+  has_many :executed_transactions, -> { executed }, class_name: "Transaction"
+  has_many :planned_transactions, -> { planned }, class_name: "Transaction"
   has_many :transactions
 
   enum category: { main: 0, budget: 1, saving: 2 }
@@ -12,7 +14,7 @@ class Account < ApplicationRecord
   before_destroy :manage_transactions
 
   def balance
-    transactions.executed.sum(&:value)
+    executed_transactions.sum(&:value)
   end
 
   def serialize(include = false)
@@ -20,8 +22,8 @@ class Account < ApplicationRecord
 
     if include
       account[:transactions] = {
-        executed: transactions.executed.order(transacted_at: :desc),
-        planned: transactions.planned.order(:transacted_at)
+        executed: executed_transactions.order(transacted_at: :desc),
+        planned: planned_transactions.order(:transacted_at)
       }
     end
 
