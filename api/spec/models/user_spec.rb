@@ -20,21 +20,6 @@ RSpec.describe User do
       end
     end
 
-    context "with sub_categories" do
-      before do
-        create(:sub_category, user:)
-      end
-
-      it "has many SubCategory" do
-        expect(user.sub_categories).to all be_a SubCategory
-      end
-
-      it "destroys sub_categories on destroy" do
-        user.destroy
-        expect(SubCategory.count).to be 0
-      end
-    end
-
     context "with transactions" do
       before do
         create(:transaction, account: create(:account, user:))

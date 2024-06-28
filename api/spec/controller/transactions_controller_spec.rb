@@ -73,7 +73,6 @@ RSpec.describe TransactionsController, type: :request do
     let(:user) { create(:user) }
     let(:account_id) { create(:account, user:).id }
     let(:description) { "A description" }
-    let(:sub_category_id) { create(:sub_category, user:).id }
     let(:transacted_at) { 2.days.ago }
     let(:value) { 1 }
 
@@ -88,7 +87,6 @@ RSpec.describe TransactionsController, type: :request do
             transaction: {
               account_id:,
               description:,
-              sub_category_id:,
               transacted_at:,
               value:
             }
@@ -109,7 +107,6 @@ RSpec.describe TransactionsController, type: :request do
           expect(data).to include({
             "account_id" => account_id,
             "description" => description,
-            "sub_category_id" => sub_category_id,
             "transacted_at" => transacted_at.floor,
             "value" => value
           })
@@ -154,7 +151,6 @@ RSpec.describe TransactionsController, type: :request do
           transaction: {
             account_id:,
             description:,
-            sub_category_id:,
             transacted_at:,
             value:
           }

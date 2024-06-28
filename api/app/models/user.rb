@@ -8,7 +8,6 @@ class User < ApplicationRecord
   UNSAFE_ATTRIBUTES_FOR_SERIALIZATION << :jti
 
   has_many :accounts, dependent: :destroy
-  has_many :sub_categories, dependent: :destroy
   has_many :transactions, through: :accounts
 
   after_create :create_main_account

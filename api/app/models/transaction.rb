@@ -3,7 +3,6 @@ class Transaction < ApplicationRecord
   scope :planned, -> { where("transacted_at >= ?", Time.zone.tomorrow) }
 
   belongs_to :account
-  belongs_to :sub_category, optional: true
 
   delegate :user, to: :account
 

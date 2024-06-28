@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_17_091813) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_155830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,26 +30,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_17_091813) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "sub_categories", force: :cascade do |t|
-    t.string "name", null: false
-    t.bigint "category_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_sub_categories_on_category_id"
-    t.index ["user_id"], name: "index_sub_categories_on_user_id"
-  end
-
   create_table "transactions", force: :cascade do |t|
     t.integer "value", null: false
     t.string "description"
     t.datetime "transacted_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "account_id", null: false
-    t.bigint "sub_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_transactions_on_account_id"
-    t.index ["sub_category_id"], name: "index_transactions_on_sub_category_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -63,8 +51,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_17_091813) do
   end
 
   add_foreign_key "accounts", "users"
-  add_foreign_key "sub_categories", "categories"
-  add_foreign_key "sub_categories", "users"
   add_foreign_key "transactions", "accounts"
-  add_foreign_key "transactions", "sub_categories"
 end
