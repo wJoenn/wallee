@@ -16,6 +16,5 @@ Rails.application.routes.draw do
   }
 
   resources :accounts, only: %i[create destroy index show update]
-  resources :categories, only: %i[index show]
   resources :transactions, only: %i[create destroy index show update]
 end
