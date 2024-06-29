@@ -10,7 +10,7 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    @resource = current_user.transactions.new(transaction_params)
+    @resource = current_user.transactions.new(resource_params)
 
     if @resource.save
       render json: @resource, status: :created
@@ -20,7 +20,7 @@ class TransactionsController < ApplicationController
   end
 
   def update
-    if @resource.update(transaction_params)
+    if @resource.update(resource_params)
       render json: @resource, status: :ok
     else
       render json: { errors: @resource.error_codes }, status: :unprocessable_entity
@@ -34,7 +34,11 @@ class TransactionsController < ApplicationController
 
   private
 
-  def transaction_params
+  def resource_params
     params.require(:transaction).permit(:account_id, :description, :transacted_at, :value)
+  end
+
+  def set_resource
+    @resource = current_user.transactions.find(params[:id])
   end
 end

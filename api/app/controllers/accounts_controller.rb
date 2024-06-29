@@ -11,7 +11,7 @@ class AccountsController < ApplicationController
   end
 
   def create
-    @resource = current_user.accounts.new(account_params)
+    @resource = current_user.accounts.new(resource_params)
 
     if @resource.save
       render json: @resource.serialize, status: :created
@@ -21,7 +21,7 @@ class AccountsController < ApplicationController
   end
 
   def update
-    if @resource.update(account_params)
+    if @resource.update(resource_params)
       render json: @resource.serialize, status: :ok
     else
       render json: { errors: @resource.error_codes }, status: :unprocessable_entity
@@ -39,7 +39,11 @@ class AccountsController < ApplicationController
 
   private
 
-  def account_params
+  def resource_params
     params.require(:account).permit(:category, :description, :name)
+  end
+
+  def set_resource
+    @resource = current_user.accounts.find(params[:id])
   end
 end
