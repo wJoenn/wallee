@@ -17,19 +17,15 @@ type Params<T extends RecursiveRecord = RecursiveRecord> = {
   order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
 }
 
-const _defaultOptions = (): Options => ({
-  headers: {
-    "Authorization": localStorage.getItem("bearerToken") ?? "",
-    "Content-type": "application/json"
-  },
-  method: "GET"
-})
-
 const _fetchApi = <T>(path: string, options?: Options) => {
   const { public: { apiUrl } } = useRuntimeConfig()
 
   return $fetch.raw<T>(`${apiUrl}${path}`, {
-    ..._defaultOptions(),
+    headers: {
+      "Authorization": localStorage.getItem("bearerToken") ?? "",
+      "Content-type": "application/json"
+    },
+    method: "GET",
     ...options
   })
 }
