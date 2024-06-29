@@ -17,4 +17,11 @@ class ApplicationController < ActionController::API
       [key.to_sym, parsed_value]
     }.to_h
   end
+
+  def order
+    return {} if params[:order].blank?
+
+    order = JSON.parse(params[:order])
+    order.to_h
+  end
 end

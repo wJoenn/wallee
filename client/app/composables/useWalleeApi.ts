@@ -14,6 +14,7 @@ type Options = {
 
 type Params<T extends RecursiveRecord = RecursiveRecord> = {
   filters?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
+  order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
 }
 
 const _defaultOptions = (): Options => ({
@@ -34,7 +35,8 @@ const _fetchApi = <T>(path: string, options?: Options) => {
 }
 
 const _stringifyParams = <T extends RecursiveRecord>(params: Params<T> = {}) => ({
-  filters: params.filters && JSON.stringify(params.filters)
+  filters: params.filters && JSON.stringify(params.filters),
+  order: params.order && JSON.stringify(params.order.map(order => typeof order === "string" ? [order, "asc"] : order))
 })
 
 export const walleeApi = {

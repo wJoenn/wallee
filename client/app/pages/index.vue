@@ -47,7 +47,9 @@
 
   const { t } = useI18n()
   const { signOut } = useUserStore()
-  const { data: accounts, status } = useWalleeApi(api => api.accounts.index(), { deep: true })
+  const { data: accounts, status } = useWalleeApi(api => api.accounts.index({
+    order: ["name"]
+  }), { deep: true })
 
   const newAccountCategory = ref<"budget" | "saving">("budget")
 

@@ -102,7 +102,9 @@
   }>()
 
   const { t } = useI18n()
-  const { data: accounts, status } = useWalleeApi(api => api.accounts.index())
+  const { data: accounts, status } = useWalleeApi(api => api.accounts.index({
+    order: ["category", "name"]
+  }))
 
   const validationSchema = useZodSchema(zod => computed(() => zod.object({
     account_id: zod.requiredNumber(),
