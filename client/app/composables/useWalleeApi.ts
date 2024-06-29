@@ -9,6 +9,11 @@ type Options = {
   body?: RecursiveRecord
   headers?: Record<string, string>
   method?: "DELETE" | "GET" | "PATCH" | "POST"
+  params?: Record<keyof Params, string | undefined>
+}
+
+type Params<T extends RecursiveRecord = RecursiveRecord> = {
+  filters?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
 }
 
 const _defaultOptions = (): Options => ({
@@ -28,11 +33,17 @@ const _fetchApi = <T>(path: string, options?: Options) => {
   })
 }
 
+const _stringifyParams = <T extends RecursiveRecord>(params: Params<T> = {}) => ({
+  filters: params.filters && JSON.stringify(params.filters)
+})
+
 export const walleeApi = {
   accounts: {
     create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
     destroy: (id: ID) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
-    index: () => _fetchApi<Account[]>("/accounts"),
+    index: (params?: Params<Account>) => _fetchApi<Account[]>("/accounts", {
+      params: _stringifyParams<Account>(params)
+    }),
     show: (id: ID) => _fetchApi<Account>(`/accounts/${id}`),
     update: (id: ID, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
       body,
@@ -42,7 +53,9 @@ export const walleeApi = {
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
     destroy: (id: ID) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
-    index: () => _fetchApi<Transaction[]>("/transactions"),
+    index: (params?: Params<Transaction>) => _fetchApi<Transaction[]>("/transactions", {
+      params: _stringifyParams<Transaction>(params)
+    }),
     show: (id: ID) => _fetchApi<Transaction>(`/transactions/${id}`),
     update: (id: ID, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
       body,
