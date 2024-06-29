@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-8 h-full">
     <div class="flex justify-between">
-      <div v-if="status === 'pending'">
+      <div v-if="accountStatus === 'pending'">
         <BaseSkeleton class="h-4 w-[10ch]" />
         <BaseSkeleton class="h-8 w-[15ch]" />
         <BaseSkeleton class="h-3 w-[25ch]" />
@@ -25,9 +25,10 @@
     <p v-if="account?.description" class="whitespace-pre-line">{{ account.description }}</p>
 
     <TransactionList
+      v-model:active="active"
       class="flex-grow"
-      :loading="status === 'pending'"
-      :transactions="account && { executed: account.executed_transactions, planned: account.planned_transactions }"
+      :loading="transactionStatus === 'pending'"
+      :transactions
       @add="showTransactionForm = true"
     />
 
@@ -54,12 +55,36 @@
     }
   }
 
+  const TRANSACTION_QUERY = {
+    executed: {
+      operator: "<",
+      order: "asc",
+      value: dayjs().add(1, "day").startOf("day").toISOString()
+    },
+    planned: {
+      operator: ">",
+      order: "desc",
+      value: dayjs().endOf("day").toISOString()
+    }
+  } as const
+
   const { t } = useI18n()
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: account, status } = useWalleeApi(api => api.accounts.show(id), { deep: true })
+  const { data: account, status: accountStatus } = useWalleeApi(api => api.accounts.show(id), { deep: true })
 
+  const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(computed(() => api => (
+    api.transactions.index({
+      filters: [
+        ["account_id", "=", id],
+        ["transacted_at", TRANSACTION_QUERY[active.value].operator, TRANSACTION_QUERY[active.value].value]
+      ],
+      order: [["transacted_at", TRANSACTION_QUERY[active.value].order]]
+    })
+  )), { deep: true })
+
+  const active = ref<"executed" | "planned">("executed")
   const showAccountForm = ref(false)
   const showTransactionForm = ref(false)
 
@@ -89,20 +114,24 @@
   }
 
   const handleTransactionCreate = ({ transaction }: { transaction: Transaction }) => {
-    if (dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))) {
+    const isExecuted = dayjs().add(1, "day").startOf("day").isAfter(dayjs(transaction.transacted_at))
+
+    if (isExecuted && active.value === "executed") {
       account.value!.balance += transaction.value
-      account.value!.executed_transactions.push(transaction)
-    } else {
-      account.value!.planned_transactions.push(transaction)
+      transactions.value!.push(transaction)
+    } else if (!isExecuted && active.value === "planned") {
+      transactions.value!.push(transaction)
     }
   }
 
-  watch(status, async () => {
-    if (status.value === "error") {
+  watch(accountStatus, async () => {
+    if (accountStatus.value === "error") {
       await router.replace(localePath("/"))
       // TODO: add failure notification
     }
   }, { immediate: true })
+
+  watch(active, async () => { await refresh() })
 </script>
 
 <i18n lang="yaml">

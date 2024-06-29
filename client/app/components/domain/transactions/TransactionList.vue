@@ -10,16 +10,16 @@
       <div class="bg-secondary grid grid-cols-2 rounded">
         <button
           class="border-none default:bg-transparent duration-300 m-1 p-1 rounded text-xs transition-colors"
-          :class="{ bg: activeList === 'executed' }"
-          @click="activeList = 'executed'"
+          :class="{ bg: active === 'executed' }"
+          @click="active = 'executed'"
         >
           {{ t("executed") }}
         </button>
 
         <button
           class="border-none default:bg-transparent duration-300 m-1 p-1 rounded text-xs transition-colors"
-          :class="{ bg: activeList === 'planned' }"
-          @click="activeList = 'planned'"
+          :class="{ bg: active === 'planned' }"
+          @click="active = 'planned'"
         >
           {{ t("planned") }}
         </button>
@@ -74,19 +74,19 @@
 
   const props = defineProps<{
     loading?: boolean
-    transactions?: { executed: Transaction[], planned: Transaction[] }
+    transactions?: Transaction[]
   }>()
 
   const { t } = useI18n()
   const localePath = useLocalePath()
 
-  const activeList = ref<"executed" | "planned">("executed")
+  const active = defineModel<"executed" | "planned">("active")
 
   const sortedTransactions = computed(() => {
     if (!props.transactions) { return }
 
-    return [...props.transactions[activeList.value]].sort((a, b) => {
-      const order = activeList.value === "executed" ? -1 : 1
+    return [...props.transactions].sort((a, b) => {
+      const order = active.value === "executed" ? -1 : 1
 
       if (dayjs(a.transacted_at).isAfter(dayjs(b.transacted_at))) { return order }
       if (dayjs(a.transacted_at).isBefore(dayjs(b.transacted_at))) { return -order }
