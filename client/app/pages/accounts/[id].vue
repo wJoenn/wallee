@@ -59,12 +59,12 @@
   const TRANSACTION_QUERY = {
     executed: {
       operator: "<",
-      order: "asc",
+      order: "desc",
       value: dayjs().add(1, "day").startOf("day").toISOString()
     },
     planned: {
       operator: ">",
-      order: "desc",
+      order: "asc",
       value: dayjs().endOf("day").toISOString()
     }
   } as const
