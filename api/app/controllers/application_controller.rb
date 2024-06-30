@@ -18,6 +18,10 @@ class ApplicationController < ActionController::API
     }.to_h
   end
 
+  def limit
+    params[:top]
+  end
+
   def order
     return {} if params[:order].blank?
 
