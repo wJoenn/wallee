@@ -10,17 +10,18 @@ unless Rails.env.production?
   groceries = Account.create(category: :budget, name: "Groceries", user:)
   saving = Account.create(category: :saving, name: "Saving", user:)
 
-  [
-    { description: "salary", transacted_at: timestamp(Time.current.beginning_of_month), value: 2_000_00 },
-    { description: "rent", transacted_at: timestamp(Time.current.beginning_of_month), value: -500_00 },
-    { description: "subscriptions", transacted_at: timestamp(Time.current.beginning_of_month), value: -100_00 },
-    { description: "fuel budget top up", transacted_at: timestamp(Time.current.beginning_of_month), value: -100_00 },
-    { description: "groceries budget top up", transacted_at: timestamp(Time.current.beginning_of_month), value: -200_00 },
-    { description: "saving top up", transacted_at: timestamp(Time.current.beginning_of_month), value: -1_000_00 },
-    { description: "salary", transacted_at: timestamp(1.month.from_now.beginning_of_month), value: 2_000_00 },
-  ].each do |transaction|
-    description, transacted_at, value = transaction.values_at(:description, :transacted_at, :value)
-    Transaction.create(account: user.main_account, description:, transacted_at:, value:)
+  (-18..6).each do |index|
+    [
+      { description: "salary", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: 2_000_00 },
+      { description: "rent", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: -500_00 },
+      { description: "subscriptions", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: -100_00 },
+      { description: "fuel budget top up", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: -100_00 },
+      { description: "groceries budget top up", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: -200_00 },
+      { description: "saving top up", transacted_at: timestamp(index.month.from_now.beginning_of_month), value: -1_000_00 },
+    ].each do |transaction|
+      description, transacted_at, value = transaction.values_at(:description, :transacted_at, :value)
+      Transaction.create(account: user.main_account, description:, transacted_at:, value:)
+    end
   end
 
   [
