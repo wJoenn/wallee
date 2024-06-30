@@ -1,9 +1,7 @@
 import type { FetchResponse } from "ofetch"
 import type { AsyncDataOptions } from "#app"
-import type { RecursiveRecord } from "~~/types"
+import type { BaseModel, RecursiveRecord } from "~~/types"
 import type { Account, Transaction, User } from "~~/types/api"
-
-type ID = number | string
 
 type Options = {
   body?: RecursiveRecord
@@ -12,13 +10,13 @@ type Options = {
   params?: Partial<Record<keyof Params, number | string | undefined>>
 }
 
-type Params<T extends RecursiveRecord = RecursiveRecord> = {
+type Params<T extends BaseModel = BaseModel> = {
   order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
   top?: number
   where?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
 }
 
-const _fetchApi = <T>(path: string, options?: Options) => {
+const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Options) => {
   const { public: { apiUrl } } = useRuntimeConfig()
 
   return $fetch.raw<T>(`${apiUrl}${path}`, {
@@ -31,7 +29,7 @@ const _fetchApi = <T>(path: string, options?: Options) => {
   })
 }
 
-const _stringifyParams = <T extends RecursiveRecord>(params: Params<T> = {}) => ({
+const _stringifyParams = <T extends BaseModel>(params: Params<T> = {}) => ({
   ...params,
   order: params.order && JSON.stringify(params.order.map(order => typeof order === "string" ? [order, "asc"] : order)),
   where: params.where && JSON.stringify(params.where)
@@ -40,24 +38,24 @@ const _stringifyParams = <T extends RecursiveRecord>(params: Params<T> = {}) => 
 export const walleeApi = {
   accounts: {
     create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
-    destroy: (id: ID) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
+    destroy: (id: number | string) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
     index: (params?: Params<Account>) => _fetchApi<Account[]>("/accounts", {
       params: _stringifyParams<Account>(params)
     }),
-    show: (id: ID) => _fetchApi<Account>(`/accounts/${id}`),
-    update: (id: ID, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
+    show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`),
+    update: (id: number | string, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
       body,
       method: "PATCH"
     })
   },
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
-    destroy: (id: ID) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
+    destroy: (id: number | string) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
     index: (params?: Params<Transaction>) => _fetchApi<Transaction[]>("/transactions", {
       params: _stringifyParams<Transaction>(params)
     }),
-    show: (id: ID) => _fetchApi<Transaction>(`/transactions/${id}`),
-    update: (id: ID, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
+    show: (id: number | string) => _fetchApi<Transaction>(`/transactions/${id}`),
+    update: (id: number | string, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
       body,
       method: "PATCH"
     })

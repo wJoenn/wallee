@@ -1,27 +1,24 @@
-import type { Timestamp } from "../index"
+import type { BaseModel, Timestamp } from "../index"
 
 export type * from "./errors.d.ts"
 
-export type Account = {
+export type Account = BaseModel & {
   balance: number
   category: "budget" | "main" | "saving"
   description?: string
-  id: number
   name: string
 
   executed_transactions: Transaction[]
   planned_transactions: Transaction[]
 }
 
-export type Transaction = {
+export type Transaction = BaseModel & {
   account_id: number
   description?: string
-  id: number
   transacted_at: Timestamp
   value: number
 }
 
-export type User = {
+export type User = BaseModel & {
   email: string
-  id: number
 }

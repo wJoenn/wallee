@@ -1,3 +1,7 @@
+export type BaseModel = {
+  id: number
+}
+
 /** @example "1970-01-01" */
 export type DateString = string
 
