@@ -14,8 +14,8 @@ type Options = {
 }
 
 export type Params<T extends BaseModel = BaseModel> = {
+  limit?: number
   order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
-  top?: number
   where?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
 }
 

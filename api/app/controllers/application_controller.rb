@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
   private
 
   def limit
-    params[:top]
+    params[:limit]
   end
 
   def order
