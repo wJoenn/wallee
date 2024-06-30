@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   before_action :set_resource, only: %i[destroy show update]
 
   def index
-    render json: current_user.transactions.where(filters).order(order).limit(limit), status: :ok
+    render json: current_user.transactions.where(where).order(order).limit(limit), status: :ok
   end
 
   def show

@@ -76,11 +76,11 @@
 
   const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(computed(() => api => (
     api.transactions.index({
-      filters: [
+      order: [["transacted_at", TRANSACTION_QUERY[active.value].order]],
+      where: [
         ["account_id", "=", id],
         ["transacted_at", TRANSACTION_QUERY[active.value].operator, TRANSACTION_QUERY[active.value].value]
-      ],
-      order: [["transacted_at", TRANSACTION_QUERY[active.value].order]]
+      ]
     })
   )), { deep: true })
 

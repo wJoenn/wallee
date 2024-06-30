@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
 
   def index
     accounts = current_user.accounts.includes(:executed_transactions, :planned_transactions)
-      .where(filters)
+      .where(where)
       .order(order)
       .limit(limit)
 
