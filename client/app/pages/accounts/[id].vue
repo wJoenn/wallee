@@ -46,6 +46,7 @@
 <script setup lang="ts">
   import type { RouteLocationNormalizedLoaded } from "vue-router"
   import type { Account, Transaction } from "~~/types/api"
+  import type { Params } from "~/composables/useWalleeApi.ts"
 
   import dayjs from "~~/libs/dayjs.ts"
 
@@ -72,17 +73,19 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: account, status: accountStatus } = useWalleeApi(api => api.accounts.show(id), { deep: true })
+  const { data: account, status: accountStatus } = useWalleeApi(api => api.accounts.show, id, { deep: true })
 
-  const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(computed(() => api => (
-    api.transactions.index({
+  const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(
+    api => api.transactions.index,
+    computed<Params<Transaction>>(() => ({
       order: [["transacted_at", TRANSACTION_QUERY[active.value].order]],
       where: [
         ["account_id", "=", id],
         ["transacted_at", TRANSACTION_QUERY[active.value].operator, TRANSACTION_QUERY[active.value].value]
       ]
-    })
-  )), { deep: true })
+    })),
+    { deep: true }
+  )
 
   const active = ref<"executed" | "planned">("executed")
   const showAccountForm = ref(false)

@@ -44,7 +44,7 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: transaction, status } = useWalleeApi(api => api.transactions.show(id))
+  const { data: transaction, status } = useWalleeApi(api => api.transactions.show, id)
 
   const showTransactionForm = ref(false)
   const showDeleteConfirmation = ref(false)

@@ -3,6 +3,9 @@ import type { AsyncDataOptions } from "#app"
 import type { BaseModel, RecursiveRecord } from "~~/types"
 import type { Account, Transaction, User } from "~~/types/api"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Fetch<T> = (api: typeof walleeApi) => (...args: any[]) => Promise<FetchResponse<T>>
+
 type Options = {
   body?: RecursiveRecord
   headers?: Record<string, string>
@@ -10,7 +13,7 @@ type Options = {
   params?: Partial<Record<keyof Params, number | string | undefined>>
 }
 
-type Params<T extends BaseModel = BaseModel> = {
+export type Params<T extends BaseModel = BaseModel> = {
   order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
   top?: number
   where?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
@@ -68,11 +71,12 @@ export const walleeApi = {
   }
 }
 
-export const useWalleeApi = <T>(
-  fetchRef: MaybeRef<(api: typeof walleeApi) => Promise<FetchResponse<T>>>,
+export const useWalleeApi = <T extends BaseModel | BaseModel[], F extends Fetch<T>>(
+  fetch: F & Fetch<T>,
+  maybeRefParams: MaybeRef<Parameters<ReturnType<F>>[0]>,
   options?: AsyncDataOptions<T>
 ) => useLazyAsyncData(crypto.randomUUID(), async () => {
-    const fetch = unref(fetchRef)
-    const { _data } = await fetch(walleeApi)
+    const params = unref(maybeRefParams)
+    const { _data } = await fetch(walleeApi)(params)
     return _data!
   }, options)
