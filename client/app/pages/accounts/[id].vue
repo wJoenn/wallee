@@ -73,10 +73,10 @@
   const localePath = useLocalePath()
   const router = useLocaleRouter()
   const { params: { id } } = useRoute() as Route
-  const { data: account, status: accountStatus } = useWalleeApi(api => api.accounts.show, id, { deep: true })
+  const { data: account, status: accountStatus } = useWalleeApi(walleeApi.accounts.show, id, { deep: true })
 
   const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(
-    api => api.transactions.index,
+    walleeApi.transactions.index,
     computed<Params<Transaction>>(() => ({
       order: [["transacted_at", TRANSACTION_QUERY[active.value].order]],
       where: [

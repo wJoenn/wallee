@@ -102,7 +102,7 @@
   }>()
 
   const { t } = useI18n()
-  const { data: accounts, status } = useWalleeApi(api => api.accounts.index, {
+  const { data: accounts, status } = useWalleeApi(walleeApi.accounts.index, {
     order: ["category", "name"]
   })
 

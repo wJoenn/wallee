@@ -4,7 +4,7 @@ import type { BaseModel, RecursiveRecord } from "~~/types"
 import type { Account, Transaction, User } from "~~/types/api"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Fetch<T> = (api: typeof walleeApi) => (...args: any[]) => Promise<FetchResponse<T>>
+type Fetch<T> = (...args: any[]) => Promise<FetchResponse<T>>
 
 type Options = {
   body?: RecursiveRecord
@@ -73,10 +73,10 @@ export const walleeApi = {
 
 export const useWalleeApi = <T extends BaseModel | BaseModel[], F extends Fetch<T>>(
   fetch: F & Fetch<T>,
-  maybeRefParams: MaybeRef<Parameters<ReturnType<F>>[0]>,
+  maybeRefParams: MaybeRef<Parameters<F>[0]>,
   options?: AsyncDataOptions<T>
 ) => useLazyAsyncData(crypto.randomUUID(), async () => {
     const params = unref(maybeRefParams)
-    const { _data } = await fetch(walleeApi)(params)
+    const { _data } = await fetch(params)
     return _data!
   }, options)
