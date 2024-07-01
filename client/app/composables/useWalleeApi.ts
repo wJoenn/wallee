@@ -15,8 +15,8 @@ type Options = {
 
 export type Params<T extends BaseModel = BaseModel> = {
   limit?: number
-  order?: (Extract<keyof T, string> | [Extract<keyof T, string>, "asc" | "desc"])[]
-  where?: [Extract<keyof T, string>, "<" | "=" | ">", string][]
+  order?: (keyof T | [keyof T, "asc" | "desc"])[]
+  where?: [keyof T, "<" | "=" | ">", string][]
 }
 
 const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Options) => {
