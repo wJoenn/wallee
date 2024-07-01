@@ -3,6 +3,8 @@ import type { AsyncDataOptions } from "#app"
 import type { BaseModel, RecursiveRecord } from "~~/types"
 import type { Account, Transaction, User } from "~~/types/api"
 
+type Element<T> = T extends unknown[] ? T[number] : T
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fetch<T> = (...args: any[]) => Promise<FetchResponse<T>>
 
@@ -34,7 +36,7 @@ const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Op
 
 const _stringifyParams = <T extends BaseModel>(params: Params<T> = {}) => ({
   ...params,
-  order: params.order && JSON.stringify(params.order.map(order => typeof order === "string" ? [order, "asc"] : order)),
+  order: params.order && JSON.stringify(_parseParamsOrder(params)),
   where: params.where && JSON.stringify(params.where)
 })
 
@@ -71,12 +73,92 @@ export const walleeApi = {
   }
 }
 
+const _parseParamsOrder = <T extends BaseModel>(params: Params<T>) => (
+  params.order?.map(order => Array.isArray(order) ? order : [order, "asc"] as const)
+)
+
 export const useWalleeApi = <T extends BaseModel | BaseModel[], F extends Fetch<T>>(
   fetch: F & Fetch<T>,
   maybeRefParams: MaybeRef<Parameters<F>[0]>,
-  options?: AsyncDataOptions<T>
-) => useLazyAsyncData(crypto.randomUUID(), async () => {
+  options?: AsyncDataOptions<T> & { infiniteScroll?: T extends unknown[] ? true : never }
+) => {
+  const hasInfiniteScroll = !!options?.infiniteScroll
+
+  const { data, refresh: _refresh, status } = useLazyAsyncData(crypto.randomUUID(), async () => {
     const params = unref(maybeRefParams)
     const { _data } = await fetch(params)
     return _data!
   }, options)
+
+  const endOfLine = ref(false)
+  const fetching = ref(false)
+  const scrolling = ref(false)
+
+  const lastElement = computed(() => {
+    if (data.value) {
+      if (Array.isArray(data.value)) { return (data.value as Element<T>[]).at(-1) }
+      return data.value as Element<T>
+    }
+  })
+
+  const refresh = async () => {
+    if (hasInfiniteScroll) {
+      window.removeEventListener("scroll", _handleScroll)
+      window.scrollTo({ top: 0 })
+      endOfLine.value = false
+    }
+
+    await _refresh()
+  }
+
+  const _handleScroll = async () => {
+    if (scrolling.value || endOfLine.value) { return }
+
+    scrolling.value = true
+    const isWithinBound = document.body.scrollHeight - window.scrollY < 1500
+    if (isWithinBound) { await _next() }
+
+    setTimeout(() => { scrolling.value = false }, 300)
+  }
+
+  // eslint-disable-next-line complexity
+  const _next = async () => {
+    if (fetching.value) { return }
+
+    fetching.value = true
+    const params = unref(maybeRefParams) as Params<Element<T>>
+    const { limit, where } = params
+    const [key, direction] = _parseParamsOrder(params)?.[0] ?? ["id", "asc"] as const
+
+    const nextParams = {
+      ...params,
+      where: [
+        ...(where ?? []),
+        [key, direction === "asc" ? ">" : "<", lastElement.value?.[key]]
+      ]
+    }
+
+    const res = await fetch(nextParams)
+    const { _data } = res as unknown as FetchResponse<Element<T>[]>
+    endOfLine.value = _data!.length < limit!;
+    (data.value as Element<T>[]).push(..._data!)
+
+    fetching.value = false
+  }
+
+  onBeforeUnmount(() => { window.removeEventListener("scroll", _handleScroll) })
+
+  watch(data, () => {
+    const isArray = Array.isArray(data.value)
+
+    if (isArray && hasInfiniteScroll) {
+      const hasLimit = !!unref<Params<Element<T>>>(maybeRefParams).limit
+
+      if (hasLimit) {
+        window.addEventListener("scroll", _handleScroll)
+      }
+    }
+  })
+
+  return { data, refresh, status }
+}

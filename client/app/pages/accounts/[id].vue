@@ -25,6 +25,7 @@
     <p v-if="account?.description" class="whitespace-pre-line">{{ account.description }}</p>
 
     <TransactionList
+      id="transaction-list"
       v-model:active="active"
       class="flex-grow"
       :loading="transactionStatus === 'pending'"
@@ -78,13 +79,14 @@
   const { data: transactions, refresh, status: transactionStatus } = useWalleeApi(
     walleeApi.transactions.index,
     computed<Params<Transaction>>(() => ({
+      limit: 20,
       order: [["transacted_at", TRANSACTION_QUERY[active.value].order]],
       where: [
         ["account_id", "=", id],
         ["transacted_at", TRANSACTION_QUERY[active.value].operator, TRANSACTION_QUERY[active.value].value]
       ]
     })),
-    { deep: true }
+    { deep: true, infiniteScroll: true }
   )
 
   const active = ref<"executed" | "planned">("executed")
