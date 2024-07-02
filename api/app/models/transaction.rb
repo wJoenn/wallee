@@ -1,4 +1,6 @@
 class Transaction < ApplicationRecord
+  ATTRIBUTES = %i[account_id description id transacted_at value]
+
   scope :executed, -> { where("transacted_at < ?", Time.zone.tomorrow) }
   scope :planned, -> { where("transacted_at >= ?", Time.zone.tomorrow) }
 

@@ -11,4 +11,9 @@ class ApplicationRecord < ActiveRecord::Base
       end
     end
   end
+
+  def serialize(attributes = nil)
+    attributes ||= self.class::ATTRIBUTES
+    slice(attributes & self.class::ATTRIBUTES)
+  end
 end

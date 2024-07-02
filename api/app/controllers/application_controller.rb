@@ -14,6 +14,13 @@ class ApplicationController < ActionController::API
     order.to_h
   end
 
+  def select
+    return nil if params[:select].blank?
+
+    select = JSON.parse(params[:select])
+    select.map(&:to_sym)
+  end
+
   def where
     return {} if params[:where].blank?
 

@@ -1,4 +1,6 @@
 class Account < ApplicationRecord
+  ATTRIBUTES = %i[balance category description executed_transactions id name planned_transactions]
+
   belongs_to :user
 
   has_many :executed_transactions, -> { executed }, class_name: "Transaction"
@@ -15,10 +17,6 @@ class Account < ApplicationRecord
 
   def balance
     executed_transactions.sum(&:value)
-  end
-
-  def serialize
-    slice(:balance, :category, :description, :executed_transactions, :id, :name, :planned_transactions)
   end
 
   private

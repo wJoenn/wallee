@@ -8,20 +8,21 @@ type Element<T> = T extends unknown[] ? T[number] : T
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fetch<T> = (...args: any[]) => Promise<FetchResponse<T>>
 
-type Options = {
+type Options<T extends BaseModel> = {
   body?: RecursiveRecord
   headers?: Record<string, string>
   method?: "DELETE" | "GET" | "PATCH" | "POST"
-  params?: Partial<Record<keyof Params, number | string | undefined>>
+  params?: Params<T>
 }
 
 export type Params<T extends BaseModel = BaseModel> = {
   limit?: number
   order?: (keyof T | [keyof T, "asc" | "desc"])[]
+  select: (keyof T)[]
   where?: [keyof T, "<" | "=" | ">", string][]
 }
 
-const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Options) => {
+const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Options<Element<T>>) => {
   const { public: { apiUrl } } = useRuntimeConfig()
 
   return $fetch.raw<T>(`${apiUrl}${path}`, {
@@ -30,23 +31,31 @@ const _fetchApi = <T extends BaseModel | BaseModel[]>(path: string, options?: Op
       "Content-type": "application/json"
     },
     method: "GET",
-    ...options
+    ...options,
+    params: _stringifyParams(options?.params)
   })
 }
 
-const _stringifyParams = <T extends BaseModel>(params: Params<T> = {}) => ({
-  ...params,
-  order: params.order && JSON.stringify(_parseParamsOrder(params)),
-  where: params.where && JSON.stringify(params.where)
-})
+const _parseParamsOrder = <T extends BaseModel>(params: Params<T>) => (
+  params.order?.map(order => Array.isArray(order) ? order : [order, "asc"] as const)
+)
+
+const _stringifyParams = <T extends BaseModel>(params?: Params<T>) => {
+  if (params) {
+    return {
+      ...params,
+      order: params.order && JSON.stringify(_parseParamsOrder(params)),
+      select: JSON.stringify(params.select),
+      where: params.where && JSON.stringify(params.where)
+    }
+  }
+}
 
 export const walleeApi = {
   accounts: {
     create: (body: RecursiveRecord) => _fetchApi<Account>("/accounts", { body, method: "POST" }),
     destroy: (id: number | string) => _fetchApi<never>(`/accounts/${id}`, { method: "DELETE" }),
-    index: (params?: Params<Account>) => _fetchApi<Account[]>("/accounts", {
-      params: _stringifyParams<Account>(params)
-    }),
+    index: (params: Params<Account>) => _fetchApi<Account[]>("/accounts", { params }),
     show: (id: number | string) => _fetchApi<Account>(`/accounts/${id}`),
     update: (id: number | string, body: RecursiveRecord) => _fetchApi<Account>(`/accounts/${id}`, {
       body,
@@ -56,9 +65,7 @@ export const walleeApi = {
   transactions: {
     create: (body: RecursiveRecord) => _fetchApi<Transaction>("/transactions", { body, method: "POST" }),
     destroy: (id: number | string) => _fetchApi<never>(`/transactions/${id}`, { method: "DELETE" }),
-    index: (params?: Params<Transaction>) => _fetchApi<Transaction[]>("/transactions", {
-      params: _stringifyParams<Transaction>(params)
-    }),
+    index: (params: Params<Transaction>) => _fetchApi<Transaction[]>("/transactions", { params }),
     show: (id: number | string) => _fetchApi<Transaction>(`/transactions/${id}`),
     update: (id: number | string, body: RecursiveRecord) => _fetchApi<Transaction>(`/transactions/${id}`, {
       body,
@@ -72,10 +79,6 @@ export const walleeApi = {
     signUp: (body: RecursiveRecord) => _fetchApi<User>("/users", { body: { user: body }, method: "POST" })
   }
 }
-
-const _parseParamsOrder = <T extends BaseModel>(params: Params<T>) => (
-  params.order?.map(order => Array.isArray(order) ? order : [order, "asc"] as const)
-)
 
 export const useWalleeApi = <T extends BaseModel | BaseModel[], F extends Fetch<T>>(
   fetch: F & Fetch<T>,

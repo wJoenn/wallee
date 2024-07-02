@@ -2,12 +2,13 @@ class AccountsController < ApplicationController
   before_action :set_resource, only: %i[destroy show update]
 
   def index
-    accounts = current_user.accounts.includes(:executed_transactions, :planned_transactions)
+    accounts = current_user.accounts.includes(:executed_transactions)
       .where(where)
       .order(order)
       .limit(limit)
+      .map { |account| account.serialize(select) }
 
-    render json: accounts.map(&:serialize), status: :ok
+    render json: accounts, status: :ok
   end
 
   def show

@@ -81,6 +81,7 @@
     computed<Params<Transaction>>(() => ({
       limit: 20,
       order: [["transacted_at", TRANSACTION_QUERY[active.value].order]],
+      select: ["description", "id", "transacted_at", "value"],
       where: [
         ["account_id", "=", id],
         ["transacted_at", TRANSACTION_QUERY[active.value].operator, TRANSACTION_QUERY[active.value].value]
