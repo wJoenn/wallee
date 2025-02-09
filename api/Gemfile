@@ -14,6 +14,10 @@ gem "devise", "~> 4.9.4"
 # [https://github.com/waiting-for-dev/devise-jwt]
 gem "devise-jwt", "~> 0.11.0"
 
+# Multithreaded, Postgres-based, Active Job backend for Ruby on Rails.
+# [https://github.com/bensheldon/good_job]
+gem "good_job", "~> 4.9.0"
+
 # The ruby interface for PostgreSQL
 # [https://github.com/ged/ruby-pg]
 gem "pg", "~> 1.5.6"
@@ -57,10 +61,6 @@ group :development do
 end
 
 group :development, :test do
-  # help to kill N+1 queries and unused eager loading
-  # [https://github.com/flyerhzm/bullet]
-  gem "bullet", "~> 7.1.6"
-
   # A Ruby gem to load environment variables from `.env`.
   # [https://github.com/bkeepers/dotenv]
   gem "dotenv", "~> 3.1.2"
