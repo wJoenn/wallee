@@ -57,10 +57,6 @@ group :development do
 end
 
 group :development, :test do
-  # help to kill N+1 queries and unused eager loading
-  # [https://github.com/flyerhzm/bullet]
-  gem "bullet", "~> 7.1.6"
-
   # A Ruby gem to load environment variables from `.env`.
   # [https://github.com/bkeepers/dotenv]
   gem "dotenv", "~> 3.1.2"
